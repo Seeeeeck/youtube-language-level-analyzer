@@ -147,7 +147,7 @@ async function analyzeWithOllama(text, model) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model,
-        prompt: `Classify English level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
+        prompt: `Classify the CEFR (MCER) level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
         stream: false,
         options: { temperature: 0.1 }
       }),

@@ -62,21 +62,27 @@
     .toggle input:checked + .slider::before { transform: translateX(18px); }
     .info { font-size: 11px; color: #999; margin-top: 8px; }
     .info code { background: #333; padding: 1px 4px; border-radius: 3px; }
-    select {
+    select, .server-input {
       background: #333; color: #e0e0e0; border: 1px solid #555;
       border-radius: 4px; padding: 4px 8px; font-size: 12px;
       max-width: 160px;
     }
-    .badge-preview {
-      display: inline-flex;
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      align-items: center; justify-content: center;
-      background: #FF9800; color: white;
-      font-size: 14px; font-weight: bold;
-      margin-left: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    .server-input { max-width: 140px; flex: 1; }
+    .btn {
+      background: #4CAF50; color: #fff; border: none;
+      border-radius: 4px; padding: 4px 8px; font-size: 11px;
+      cursor: pointer; margin-left: 4px;
     }
+    .btn-reset {
+      background: #555; color: #e0e0e0; border: none;
+      border-radius: 4px; padding: 4px 8px; font-size: 11px;
+      cursor: pointer; margin-left: 4px;
+    }
+    .server-row {
+      display: flex; align-items: center; gap: 4px;
+      padding: 8px 0; border-bottom: 1px solid #333;
+    }
+    .server-row label { font-size: 11px; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -92,13 +98,16 @@
     </label>
   </div>
 
+  <div class="server-row">
+    <label>Servidor</label>
+    <input type="text" id="serverInput" class="server-input" placeholder="http://localhost:11434">
+    <button class="btn" id="saveServerBtn">OK</button>
+    <button class="btn-reset" id="resetServerBtn">↺</button>
+  </div>
+
   <div class="row" id="modelRow" style="display:none;border:none;">
     <label>Modelo</label>
     <select id="modelSelect"></select>
-  </div>
-
-  <div class="info">
-    AI local: <a href="https://ollama.com" target="_blank" style="color:#4CAF50;">Ollama</a>.
   </div>
 
   <script src="popup.js"></script>

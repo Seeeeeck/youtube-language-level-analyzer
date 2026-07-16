@@ -1,6 +1,16 @@
+const OLLAMA_DEFAULT = 'http://localhost:11434'
+
 function setStatus(el, type, msg) {
   el.className = 'status ' + type
   el.textContent = msg
+}
+
+async function fetchModels(server) {
+  const url = server.replace(/\/+$/, '') + '/api/tags'
+  const resp = await fetch(url, { signal: AbortSignal.timeout(3000) })
+  if (!resp.ok) return []
+  const data = await resp.json()
+  return (data?.models || []).map(m => m.name)
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -8,25 +18,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   const useAICheckbox = document.getElementById('useAI')
   const modelSelect = document.getElementById('modelSelect')
   const modelRow = document.getElementById('modelRow')
+  const serverInput = document.getElementById('serverInput')
+  const saveServerBtn = document.getElementById('saveServerBtn')
+  const resetServerBtn = document.getElementById('resetServerBtn')
 
-  const { useAI, ollamaModel } = await chrome.storage.local.get(['useAI', 'ollamaModel'])
+  const { useAI, ollamaModel, ollamaServer } = await chrome.storage.local.get(['useAI', 'ollamaModel', 'ollamaServer'])
+  serverInput.value = ollamaServer || OLLAMA_DEFAULT
   useAICheckbox.checked = useAI !== false
 
   useAICheckbox.addEventListener('change', async () => {
     await chrome.storage.local.set({ useAI: useAICheckbox.checked })
   })
 
-  async function getTab() {
+  async function sendToContent(msg) {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-    return tab
+    if (!tab?.id) return
+    try { await chrome.tabs.sendMessage(tab.id, msg) } catch {}
   }
 
-  async function populateModels() {
+  async function refreshAll(server) {
+    const base = server || serverInput.value || OLLAMA_DEFAULT
     try {
-      const tab = await getTab()
-      if (!tab?.id) return
-      const models = await chrome.tabs.sendMessage(tab.id, { type: 'get_models' })
-      if (!models || models.length === 0) { modelRow.style.display = 'none'; return }
+      const models = await fetchModels(base)
+      if (!models || models.length === 0) {
+        modelRow.style.display = 'none'
+        setStatus(statusEl, 'warn', '⚠ Servidor sin modelos')
+        return
+      }
       modelRow.style.display = 'flex'
       modelSelect.innerHTML = ''
       models.forEach(m => {
@@ -35,43 +53,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         opt.textContent = m
         modelSelect.appendChild(opt)
       })
-      modelSelect.value = ollamaModel || models[0] || ''
-      if (!ollamaModel || !models.includes(ollamaModel)) {
-        await chrome.storage.local.set({ ollamaModel: modelSelect.value })
-      }
+      const saved = ollamaModel
+      modelSelect.value = saved && models.includes(saved) ? saved : models[0]
+      setStatus(statusEl, 'ok', `✓ ${modelSelect.value.split(':')[0]} listo`)
     } catch {
       modelRow.style.display = 'none'
+      setStatus(statusEl, 'off', '✗ Servidor no encontrado')
     }
   }
+
+  async function applyServer(server) {
+    serverInput.value = server
+    await chrome.storage.local.set({ ollamaServer: server })
+    await sendToContent({ type: 'set_server', server })
+    await refreshAll(server)
+  }
+
+  saveServerBtn.addEventListener('click', async () => {
+    let val = serverInput.value.trim()
+    if (!val) val = OLLAMA_DEFAULT
+    if (!val.startsWith('http://') && !val.startsWith('https://')) val = 'http://' + val
+    val = val.replace(/\/+$/, '')
+    await applyServer(val)
+  })
+
+  resetServerBtn.addEventListener('click', async () => {
+    await applyServer(OLLAMA_DEFAULT)
+  })
 
   modelSelect.addEventListener('change', async () => {
     const model = modelSelect.value
     await chrome.storage.local.set({ ollamaModel: model })
-    try {
-      const tab = await getTab()
-      if (tab?.id) await chrome.tabs.sendMessage(tab.id, { type: 'set_model', model })
-    } catch {}
-    const modelName = model.split(':')[0]
-    setStatus(statusEl, 'ok', `✓ ${modelName} listo`)
+    await sendToContent({ type: 'set_model', model })
   })
 
-  async function updateStatus() {
-    try {
-      const tab = await getTab()
-      if (!tab?.id) { setStatus(statusEl, 'warn', '⚠ No hay pestaña activa'); return }
-
-      try {
-        const result = await chrome.tabs.sendMessage(tab.id, { type: 'check_ollama' })
-        const model = ollamaModel || 'gemma3:1b'
-        setStatus(statusEl, result ? 'ok' : 'off', result ? `✓ ${model.split(':')[0]} listo` : '✗ Sin AI disponible')
-      } catch {
-        setStatus(statusEl, 'off', '✗ Sin AI disponible')
-      }
-    } catch {
-      setStatus(statusEl, 'off', '✗ Error al verificar AI')
-    }
-  }
-
-  await populateModels()
-  updateStatus()
+  refreshAll()
 })

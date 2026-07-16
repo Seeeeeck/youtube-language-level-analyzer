@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Analiza el nivel de inglés (A1-C2) de videos en YouTube usando IA local",
   "permissions": ["storage", "scripting"],
-  "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "http://localhost:11434/*"],
+  "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "http://*/*"],
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],

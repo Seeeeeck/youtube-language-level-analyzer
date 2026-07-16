@@ -1,3 +1,5 @@
+const OLLAMA_DEFAULT = 'http://localhost:11434'
+
 console.log('[YT-Level] Content script loaded v2')
 ;(async () => {
   const { cacheVer } = await chrome.storage.local.get('cacheVer')
@@ -77,11 +79,12 @@ function analyzeHeuristic(text) {
   return CEFR_LEVELS[Math.max(0, Math.min(5, Math.round(rawScore)))]
 }
 
+async function getServerUrl() {
+  const { ollamaServer } = await chrome.storage.local.get('ollamaServer')
+  return ollamaServer || OLLAMA_DEFAULT
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  if (msg.type === 'check_ollama') {
-    checkOllama().then(sendResponse)
-    return true
-  }
   if (msg.type === 'get_models') {
     getModels().then(sendResponse)
     return true
@@ -90,18 +93,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setModel(msg.model).then(sendResponse)
     return true
   }
+  if (msg.type === 'set_server') {
+    setServer(msg.server).then(sendResponse)
+    return true
+  }
 })
-
-async function checkOllama() {
-  try {
-    const resp = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(3000) })
-    return resp.ok
-  } catch { return false }
-}
 
 async function getModels() {
   try {
-    const resp = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(3000) })
+    const base = await getServerUrl()
+    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(3000) })
     if (!resp.ok) return []
     const data = await resp.json()
     return (data?.models || []).map(m => m.name)
@@ -125,10 +126,23 @@ async function getModel() {
   return ollamaModel || 'gemma3:1b'
 }
 
+async function setServer(server) {
+  await chrome.storage.local.set({ ollamaServer: server })
+  const all = await chrome.storage.local.get(null)
+  for (const key of Object.keys(all)) {
+    if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
+  }
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(scanFeed, 100)
+  return true
+}
+
 async function analyzeWithOllama(text, model) {
   console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
   try {
-    const resp = await fetch('http://localhost:11434/api/generate', {
+    const base = await getServerUrl()
+    const resp = await fetch(`${base}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

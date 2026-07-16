@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       setStatus(statusEl, 'ok', `✓ ${selected.split(':')[0]} listo`)
     } catch {
       modelRow.style.display = 'none'
-      setStatus(statusEl, 'off', '✗ Servidor no encontrado')
+      setStatus(statusEl, 'off', '✗ Servidor sin conexión')
     }
   }
 

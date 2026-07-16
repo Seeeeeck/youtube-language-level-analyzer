@@ -6,60 +6,72 @@ function setStatus(el, type, msg) {
 document.addEventListener('DOMContentLoaded', async () => {
   const statusEl = document.getElementById('aiStatus')
   const useAICheckbox = document.getElementById('useAI')
-  const ollamaRow = document.getElementById('ollamaRow')
-  const ollamaStatus = document.getElementById('ollamaStatus')
+  const modelSelect = document.getElementById('modelSelect')
+  const modelRow = document.getElementById('modelRow')
 
-  const { useAI } = await chrome.storage.local.get('useAI')
+  const { useAI, ollamaModel } = await chrome.storage.local.get(['useAI', 'ollamaModel'])
   useAICheckbox.checked = useAI !== false
 
   useAICheckbox.addEventListener('change', async () => {
     await chrome.storage.local.set({ useAI: useAICheckbox.checked })
   })
 
-  async function checkOllama() {
+  async function getTab() {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+    return tab
+  }
+
+  async function populateModels() {
     try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+      const tab = await getTab()
       if (!tab?.id) return
-      const result = await chrome.tabs.sendMessage(tab.id, { type: 'check_ollama' })
-      ollamaRow.style.display = 'flex'
-      ollamaStatus.textContent = result ? '✓ gemma3:1b listo' : '✗ gemma3 no encontrado'
-      ollamaStatus.style.color = result ? '#a5d6a7' : '#ef9a9a'
+      const models = await chrome.tabs.sendMessage(tab.id, { type: 'get_models' })
+      if (!models || models.length === 0) { modelRow.style.display = 'none'; return }
+      modelRow.style.display = 'flex'
+      modelSelect.innerHTML = ''
+      models.forEach(m => {
+        const opt = document.createElement('option')
+        opt.value = m
+        opt.textContent = m
+        modelSelect.appendChild(opt)
+      })
+      modelSelect.value = ollamaModel || models[0] || ''
+      if (!ollamaModel || !models.includes(ollamaModel)) {
+        await chrome.storage.local.set({ ollamaModel: modelSelect.value })
+      }
     } catch {
-      ollamaRow.style.display = 'none'
+      modelRow.style.display = 'none'
     }
   }
 
+  modelSelect.addEventListener('change', async () => {
+    const model = modelSelect.value
+    await chrome.storage.local.set({ ollamaModel: model })
+    try {
+      const tab = await getTab()
+      if (tab?.id) await chrome.tabs.sendMessage(tab.id, { type: 'set_model', model })
+    } catch {}
+    const modelName = model.split(':')[0]
+    setStatus(statusEl, 'ok', `✓ ${modelName} listo`)
+  })
+
   async function updateStatus() {
     try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+      const tab = await getTab()
       if (!tab?.id) { setStatus(statusEl, 'warn', '⚠ No hay pestaña activa'); return }
 
-      const raw = await chrome.scripting.executeScript({
-        target: { tabId: tab.id }, world: 'MAIN',
-        func: async () => {
-          if (typeof LanguageModel === 'undefined') return 'no-api'
-          try { return await LanguageModel.availability() }
-          catch (e) { return 'error' }
-        }
-      }).then(r => r?.[0]?.result).catch(() => 'error')
-
-      if (raw === 'readily') {
-        setStatus(statusEl, 'ok', '✓ Gemini Nano listo')
-      } else if (raw === 'after-download' || raw === 'downloading') {
-        setStatus(statusEl, 'warn', '⬇ Descargando Gemini Nano...')
-      } else {
-        try {
-          const result = await chrome.tabs.sendMessage(tab.id, { type: 'check_ollama' })
-          setStatus(statusEl, result ? 'ok' : 'off', result ? '✓ Ollama + gemma3:1b listo' : '✗ Sin AI disponible')
-        } catch {
-          setStatus(statusEl, 'off', '✗ Sin AI disponible')
-        }
+      try {
+        const result = await chrome.tabs.sendMessage(tab.id, { type: 'check_ollama' })
+        const model = ollamaModel || 'gemma3:1b'
+        setStatus(statusEl, result ? 'ok' : 'off', result ? `✓ ${model.split(':')[0]} listo` : '✗ Sin AI disponible')
+      } catch {
+        setStatus(statusEl, 'off', '✗ Sin AI disponible')
       }
     } catch {
       setStatus(statusEl, 'off', '✗ Error al verificar AI')
     }
   }
 
-  checkOllama()
+  await populateModels()
   updateStatus()
 })

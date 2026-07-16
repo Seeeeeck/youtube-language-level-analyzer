@@ -13,8 +13,6 @@ console.log('[YT-Level] Content script loaded v2')
 
 const BADGE_CLASS = 'yt-level-badge'
 const PROCESSED_ATTR = 'data-level-video'
-const AI_TIMEOUT = 20000
-let aiAvailable = false
 
 const LEVEL_COLORS = {
   A1: '#4CAF50', A2: '#8BC34A',
@@ -79,18 +77,17 @@ function analyzeHeuristic(text) {
   return CEFR_LEVELS[Math.max(0, Math.min(5, Math.round(rawScore)))]
 }
 
-function injectAIScript(code) {
-  const s = document.createElement('script')
-  s.textContent = code
-  document.documentElement.appendChild(s)
-  s.remove()
-}
-
-window.addEventListener('__yt_level_ai_ready', () => { aiAvailable = true })
-
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'check_ollama') {
     checkOllama().then(sendResponse)
+    return true
+  }
+  if (msg.type === 'get_models') {
+    getModels().then(sendResponse)
+    return true
+  }
+  if (msg.type === 'set_model') {
+    setModel(msg.model).then(sendResponse)
     return true
   }
 })
@@ -98,65 +95,44 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 async function checkOllama() {
   try {
     const resp = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(3000) })
-    if (!resp.ok) return false
-    const data = await resp.json()
-    return data?.models?.some(m => m.name.startsWith('gemma3')) || false
+    return resp.ok
   } catch { return false }
 }
 
-function initAI() {
-  injectAIScript(`
-    (async () => {
-      try {
-        if (typeof LanguageModel === 'undefined') return
-        const a = await LanguageModel.availability()
-        if (a === 'readily') {
-          window.dispatchEvent(new CustomEvent('__yt_level_ai_ready'))
-        } else if (a === 'after-download') {
-          LanguageModel.create().then(() => {
-            window.dispatchEvent(new CustomEvent('__yt_level_ai_ready'))
-          })
-        }
-      } catch(e) {}
-    })()
-  `)
+async function getModels() {
+  try {
+    const resp = await fetch('http://localhost:11434/api/tags', { signal: AbortSignal.timeout(3000) })
+    if (!resp.ok) return []
+    const data = await resp.json()
+    return (data?.models || []).map(m => m.name)
+  } catch { return [] }
 }
 
-function analyzeWithAI(text) {
-  return new Promise((resolve) => {
-    const timer = setTimeout(() => resolve(null), AI_TIMEOUT)
-    const handler = (e) => {
-      clearTimeout(timer)
-      window.removeEventListener('__yt_level_ai_result', handler)
-      resolve(e.detail?.level || null)
-    }
-    window.addEventListener('__yt_level_ai_result', handler)
-    const escaped = text.slice(0, 4000).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')
-    injectAIScript(`
-      (async () => {
-        try {
-          if (typeof LanguageModel === 'undefined') return window.dispatchEvent(new CustomEvent('__yt_level_ai_result', { detail: {} }))
-          const a = await LanguageModel.availability()
-          if (a !== 'readily') return window.dispatchEvent(new CustomEvent('__yt_level_ai_result', { detail: {} }))
-          const s = await LanguageModel.create()
-          const r = await s.prompt('Classify the English level of this YouTube transcript as A1, A2, B1, B2, C1, or C2 (CEFR). Consider vocabulary range, grammar complexity, and sentence structure. Reply with ONLY the level code.\\n\\nTranscript:\\n${escaped}')
-          s.destroy()
-          const l = r.trim().toUpperCase()
-          window.dispatchEvent(new CustomEvent('__yt_level_ai_result', { detail: { level: CEFR_LEVELS.includes(l) ? l : null } }))
-        } catch(e) { window.dispatchEvent(new CustomEvent('__yt_level_ai_result', { detail: {} })) }
-      })()
-    `)
-  })
+async function setModel(model) {
+  await chrome.storage.local.set({ ollamaModel: model })
+  const all = await chrome.storage.local.get(null)
+  for (const key of Object.keys(all)) {
+    if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
+  }
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(scanFeed, 100)
+  return true
 }
 
-async function analyzeWithOllama(text) {
-  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length)
+async function getModel() {
+  const { ollamaModel } = await chrome.storage.local.get('ollamaModel')
+  return ollamaModel || 'gemma3:1b'
+}
+
+async function analyzeWithOllama(text, model) {
+  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
   try {
     const resp = await fetch('http://localhost:11434/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'gemma3:1b',
+        model,
         prompt: `Classify English level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
         stream: false,
         options: { temperature: 0.1 }
@@ -181,18 +157,12 @@ async function analyzeLevel(text) {
   const { useAI } = await chrome.storage.local.get('useAI')
   if (useAI === false) return null
 
-  if (aiAvailable) {
-    const aiLevel = await analyzeWithAI(text)
-    if (aiLevel) return { level: aiLevel, method: 'nano' }
-  }
-
-  const ollamaLevel = await analyzeWithOllama(text)
-  if (ollamaLevel) return { level: ollamaLevel, method: 'ollama' }
+  const model = await getModel()
+  const ollamaLevel = await analyzeWithOllama(text, model)
+  if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 
   return null
 }
-
-initAI()
 
 async function fetchTranscript(videoId) {
   const resp = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`)
@@ -211,12 +181,12 @@ function getVideoId(element) {
   return match ? match[1] : null
 }
 
-function injectBadge(element, level, method) {
+function injectBadge(element, level, method, model) {
   if (element.querySelector(`.${BADGE_CLASS}`)) return
   const badge = document.createElement('div')
   badge.className = BADGE_CLASS
   badge.textContent = level
-  badge.title = `Nivel ${level} (${method === 'nano' ? 'Gemini Nano' : 'Ollama'})`
+  badge.title = `Nivel ${level} (${model || 'Ollama'})`
   Object.assign(badge.style, {
     position: 'absolute', top: '8px', left: '8px', zIndex: 10,
     width: '38px', height: '38px', borderRadius: '50%',
@@ -268,11 +238,12 @@ async function processVideoElement(element) {
     if (cached[videoId]) {
       const c = cached[videoId]
       if (typeof c === 'string') return
-      if (c.method === 'nano' || c.method === 'ollama') {
-        injectBadge(element, c.level, c.method)
+      const currentModel = await getModel()
+      if (c.method === 'ollama' && c.model === currentModel) {
+        injectBadge(element, c.level, c.method, c.model)
         return
       }
-      return
+      await chrome.storage.local.remove(videoId)
     }
 
     injectSpinner(element)
@@ -283,8 +254,8 @@ async function processVideoElement(element) {
     const result = await analyzeLevel(transcript)
     removeSpinner(element)
     if (result) {
-      await chrome.storage.local.set({ [videoId]: { level: result.level, method: result.method } })
-      injectBadge(element, result.level, result.method)
+      await chrome.storage.local.set({ [videoId]: { level: result.level, method: result.method, model: result.model } })
+      injectBadge(element, result.level, result.method, result.model)
     }
   } catch (e) {
     removeSpinner(element)

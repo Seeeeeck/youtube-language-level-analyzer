@@ -1,0 +1,10 @@
+.yt-level-badge {
+  pointer-events: none;
+  user-select: none;
+  animation: yt-level-fadein 0.3s ease-in;
+}
+
+@keyframes yt-level-fadein {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}

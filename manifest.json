@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube English Level Analyzer",
+  "version": "1.0",
+  "description": "Analiza el nivel de inglés (A1-C2) de videos en YouTube usando IA local",
+  "permissions": ["storage", "scripting"],
+  "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "http://localhost:11434/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "YT Level"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

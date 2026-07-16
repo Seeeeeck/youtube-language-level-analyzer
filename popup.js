@@ -15,20 +15,14 @@ async function fetchModels(server) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusEl = document.getElementById('aiStatus')
-  const useAICheckbox = document.getElementById('useAI')
   const modelSelect = document.getElementById('modelSelect')
   const modelRow = document.getElementById('modelRow')
   const serverInput = document.getElementById('serverInput')
   const saveServerBtn = document.getElementById('saveServerBtn')
   const resetServerBtn = document.getElementById('resetServerBtn')
 
-  const { useAI, ollamaModel, ollamaServer } = await chrome.storage.local.get(['useAI', 'ollamaModel', 'ollamaServer'])
+  const { ollamaModel, ollamaServer } = await chrome.storage.local.get(['ollamaModel', 'ollamaServer'])
   serverInput.value = ollamaServer || OLLAMA_DEFAULT
-  useAICheckbox.checked = useAI !== false
-
-  useAICheckbox.addEventListener('change', async () => {
-    await chrome.storage.local.set({ useAI: useAICheckbox.checked })
-  })
 
   async function sendToContent(msg) {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })

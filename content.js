@@ -168,9 +168,6 @@ async function analyzeWithOllama(text, model) {
 }
 
 async function analyzeLevel(text) {
-  const { useAI } = await chrome.storage.local.get('useAI')
-  if (useAI === false) return null
-
   const model = await getModel()
   const ollamaLevel = await analyzeWithOllama(text, model)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }

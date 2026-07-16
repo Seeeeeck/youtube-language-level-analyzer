@@ -65,7 +65,12 @@
 
   <div id="aiStatus" class="status"></div>
 
-  <div class="server-row">
+  <div class="row" id="langRow" style="border:none;">
+    <label>Idioma</label>
+    <select id="langSelect"></select>
+  </div>
+
+  <div class="server-row" id="serverRow">
     <label>Servidor</label>
     <input type="text" id="serverInput" class="server-input" placeholder="http://localhost:11434">
     <button class="btn" id="saveServerBtn">OK</button>

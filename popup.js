@@ -54,8 +54,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         modelSelect.appendChild(opt)
       })
       const saved = ollamaModel
-      modelSelect.value = saved && models.includes(saved) ? saved : models[0]
-      setStatus(statusEl, 'ok', `✓ ${modelSelect.value.split(':')[0]} listo`)
+      const selected = saved && models.includes(saved) ? saved : models[0]
+      modelSelect.value = selected
+      await chrome.storage.local.set({ ollamaModel: selected })
+      await sendToContent({ type: 'set_model', model: selected })
+      setStatus(statusEl, 'ok', `✓ ${selected.split(':')[0]} listo`)
     } catch {
       modelRow.style.display = 'none'
       setStatus(statusEl, 'off', '✗ Servidor no encontrado')

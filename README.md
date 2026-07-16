@@ -1,34 +1,34 @@
 # YouTube English Level Analyzer
 
-Extensión para Chrome/Brave que analiza el nivel de inglés (A1-C2) de videos de YouTube usando IA local con Ollama.
+Browser extension for Chrome/Brave that analyzes the English CEFR level (A1-C2) of YouTube videos using local AI via Ollama.
 
-Muestra un círculo con el nivel CEFR en cada video del feed de YouTube.
+Shows a colored circle with the CEFR level on each video in the YouTube feed.
 
-## Requisitos
+## Requirements
 
-- **Chrome 128+** o **Brave** (u otro Chromium)
-- **Ollama** instalado y corriendo
-- Modelo **gemma3:1b** descargado (~1.6 GB)
+- **Chrome 128+** or **Brave** (or any Chromium-based browser)
+- **Ollama** installed and running
+- **gemma3:1b** model downloaded (`ollama pull gemma3:1b`)
 
-## Instalación
+## Installation — step by step
 
-### 1. Instalar Ollama
+### 1. Install Ollama
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-### 2. Descargar el modelo
+### 2. Download the model
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-### 3. Configurar CORS en Ollama
+### 3. Configure CORS in Ollama
 
-Para que la extensión pueda comunicarse con Ollama desde YouTube, necesitas permitir orígenes externos.
+The extension needs permission to talk to Ollama from YouTube's website.
 
-#### Opción A: Systemd (recomendado, permanente)
+#### Option A: Systemd (permanent, recommended)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -38,52 +38,63 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Opción B: Manual (temporal, hasta que cierres la terminal)
+#### Option B: Manual (temporary, until you close the terminal)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
 
-### 4. Cargar la extensión
+### 4. Load the extension in your browser
 
-1. Abre `chrome://extensions` (o `brave://extensions`)
-2. Activa **"Modo desarrollador"** (esquina superior derecha)
-3. Click **"Cargar descomprimida"**
-4. Selecciona la carpeta del proyecto
+1. Go to **`chrome://extensions`** (or **`brave://extensions`**)
+2. Turn on **"Developer mode"** (top right corner)
+3. Click **"Load unpacked"**
+4. Select the project folder
 
-### 5. Usar
+### 5. Grant permissions (IMPORTANT)
 
-1. Ve a https://www.youtube.com
-2. Los videos con transcripción disponible mostrarán un spinner verde mientras se analizan
-3. Al terminar, aparece un círculo con el nivel: **A1**, **A2**, **B1**, **B2**, **C1** o **C2**
-4. Pasando el mouse encima del badge muestra si fue analizado con Ollama
+Brave and some Chromium browsers require explicit permission for extensions to run on websites:
 
-## Cómo funciona
+1. In `brave://extensions` (or `chrome://extensions`), click **"Details"** on **YT Level**
+2. Enable **"Allow this extension to read and change all your data on websites you visit"** (or **"Run on all sites"**)
+3. Also enable **"Allow access to file URLs"** if available
+4. If prompted with a permission dialog, click **"Allow"**
 
-1. La extensión extrae el ID de cada video en el feed de YouTube
-2. Obtiene la transcripción del video via `youtube-transcript.ai`
-3. Envía la transcripción a Ollama (`gemma3:1b`) pidiendo clasificación CEFR
-4. Muestra el resultado como un badge circular sobre el video
-5. Los resultados se cachean localmente para no re-analizar
+> Without this step, the extension will load but won't run on YouTube pages.
 
-## Estructura
+### 6. Use
+
+1. Go to https://www.youtube.com
+2. Videos with transcripts will show a green spinner while analyzing
+3. A colored circle appears with the level: **A1**, **A2**, **B1**, **B2**, **C1** or **C2**
+4. Hover over the badge to see the analysis source
+
+## How it works
+
+1. Extracts each video ID from the YouTube feed
+2. Fetches the transcript via `youtube-transcript.ai`
+3. Sends the transcript to Ollama (`gemma3:1b`) requesting CEFR classification
+4. Displays the result as a circular badge on the video thumbnail
+5. Results are cached locally to avoid re-analysis
+
+## File structure
 
 ```
-├── manifest.json      # Configuración de la extensión
-├── content.js         # Script principal (inyectado en YouTube)
-├── background.js      # Service worker (mínimo)
-├── popup.html         # Popup de la extensión
-├── popup.js           # Lógica del popup
-├── styles.css         # Estilos adicionales
-├── analyzer.js        # Analizador heurístico (respaldo)
-├── icons/             # Iconos de la extensión
+├── manifest.json      Extension configuration
+├── content.js         Main script (injected into YouTube)
+├── background.js      Service worker
+├── popup.html         Extension popup
+├── popup.js           Popup logic
+├── styles.css         Additional styles
+├── analyzer.js        Heuristic analyzer (fallback)
+├── icons/             Extension icons
 └── README.md
 ```
 
-## Notas
+## Notes
 
-- Solo analiza videos que tienen **transcripción disponible** en YouTube
-- El análisis puede tomar varios segundos en CPU (20-60s por video)
-- Si Ollama no está corriendo o el modelo no está instalado, no se muestran badges
-- No se requiere API key ni conexión a internet (una vez descargado el modelo)
+- Only analyzes videos that have **transcripts available** on YouTube
+- Analysis can take 20-60 seconds per video on CPU
+- If Ollama is not running or the model is not installed, no badges are shown
+- No API key or internet connection required (once the model is downloaded)

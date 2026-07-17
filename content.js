@@ -1,17 +1,6 @@
 const OLLAMA_DEFAULT = 'http://localhost:11434'
 
-console.log('[YT-Level] Content script loaded v2')
-;(async () => {
-  const { cacheVer } = await chrome.storage.local.get('cacheVer')
-  if (cacheVer !== 'v2') {
-    const all = await chrome.storage.local.get(null)
-    for (const key of Object.keys(all)) {
-      if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
-    }
-    await chrome.storage.local.set({ cacheVer: 'v2' })
-    console.log('[YT-Level] Cache viejo eliminado')
-  }
-})()
+console.log('[YT-Level] Content script loaded')
 
 const BADGE_CLASS = 'yt-level-badge'
 const PROCESSED_ATTR = 'data-level-video'
@@ -147,7 +136,37 @@ async function analyzeWithOllama(text, model) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model,
-        prompt: `Classify the CEFR (MCER) level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
+        prompt: `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
+
+Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference.
+
+Evaluate based on these criteria, in order of importance:
+1. Grammatical range and accuracy (verb tenses, subordinate structures, agreement)
+2. Lexical range and precision (general vs. specialized vocabulary, collocations, nuance)
+3. Discourse coherence and cohesion (connectors, idea organization)
+4. Apparent fluency (self-corrections, filler words, pauses reflected in the text)
+5. Complexity of ideas expressed (ability to argue, qualify, hypothesize)
+
+Rules:
+- Base your decision on the most consistent evidence throughout the text, not on a single isolated fragment.
+- If there are mixed signals between two levels, choose the level where most criteria are sustained consistently.
+- Do not explain your reasoning.
+- Do not add comments, justifications, or additional text.
+
+Your response must be EXCLUSIVELY one of these six codes, with no other character, word, period, or extra space:
+A1
+A2
+B1
+B2
+C1
+C2
+
+Any other response format is considered invalid.
+
+Transcript:
+"""
+${text.slice(0, 1000)}
+"""`,
         stream: false,
         options: { temperature: 0.1 }
       }),
@@ -245,18 +264,6 @@ async function processVideoElement(element) {
   element.setAttribute(PROCESSED_ATTR, videoId)
 
   try {
-    const cached = await chrome.storage.local.get(videoId)
-    if (cached[videoId]) {
-      const c = cached[videoId]
-      if (typeof c === 'string') return
-      const currentModel = await getModel()
-      if (c.method === 'ollama' && c.model === currentModel) {
-        injectBadge(element, c.level, c.method, c.model)
-        return
-      }
-      await chrome.storage.local.remove(videoId)
-    }
-
     injectSpinner(element)
 
     const transcript = await fetchTranscript(videoId)
@@ -265,7 +272,6 @@ async function processVideoElement(element) {
     const result = await analyzeLevel(transcript)
     removeSpinner(element)
     if (result) {
-      await chrome.storage.local.set({ [videoId]: { level: result.level, method: result.method, model: result.model } })
       injectBadge(element, result.level, result.method, result.model)
     }
   } catch (e) {

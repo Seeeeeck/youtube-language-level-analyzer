@@ -35,7 +35,7 @@ async function fetchModels(server) {
   return (data?.models || []).map(m => m.name)
 }
 
-const README_BASE = 'https://github.com/Seeeeeck/youtube-language-level-analyzer/blob/main/README'
+const README_BASE = 'https://github.com/Seeeeeck/youtube-language-level-analyzer/blob/master/README'
 
 function readmeUrl(lang) {
   return lang === 'en' ? README_BASE + '.md' : README_BASE + '.' + lang + '.md'

@@ -16,6 +16,20 @@
 
 ---
 
+## スクリーンショット
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="YouTube 動画の CEFR バッジ" width="600">
+  <br>
+  <em>YouTube サムネイルに表示される CEFR レベルバッジ（A1～C2）</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="拡張機能のポップアップ" width="300">
+  <br>
+  <em>設定ポップアップ — サーバー、モデル、言語</em>
+</p>
+
 ## 機能
 
 - 🏷️ **CEFR バッジ** — YouTube 動画サムネイルに色付きの円（A1～C2）を表示

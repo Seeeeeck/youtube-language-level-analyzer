@@ -16,6 +16,20 @@ Fonctionne pour **toutes les langues** (anglais, espagnol, français, allemand, 
 
 ---
 
+## Captures d'écran
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="Badges CEFR sur les vidéos YouTube" width="600">
+  <br>
+  <em>Badges de niveau CEFR (A1–C2) sur les vignettes YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Popup de l'extension" width="300">
+  <br>
+  <em>Popup de configuration — serveur, modèle et langue</em>
+</p>
+
 ## Fonctionnalités
 
 - 🏷️ **Badges CECR** — cercles colorés (A1–C2) sur les vignettes des vidéos YouTube

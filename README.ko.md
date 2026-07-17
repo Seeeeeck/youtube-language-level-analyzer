@@ -12,6 +12,20 @@
 
 ---
 
+## 스크린샷
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="YouTube 동영상의 CEFR 배지" width="600">
+  <br>
+  <em>YouTube 썸네일 위에 표시된 CEFR 레벨 배지(A1–C2)</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="확장 프로그램 팝업" width="300">
+  <br>
+  <em>설정 팝업 — 서버, 모델, 언어</em>
+</p>
+
 ## 기능
 
 - 🏷️ **CEFR 배지** — YouTube 동영상 썸네일에 색상이 있는 원(A1–C2) 표시

@@ -12,6 +12,20 @@
 
 ---
 
+## स्क्रीनशॉट
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="YouTube वीडियो पर CEFR बैज" width="600">
+  <br>
+  <em>YouTube थंबनेल पर CEFR स्तर बैज (A1–C2)</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="एक्सटेंशन पॉपअप" width="300">
+  <br>
+  <em>कॉन्फ़िगरेशन पॉपअप — सर्वर, मॉडल और भाषा</em>
+</p>
+
 ## विशेषताएँ
 
 - 🏷️ **CEFR बैज** — YouTube वीडियो थंबनेल पर रंगीन वृत्त (A1–C2)

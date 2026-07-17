@@ -16,6 +16,20 @@ Funciona para **qualquer idioma** (inglês, espanhol, francês, alemão, chinês
 
 ---
 
+## Capturas de Tela
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="Selos CEFR em vídeos do YouTube" width="600">
+  <br>
+  <em>Selos de nível CEFR (A1–C2) nas miniaturas do YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Popup da extensão" width="300">
+  <br>
+  <em>Popup de configuração — servidor, modelo e idioma</em>
+</p>
+
 ## Funcionalidades
 
 - 🏷️ **Selos CEFR** — círculos coloridos (A1–C2) nas miniaturas de vídeos do YouTube

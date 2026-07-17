@@ -16,6 +16,20 @@ Funktioniert für **alle Sprachen** (Englisch, Spanisch, Französisch, Deutsch, 
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="CEFR-Abzeichen auf YouTube-Videos" width="600">
+  <br>
+  <em>CEFR-Level-Abzeichen (A1–C2) auf YouTube-Thumbnails</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Erweiterungs-Popup" width="300">
+  <br>
+  <em>Konfigurations-Popup — Server, Modell und Sprache</em>
+</p>
+
 ## Funktionen
 
 - 🏷️ **CEFR-Abzeichen** — farbige Kreise (A1–C2) auf YouTube-Video-Thumbnails

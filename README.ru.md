@@ -16,6 +16,20 @@
 
 ---
 
+## Скриншоты
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="Значки CEFR на видео YouTube" width="600">
+  <br>
+  <em>Значки уровня CEFR (A1–C2) на миниатюрах YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Всплывающее окно расширения" width="300">
+  <br>
+  <em>Окно настройки — сервер, модель и язык</em>
+</p>
+
 ## Возможности
 
 - 🏷️ **Значки CEFR** — цветные кружки (A1–C2) на миниатюрах видео YouTube

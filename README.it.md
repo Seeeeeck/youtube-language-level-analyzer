@@ -16,6 +16,20 @@ Funziona per **qualsiasi lingua** (inglese, spagnolo, francese, tedesco, cinese,
 
 ---
 
+## Screenshot
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="Badge CEFR sui video YouTube" width="600">
+  <br>
+  <em>Badge di livello CEFR (A1–C2) sulle miniature YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Popup dell'estensione" width="300">
+  <br>
+  <em>Popup di configurazione — server, modello e lingua</em>
+</p>
+
 ## Caratteristiche
 
 - 🏷️ **Badge CEFR** — cerchi colorati (A1–C2) sulle miniature dei video YouTube

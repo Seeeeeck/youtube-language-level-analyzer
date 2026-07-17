@@ -16,6 +16,20 @@
 
 ---
 
+## 屏幕截图
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="YouTube 视频上的 CEFR 徽章" width="600">
+  <br>
+  <em>YouTube 缩略图上的 CEFR 等级徽章（A1–C2）</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="扩展弹出窗口" width="300">
+  <br>
+  <em>配置弹出窗口 — 服务器、模型和语言</em>
+</p>
+
 ## 功能特点
 
 - 🏷️ **CEFR 徽章** — YouTube 视频缩略图上的彩色圆圈（A1–C2）

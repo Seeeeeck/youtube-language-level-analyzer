@@ -12,6 +12,20 @@
 
 ---
 
+## لقطات الشاشة
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="شارات CEFR على فيديوهات YouTube" width="600">
+  <br>
+  <em>شارات مستوى CEFR (A1–C2) على الصور المصغّرة لـ YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="نافذة الإضافة المنبثقة" width="300">
+  <br>
+  <em>نافذة الإعدادات — الخادم، النموذج واللغة</em>
+</p>
+
 ## المميزات
 
 - 🏷️ **شارات CEFR** — دوائر ملونة (A1–C2) على الصور المصغّرة لفيديوهات YouTube

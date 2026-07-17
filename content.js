@@ -19,6 +19,41 @@ const CARD_SELECTORS = [
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
+const PROMPT_EFFORT = {
+  min: text => `Classify the CEFR (MCER) level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
+  max: text => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
+
+Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference.
+
+Evaluate based on these criteria, in order of importance:
+1. Grammatical range and accuracy (verb tenses, subordinate structures, agreement)
+2. Lexical range and precision (general vs. specialized vocabulary, collocations, nuance)
+3. Discourse coherence and cohesion (connectors, idea organization)
+4. Apparent fluency (self-corrections, filler words, pauses reflected in the text)
+5. Complexity of ideas expressed (ability to argue, qualify, hypothesize)
+
+Rules:
+- Base your decision on the most consistent evidence throughout the text, not on a single isolated fragment.
+- If there are mixed signals between two levels, choose the level where most criteria are sustained consistently.
+- Do not explain your reasoning.
+- Do not add comments, justifications, or additional text.
+
+Your response must be EXCLUSIVELY one of these six codes, with no other character, word, period, or extra space:
+A1
+A2
+B1
+B2
+C1
+C2
+
+Any other response format is considered invalid.
+
+Transcript:
+"""
+${text.slice(0, 1000)}
+"""`,
+}
+
 const GRAMMAR_PATTERNS = [
   { level: 0, regex: /\b(is|am|are|have|has|do|does|like|want|need|can)\b/gi },
   { level: 1, regex: /\b(did|was|were|went|ate|saw|took|made|said|told|gave|going to|had to|used to)\b/gi },
@@ -86,6 +121,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setServer(msg.server).then(sendResponse)
     return true
   }
+  if (msg.type === 'set_effort') {
+    setEffort(msg.mode).then(sendResponse)
+    return true
+  }
 })
 
 async function getModels() {
@@ -115,6 +154,19 @@ async function getModel() {
   return ollamaModel || 'gemma3:1b'
 }
 
+async function getEffortMode() {
+  const { effortMode } = await chrome.storage.local.get('effortMode')
+  return effortMode || 'min'
+}
+
+async function setEffort(mode) {
+  await chrome.storage.local.set({ effortMode: mode })
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(scanFeed, 100)
+  return true
+}
+
 async function setServer(server) {
   await chrome.storage.local.set({ ollamaServer: server })
   const all = await chrome.storage.local.get(null)
@@ -127,8 +179,8 @@ async function setServer(server) {
   return true
 }
 
-async function analyzeWithOllama(text, model) {
-  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
+async function analyzeWithOllama(text, model, mode) {
+  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model, 'mode:', mode)
   try {
     const base = await getServerUrl()
     const resp = await fetch(`${base}/api/generate`, {
@@ -136,37 +188,7 @@ async function analyzeWithOllama(text, model) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model,
-        prompt: `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
-
-Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference.
-
-Evaluate based on these criteria, in order of importance:
-1. Grammatical range and accuracy (verb tenses, subordinate structures, agreement)
-2. Lexical range and precision (general vs. specialized vocabulary, collocations, nuance)
-3. Discourse coherence and cohesion (connectors, idea organization)
-4. Apparent fluency (self-corrections, filler words, pauses reflected in the text)
-5. Complexity of ideas expressed (ability to argue, qualify, hypothesize)
-
-Rules:
-- Base your decision on the most consistent evidence throughout the text, not on a single isolated fragment.
-- If there are mixed signals between two levels, choose the level where most criteria are sustained consistently.
-- Do not explain your reasoning.
-- Do not add comments, justifications, or additional text.
-
-Your response must be EXCLUSIVELY one of these six codes, with no other character, word, period, or extra space:
-A1
-A2
-B1
-B2
-C1
-C2
-
-Any other response format is considered invalid.
-
-Transcript:
-"""
-${text.slice(0, 1000)}
-"""`,
+        prompt: PROMPT_EFFORT[mode](text),
         stream: false,
         options: { temperature: 0.1 }
       }),
@@ -188,7 +210,8 @@ ${text.slice(0, 1000)}
 
 async function analyzeLevel(text) {
   const model = await getModel()
-  const ollamaLevel = await analyzeWithOllama(text, model)
+  const mode = await getEffortMode()
+  const ollamaLevel = await analyzeWithOllama(text, model, mode)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 
   return null

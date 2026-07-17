@@ -1,5 +1,3 @@
-const OLLAMA_DEFAULT = 'http://localhost:11434'
-
 console.log('[YT-Level] Content script loaded')
 
 const BADGE_CLASS = 'yt-level-badge'
@@ -103,11 +101,6 @@ function analyzeHeuristic(text) {
   return CEFR_LEVELS[Math.max(0, Math.min(5, Math.round(rawScore)))]
 }
 
-async function getServerUrl() {
-  const { ollamaServer } = await chrome.storage.local.get('ollamaServer')
-  return ollamaServer || OLLAMA_DEFAULT
-}
-
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'get_models') {
     getModels().then(sendResponse)
@@ -129,11 +122,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 async function getModels() {
   try {
-    const base = await getServerUrl()
-    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(3000) })
-    if (!resp.ok) return []
-    const data = await resp.json()
-    return (data?.models || []).map(m => m.name)
+    const models = await chrome.runtime.sendMessage({ type: 'ollama_get_models' })
+    return models || []
   } catch { return [] }
 }
 
@@ -151,7 +141,13 @@ async function setModel(model) {
 
 async function getModel() {
   const { ollamaModel } = await chrome.storage.local.get('ollamaModel')
-  return ollamaModel || 'gemma3:1b'
+  if (ollamaModel) return ollamaModel
+  const models = await getModels()
+  if (models.length > 0) {
+    await chrome.storage.local.set({ ollamaModel: models[0] })
+    return models[0]
+  }
+  return 'gemma3:1b'
 }
 
 async function getEffortMode() {
@@ -182,24 +178,20 @@ async function setServer(server) {
 async function analyzeWithOllama(text, model, mode) {
   console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model, 'mode:', mode)
   try {
-    const base = await getServerUrl()
-    const resp = await fetch(`${base}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model,
-        prompt: PROMPT_EFFORT[mode](text),
-        stream: false,
-        options: { temperature: 0.1 }
-      }),
-      signal: AbortSignal.timeout(60000)
+    const result = await chrome.runtime.sendMessage({
+      type: 'ollama_generate',
+      model,
+      prompt: PROMPT_EFFORT[mode](text),
+      mode
     })
-    if (!resp.ok) { console.log('[YT-Level] Ollama error:', resp.status); return null }
-    const data = await resp.json()
-    const raw = data?.response || ''
-    const result = raw.trim().toUpperCase()
+    if (!result || result.error) {
+      console.log('[YT-Level] Ollama error:', result?.error)
+      return null
+    }
+    const raw = result.response || ''
+    const trimmed = raw.trim().toUpperCase()
     console.log('[YT-Level] Ollama raw response:', raw)
-    const level = CEFR_LEVELS.find(l => result.includes(l))
+    const level = CEFR_LEVELS.find(l => trimmed.includes(l))
     console.log('[YT-Level] Ollama parsed level:', level)
     return level || null
   } catch (e) {
@@ -218,12 +210,9 @@ async function analyzeLevel(text) {
 }
 
 async function fetchTranscript(videoId) {
-  const resp = await fetch(`https://youtube-transcript.ai/transcript/${videoId}.txt`)
-  if (!resp.ok) return null
-  let text = await resp.text()
-  const match = text.match(/## Transcript\n([\s\S]+?)\n---/)
-  if (match) text = match[1]
-  return text.replace(/\[\d+:\d+\]\s*/g, '').replace(/[♪\-]/g, '').trim()
+  try {
+    return await chrome.runtime.sendMessage({ type: 'fetch_transcript', videoId })
+  } catch { return null }
 }
 
 function getVideoId(element) {

@@ -1,18 +1,33 @@
-# YouTube English Level Analyzer
+# YT Level — Analizador de Nivel de YouTube
 
-> [🇬🇧 English](README.md)
+**Analiza el nivel MCER (A1–C2) de cualquier video de YouTube usando IA local — sin API keys, sin internet.**
 
-Extensión para Chrome/Brave que analiza el nivel de inglés (A1-C2) de videos de YouTube usando IA local con Ollama.
+Funciona para **cualquier idioma**. La extensión obtiene la transcripción del video y la envía a un modelo local de Ollama para clasificación CEFR. Un badge de color aparece en cada miniatura de video.
 
-Muestra un círculo de color con el nivel CEFR en cada video del feed de YouTube.
+---
+
+**🌐 Idioma**
+
+[🇬🇧 English](README.md) · [🇪🇸 Español](README.es.md) · [🇫🇷 Français](README.fr.md) · [🇵🇹 Português](README.pt.md) · [🇩🇪 Deutsch](README.de.md) · [🇮🇹 Italiano](README.it.md) · [🇨🇳 中文](README.zh.md) · [🇯🇵 日本語](README.ja.md) · [🇰🇷 한국어](README.ko.md) · [🇸🇦 العربية](README.ar.md) · [🇮🇳 हिन्दी](README.hi.md) · [🇷🇺 Русский](README.ru.md)
+
+---
+
+## Características
+
+- 🏷️ **Badges CEFR** — círculos de color (A1–C2) en las miniaturas de YouTube
+- 🤖 **IA local** — funciona con cualquier modelo de Ollama (gemma, llama, mistral, etc.)
+- 🌍 **Multi-idioma** — analiza videos en cualquier lengua
+- 🎨 **Servidor personalizado** — apunta a cualquier instancia de Ollama en tu red
+- ⚡ **Caché rápida** — los resultados se guardan localmente para evitar re-análisis
+- 🔒 **100% privado** — todo corre localmente, ningún dato sale de tu máquina
 
 ## Requisitos
 
-- **Chrome 128+** o **Brave** (o cualquier navegador basado en Chromium)
-- **Ollama** instalado y ejecutándose
-- Modelo **gemma3:1b** descargado (`ollama pull gemma3:1b`)
+- **Chrome 128+**, **Brave** o cualquier navegador basado en Chromium
+- **Ollama** instalado y ejecutándose ([ollama.com](https://ollama.com))
+- Al menos **un modelo de Ollama** descargado (ej. `ollama pull gemma3:1b`)
 
-## Instalación — paso a paso
+## Instalación — Paso a Paso
 
 ### 1. Instalar Ollama
 
@@ -20,27 +35,31 @@ Muestra un círculo de color con el nivel CEFR en cada video del feed de YouTube
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-### 2. Descargar el modelo
+### 2. Descargar un modelo
 
 ```bash
 ollama pull gemma3:1b
 ```
 
+> Puedes usar cualquier modelo. La extensión te permite seleccionar cuál usar desde el popup.
+
 ### 3. Configurar CORS en Ollama
 
-La extensión necesita poder comunicarse con Ollama desde el sitio de YouTube.
+La extensión necesita comunicarse con Ollama desde el sitio de YouTube.
 
 #### Opción A: Systemd (permanente, recomendada)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
+
 echo '[Service]
 Environment=OLLAMA_ORIGINS=*' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+
 sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Opción B: Manual (temporal, hasta cerrar la terminal)
+#### Opción B: Manual (temporal)
 
 ```bash
 sudo systemctl stop ollama
@@ -56,31 +75,43 @@ OLLAMA_ORIGINS=* ollama serve
 
 ### 5. Conceder permisos (IMPORTANTE)
 
-Brave y algunos navegadores Chromium requieren permiso explícito para que la extensión se ejecute en los sitios web:
+Algunos navegadores requieren permiso explícito para que la extensión funcione:
 
-1. En `brave://extensions` (o `chrome://extensions`), haz clic en **"Detalles"** en **YT Level**
-2. Activa **"Permitir que esta extensión lea y modifique todos tus datos en los sitios web que visitas"** (o **"Run on all sites"**)
-3. También activa **"Permitir acceso a URL de archivos"** si está disponible
-4. Si aparece un cuadro de permiso, haz clic en **"Permitir"**
+1. En `chrome://extensions`, haz clic en **"Detalles"** en **YT Level**
+2. Activa **"Permitir que esta extensión lea y modifique todos tus datos en los sitios web que visitas"**
+3. Si aparece un cuadro de permiso, haz clic en **"Permitir"**
 
-> Sin este paso, la extensión se cargará pero no funcionará en las páginas de YouTube.
+> Sin este paso, la extensión se carga pero no funciona en las páginas de YouTube.
 
-### 6. Usar
+### 6. Usar la extensión
 
-1. Ve a https://www.youtube.com
+1. Ve a **https://www.youtube.com**
 2. Los videos con transcripción mostrarán un spinner verde mientras se analizan
 3. Aparece un círculo con el nivel: **A1**, **A2**, **B1**, **B2**, **C1** o **C2**
-4. Mouse encima del badge muestra la fuente del análisis
+4. Mouse encima del badge muestra el modelo usado
+5. Haz clic en el ícono de la extensión para abrir el popup:
+   - **Servidor** — cambia la URL de tu servidor Ollama
+   - **Modelo** — selecciona qué modelo usar
+   - **Idioma** — cambia el idioma de la interfaz
 
-## Cómo funciona
+## Cómo Funciona
 
 1. Extrae el ID de cada video del feed de YouTube
 2. Obtiene la transcripción via `youtube-transcript.ai`
-3. Envía la transcripción a Ollama (`gemma3:1b`) pidiendo clasificación CEFR
+3. Envía la transcripción a tu modelo local de Ollama pidiendo clasificación CEFR
 4. Muestra el resultado como badge circular sobre el video
 5. Los resultados se guardan en caché local
 
-## Estructura de archivos
+## Servidor Ollama Personalizado
+
+Por defecto la extensión se conecta a `http://localhost:11434`. Puedes cambiarlo:
+
+1. Haz clic en el ícono de la extensión
+2. Ingresa la URL del servidor (ej. `http://192.168.1.100:11434`)
+3. Haz clic en **OK** — la extensión probará la conexión y cargará los modelos
+4. Haz clic en **↺** para restaurar el valor por defecto
+
+## Estructura de Archivos
 
 ```
 ├── manifest.json      Configuración de la extensión
@@ -91,13 +122,13 @@ Brave y algunos navegadores Chromium requieren permiso explícito para que la ex
 ├── styles.css         Estilos adicionales
 ├── analyzer.js        Analizador heurístico (respaldo)
 ├── icons/             Iconos
-├── README.es.md       Instrucciones en español
-└── README.md
+└── README.es.md       Este archivo
 ```
 
 ## Notas
 
 - Solo analiza videos que tengan **transcripción disponible** en YouTube
-- El análisis puede tomar 20-60 segundos por video en CPU
-- Si Ollama no está corriendo o el modelo no está instalado, no se muestran badges
+- El tiempo de análisis depende de tu hardware y tamaño del modelo (20–60 segundos por video en CPU)
+- Si Ollama no está corriendo o no hay modelo instalado, no se muestran badges
 - No se necesita API key ni conexión a internet (una vez descargado el modelo)
+- Todos los datos quedan locales — nada se envía a servidores externos

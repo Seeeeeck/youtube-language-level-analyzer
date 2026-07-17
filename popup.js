@@ -1,18 +1,18 @@
 const OLLAMA_DEFAULT = 'http://localhost:11434'
 
 const LANG = {
-  es: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', noModels: '⚠ Sin modelos disponibles', noConn: '✗ Servidor sin conexión', ready: v => `✓ ${v} listo` },
-  en: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Model', lang: 'Language', noModels: '⚠ No models available', noConn: '✗ Server unreachable', ready: v => `✓ ${v} ready` },
-  fr: { title: 'YT Level', server: 'Serveur', ok: 'OK', model: 'Modèle', lang: 'Langue', noModels: '⚠ Aucun modèle', noConn: '✗ Serveur inaccessible', ready: v => `✓ ${v} prêt` },
-  pt: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', noModels: '⚠ Sem modelos', noConn: '✗ Servidor sem conexão', ready: v => `✓ ${v} pronto` },
-  de: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modell', lang: 'Sprache', noModels: '⚠ Keine Modelle', noConn: '✗ Server nicht erreichbar', ready: v => `✓ ${v} bereit` },
-  it: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modello', lang: 'Lingua', noModels: '⚠ Nessun modello', noConn: '✗ Server non raggiungibile', ready: v => `✓ ${v} pronto` },
-  zh: { title: 'YT Level', server: '服务器', ok: '确定', model: '模型', lang: '语言', noModels: '⚠ 无可用模型', noConn: '✗ 服务器无法连接', ready: v => `✓ ${v} 就绪` },
-  ja: { title: 'YT Level', server: 'サーバー', ok: 'OK', model: 'モデル', lang: '言語', noModels: '⚠ モデルがありません', noConn: '✗ サーバーに接続できません', ready: v => `✓ ${v} 準備完了` },
-  ko: { title: 'YT Level', server: '서버', ok: '확인', model: '모델', lang: '언어', noModels: '⚠ 모델 없음', noConn: '✗ 서버 연결 불가', ready: v => `✓ ${v} 준비 완료` },
-  ar: { title: 'YT Level', server: 'الخادم', ok: 'موافق', model: 'النموذج', lang: 'اللغة', noModels: '⚠ لا توجد نماذج', noConn: '✗ الخادم غير متاح', ready: v => `✓ ${v} جاهز` },
-  hi: { title: 'YT Level', server: 'सर्वर', ok: 'ठीक', model: 'मॉडल', lang: 'भाषा', noModels: '⚠ कोई मॉडल नहीं', noConn: '✗ सर्वर से कनेक्ट नहीं हो सका', ready: v => `✓ ${v} तैयार` },
-  ru: { title: 'YT Level', server: 'Сервер', ok: 'ОК', model: 'Модель', lang: 'Язык', noModels: '⚠ Нет моделей', noConn: '✗ Сервер недоступен', ready: v => `✓ ${v} готов` },
+  es: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instrucciones', noModels: '⚠ Sin modelos disponibles', noConn: '✗ Servidor sin conexión', ready: v => `✓ ${v} listo` },
+  en: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Model', lang: 'Language', instructions: 'Instructions', noModels: '⚠ No models available', noConn: '✗ Server unreachable', ready: v => `✓ ${v} ready` },
+  fr: { title: 'YT Level', server: 'Serveur', ok: 'OK', model: 'Modèle', lang: 'Langue', instructions: 'Instructions', noModels: '⚠ Aucun modèle', noConn: '✗ Serveur inaccessible', ready: v => `✓ ${v} prêt` },
+  pt: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instruções', noModels: '⚠ Sem modelos', noConn: '✗ Servidor sem conexão', ready: v => `✓ ${v} pronto` },
+  de: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modell', lang: 'Sprache', instructions: 'Anleitung', noModels: '⚠ Keine Modelle', noConn: '✗ Server nicht erreichbar', ready: v => `✓ ${v} bereit` },
+  it: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modello', lang: 'Lingua', instructions: 'Istruzioni', noModels: '⚠ Nessun modello', noConn: '✗ Server non raggiungibile', ready: v => `✓ ${v} pronto` },
+  zh: { title: 'YT Level', server: '服务器', ok: '确定', model: '模型', lang: '语言', instructions: '使用说明', noModels: '⚠ 无可用模型', noConn: '✗ 服务器无法连接', ready: v => `✓ ${v} 就绪` },
+  ja: { title: 'YT Level', server: 'サーバー', ok: 'OK', model: 'モデル', lang: '言語', instructions: '説明書', noModels: '⚠ モデルがありません', noConn: '✗ サーバーに接続できません', ready: v => `✓ ${v} 準備完了` },
+  ko: { title: 'YT Level', server: '서버', ok: '확인', model: '모델', lang: '언어', instructions: '설명서', noModels: '⚠ 모델 없음', noConn: '✗ 서버 연결 불가', ready: v => `✓ ${v} 준비 완료` },
+  ar: { title: 'YT Level', server: 'الخادم', ok: 'موافق', model: 'النموذج', lang: 'اللغة', instructions: 'التعليمات', noModels: '⚠ لا توجد نماذج', noConn: '✗ الخادم غير متاح', ready: v => `✓ ${v} جاهز` },
+  hi: { title: 'YT Level', server: 'सर्वर', ok: 'ठीक', model: 'मॉडल', lang: 'भाषा', instructions: 'निर्देश', noModels: '⚠ कोई मॉडल नहीं', noConn: '✗ सर्वर से कनेक्ट नहीं हो सका', ready: v => `✓ ${v} तैयार` },
+  ru: { title: 'YT Level', server: 'Сервер', ok: 'ОК', model: 'Модель', lang: 'Язык', instructions: 'Инструкция', noModels: '⚠ Нет моделей', noConn: '✗ Сервер недоступен', ready: v => `✓ ${v} готов` },
 }
 
 const LANG_NAMES = {
@@ -35,6 +35,12 @@ async function fetchModels(server) {
   return (data?.models || []).map(m => m.name)
 }
 
+const README_BASE = 'https://github.com/Seeeeeck/youtube-language-level-analyzer/blob/main/README'
+
+function readmeUrl(lang) {
+  return lang === 'en' ? README_BASE + '.md' : README_BASE + '.' + lang + '.md'
+}
+
 function applyLang(lang, els) {
   const tr = LANG[lang] || LANG.es
   els.title.textContent = tr.title
@@ -42,6 +48,7 @@ function applyLang(lang, els) {
   els.saveBtn.textContent = tr.ok
   els.modelLabel.textContent = tr.model
   els.langLabel.textContent = tr.lang
+  els.instructionsBtn.textContent = tr.instructions
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -60,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveBtn: saveServerBtn,
     modelLabel: document.querySelector('#modelRow label'),
     langLabel: document.querySelector('#langRow label'),
+    instructionsBtn: document.getElementById('instructionsBtn'),
   }
 
   const { ollamaModel, ollamaServer, lang } = await chrome.storage.local.get(['ollamaModel', 'ollamaServer', 'lang'])
@@ -76,6 +84,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   applyLang(lang || 'es', els)
+
+  els.instructionsBtn.addEventListener('click', e => {
+    e.preventDefault()
+    const l = langSelect.value || 'en'
+    chrome.tabs.create({ url: readmeUrl(l) })
+  })
 
   langSelect.addEventListener('change', async () => {
     const l = langSelect.value

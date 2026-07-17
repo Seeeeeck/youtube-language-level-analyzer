@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f0f0f"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="thumb1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a5a7a"/>
+      <stop offset="100%" stop-color="#1a3a5a"/>
+    </linearGradient>
+    <linearGradient id="thumb2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a2a7a"/>
+      <stop offset="100%" stop-color="#3a1a5a"/>
+    </linearGradient>
+    <linearGradient id="thumb3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a7a5a"/>
+      <stop offset="100%" stop-color="#1a5a3a"/>
+    </linearGradient>
+    <linearGradient id="thumb4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a5a2a"/>
+      <stop offset="100%" stop-color="#5a3a1a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="#0f0f0f"/>
+
+  <!-- Top bar -->
+  <rect width="800" height="56" fill="#1a1a1a"/>
+  <!-- YouTube logo -->
+  <rect x="20" y="14" width="80" height="28" rx="4" fill="#ff0000"/>
+  <path d="M40 22l-2-5v10l2-5z" fill="#fff" transform="translate(20,18)"/>
+  <rect x="380" y="16" width="200" height="24" rx="12" fill="#333" stroke="#555" stroke-width="1"/>
+  <text x="580" y="36" fill="#fff" font-family="Arial" font-size="13">Buscar</text>
+  <rect x="590" y="16" width="50" height="24" rx="12" fill="#333"/>
+  <text x="605" y="32" fill="#fff" font-family="Arial" font-size="11">🔍</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="56" width="60" height="394" fill="#1a1a1a"/>
+
+  <!-- Section label -->
+  <text x="80" y="90" fill="#fff" font-family="Arial" font-size="18" font-weight="bold">YouTube Level Analyzer</text>
+
+  <!-- Video grid - Row 1 -->
+  <!-- Card 1 -->
+  <rect x="80" y="110" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="80" y="110" width="170" height="95" rx="8" fill="url(#thumb1)"/>
+  <!-- Play button overlay -->
+  <polygon points="155,145 155,165 170,155" fill="#fff" opacity=".8"/>
+  <!-- Duration -->
+  <rect x="210" y="185" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="226" y="195" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">12:34</text>
+
+  <!-- CEFR Badge A1 -->
+  <circle cx="92" cy="122" r="16" fill="#4CAF50" stroke="#fff" stroke-width="1.5"/>
+  <text x="92" y="127" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">A1</text>
+
+  <text x="80" y="220" fill="#ddd" font-family="Arial" font-size="11">Easy English</text>
+  <text x="80" y="235" fill="#888" font-family="Arial" font-size="10">Beginner Lesson</text>
+  <text x="80" y="248" fill="#666" font-family="Arial" font-size="9">10K views · 2 days ago</text>
+
+  <!-- Card 2 -->
+  <rect x="270" y="110" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="270" y="110" width="170" height="95" rx="8" fill="url(#thumb2)"/>
+  <polygon points="345,145 345,165 360,155" fill="#fff" opacity=".8"/>
+  <rect x="400" y="185" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="416" y="195" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">8:20</text>
+
+  <!-- CEFR Badge B2 -->
+  <circle cx="282" cy="122" r="16" fill="#FF9800" stroke="#fff" stroke-width="1.5"/>
+  <text x="282" y="127" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">B2</text>
+
+  <text x="270" y="220" fill="#ddd" font-family="Arial" font-size="11">Advanced English</text>
+  <text x="270" y="235" fill="#888" font-family="Arial" font-size="10">Debate Skills</text>
+  <text x="270" y="248" fill="#666" font-family="Arial" font-size="9">5K views · 5 days ago</text>
+
+  <!-- Card 3 -->
+  <rect x="460" y="110" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="460" y="110" width="170" height="95" rx="8" fill="url(#thumb3)"/>
+  <polygon points="535,145 535,165 550,155" fill="#fff" opacity=".8"/>
+  <rect x="590" y="185" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="606" y="195" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">15:45</text>
+
+  <!-- CEFR Badge C2 -->
+  <circle cx="472" cy="122" r="16" fill="#B71C1C" stroke="#fff" stroke-width="1.5"/>
+  <text x="472" y="127" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">C2</text>
+
+  <text x="460" y="220" fill="#ddd" font-family="Arial" font-size="11">Native Speaker</text>
+  <text x="460" y="235" fill="#888" font-family="Arial" font-size="10">Complex Topics</text>
+  <text x="460" y="248" fill="#666" font-family="Arial" font-size="9">50K views · 1 week ago</text>
+
+  <!-- Row 2 -->
+  <!-- Card 4 -->
+  <rect x="80" y="280" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="80" y="280" width="170" height="95" rx="8" fill="url(#thumb4)"/>
+  <polygon points="155,315 155,335 170,325" fill="#fff" opacity=".8"/>
+  <rect x="210" y="355" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="226" y="365" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">6:10</text>
+
+  <!-- CEFR Badge B1 -->
+  <circle cx="92" cy="292" r="16" fill="#FFC107" stroke="#fff" stroke-width="1.5"/>
+  <text x="92" y="297" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">B1</text>
+
+  <text x="80" y="390" fill="#ddd" font-family="Arial" font-size="11">Intermediate Conv</text>
+  <text x="80" y="405" fill="#888" font-family="Arial" font-size="10">Daily Life Topics</text>
+  <text x="80" y="418" fill="#666" font-family="Arial" font-size="9">20K views · 3 days ago</text>
+
+  <!-- Card 5 -->
+  <rect x="270" y="280" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="270" y="280" width="170" height="95" rx="8" fill="url(#thumb1)"/>
+  <polygon points="345,315 345,335 360,325" fill="#fff" opacity=".8"/>
+  <rect x="400" y="355" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="416" y="365" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">22:15</text>
+
+  <!-- CEFR Badge A2 -->
+  <circle cx="282" cy="292" r="16" fill="#8BC34A" stroke="#fff" stroke-width="1.5"/>
+  <text x="282" y="297" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">A2</text>
+
+  <text x="270" y="390" fill="#ddd" font-family="Arial" font-size="11">Everyday English</text>
+  <text x="270" y="405" fill="#888" font-family="Arial" font-size="10">Travel Phrases</text>
+  <text x="270" y="418" fill="#666" font-family="Arial" font-size="9">3K views · 6 days ago</text>
+
+  <!-- Card 6 -->
+  <rect x="460" y="280" width="170" height="140" rx="8" fill="#222"/>
+  <rect x="460" y="280" width="170" height="95" rx="8" fill="url(#thumb2)"/>
+  <polygon points="535,315 535,335 550,325" fill="#fff" opacity=".8"/>
+  <rect x="590" y="355" width="32" height="14" rx="2" fill="#000" opacity=".7"/>
+  <text x="606" y="365" text-anchor="middle" fill="#fff" font-family="Arial" font-size="8">30:00</text>
+
+  <!-- CEFR Badge C1 -->
+  <circle cx="472" cy="292" r="16" fill="#F44336" stroke="#fff" stroke-width="1.5"/>
+  <text x="472" y="297" text-anchor="middle" fill="#fff" font-family="Arial" font-size="10" font-weight="bold">C1</text>
+
+  <text x="460" y="390" fill="#ddd" font-family="Arial" font-size="11">Academic English</text>
+  <text x="460" y="405" fill="#888" font-family="Arial" font-size="10">University Lecture</text>
+  <text x="460" y="418" fill="#666" font-family="Arial" font-size="9">15K views · 4 days ago</text>
+
+  <!-- Spinner badge example (on an extra small card) -->
+  <!--
+  <rect x="650" y="280" width="130" height="100" rx="8" fill="#222"/>
+  <rect x="650" y="280" width="130" height="70" rx="8" fill="url(#thumb3)"/>
+  <circle cx="662" cy="292" r="14" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="60,20"/>
+  -->
+</svg>

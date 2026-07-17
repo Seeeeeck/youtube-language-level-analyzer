@@ -16,6 +16,20 @@ Works for **any language** (English, Spanish, French, German, Chinese, etc.). Th
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="CEFR badges on YouTube videos" width="600">
+  <br>
+  <em>CEFR level badges (A1–C2) overlaid on YouTube thumbnails</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Extension popup" width="300">
+  <br>
+  <em>Configuration popup — server, model, and language settings</em>
+</p>
+
 ## Features
 
 - 🏷️ **CEFR badges** — colored circles (A1–C2) on YouTube video thumbnails

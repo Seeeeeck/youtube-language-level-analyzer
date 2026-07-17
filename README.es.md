@@ -12,6 +12,20 @@ Funciona para **cualquier idioma**. La extensión obtiene la transcripción del 
 
 ---
 
+## Capturas
+
+<p align="center">
+  <img src="screenshots/badges.svg" alt="Badges CEFR en videos de YouTube" width="600">
+  <br>
+  <em>Badges de nivel CEFR (A1–C2) sobre miniaturas de YouTube</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/popup.svg" alt="Popup de la extensión" width="300">
+  <br>
+  <em>Popup de configuración — servidor, modelo e idioma</em>
+</p>
+
 ## Características
 
 - 🏷️ **Badges CEFR** — círculos de color (A1–C2) en las miniaturas de YouTube

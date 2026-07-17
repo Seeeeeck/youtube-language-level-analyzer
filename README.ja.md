@@ -35,11 +35,17 @@
 
 ### 1. Ollama をインストール
 
+**Linux / macOS：**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows：**
+ollama.com/download からインストーラーをダウンロードして実行してください。Ollama は自動的にバックグラウンドサービスとして起動します。
+
 ### 2. モデルをダウンロード
+
+ターミナル（Windows の場合はコマンドプロンプト）を開いて実行：
 
 ```bash
 ollama pull gemma3:1b
@@ -51,7 +57,7 @@ ollama pull gemma3:1b
 
 拡張機能が YouTube サイトから Ollama と通信するための権限が必要です。
 
-#### オプション A：Systemd（永続的、推奨）
+#### Linux — オプション A：Systemd（永続的、推奨）
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -63,12 +69,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### オプション B：手動（一時的）
+#### Linux — オプション B：手動（一時的）
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — オプション A：永続的（推奨）
+
+1. システムのプロパティ → 環境変数を開く
+2. 新しいシステム変数を追加：
+   - 名前：`OLLAMA_ORIGINS`
+   - 値：`*`
+3. OK をクリックし、システムトレイから Ollama を再起動してください（右クリック → 終了、その後再度起動）
+
+#### Windows — オプション B：一時的（コマンドプロンプト）
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> Windows では、システムトレイから Ollama を終了してからこれらのコマンドを実行してください。
 
 ### 4. ブラウザに拡張機能を読み込む
 

@@ -35,11 +35,17 @@
 
 ### 1. 安装 Ollama
 
+**Linux / macOS：**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows：**
+从 ollama.com/download 下载安装程序并运行。Ollama 将自动作为后台服务启动。
+
 ### 2. 下载模型
+
+打开终端（Windows 上为命令提示符）并运行：
 
 ```bash
 ollama pull gemma3:1b
@@ -51,7 +57,7 @@ ollama pull gemma3:1b
 
 扩展程序需要获得从 YouTube 网站与 Ollama 通信的权限。
 
-#### 选项 A：Systemd（永久生效，推荐）
+#### Linux — 选项 A：Systemd（永久生效，推荐）
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -63,12 +69,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### 选项 B：手动（临时）
+#### Linux — 选项 B：手动（临时）
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — 选项 A：永久生效（推荐）
+
+1. 打开系统属性 → 环境变量
+2. 添加一个新的系统变量：
+   - 名称：`OLLAMA_ORIGINS`
+   - 值：`*`
+3. 点击确定，然后从系统托盘重启 Ollama（右键 → 退出，然后重新启动）
+
+#### Windows — 选项 B：临时（命令提示符）
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> 在 Windows 上，请先从系统托盘关闭 Ollama，然后再运行这些命令。
 
 ### 4. 在浏览器中加载扩展程序
 

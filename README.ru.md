@@ -35,11 +35,17 @@
 
 ### 1. Установите Ollama
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+Скачайте установщик с [ollama.com/download](https://ollama.com/download) и запустите его. Ollama автоматически запустится как фоновый сервис.
+
 ### 2. Загрузите модель
+
+Откройте терминал (командную строку в Windows) и выполните:
 
 ```bash
 ollama pull gemma3:1b
@@ -51,7 +57,7 @@ ollama pull gemma3:1b
 
 Расширению нужно разрешение на общение с Ollama с сайта YouTube.
 
-#### Вариант A: Systemd (постоянный, рекомендуется)
+#### Linux — Вариант A: Systemd (постоянный, рекомендуется)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -63,12 +69,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Вариант B: Вручную (временно)
+#### Linux — Вариант B: Вручную (временно)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — Вариант A: Постоянный (рекомендуется)
+
+1. Откройте Свойства системы → Переменные среды
+2. Добавьте новую системную переменную:
+   - Имя: `OLLAMA_ORIGINS`
+   - Значение: `*`
+3. Нажмите OK и перезапустите Ollama из системного трея (правый клик → Выйти, затем запустите снова)
+
+#### Windows — Вариант B: Временный (командная строка)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> В Windows запускайте эти команды после закрытия Ollama из системного трея.
 
 ### 4. Загрузите расширение в браузер
 

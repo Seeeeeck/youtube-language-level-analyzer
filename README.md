@@ -35,11 +35,17 @@ Works for **any language** (English, Spanish, French, German, Chinese, etc.). Th
 
 ### 1. Install Ollama
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+Download the installer from [ollama.com/download](https://ollama.com/download) and run it. Ollama will start automatically as a background service.
+
 ### 2. Download a model
+
+Open a terminal (Command Prompt on Windows) and run:
 
 ```bash
 ollama pull gemma3:1b
@@ -51,7 +57,7 @@ ollama pull gemma3:1b
 
 The extension needs permission to talk to Ollama from YouTube's website.
 
-#### Option A: Systemd (permanent, recommended)
+#### Linux — Option A: Systemd (permanent, recommended)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -63,12 +69,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Option B: Manual (temporary)
+#### Linux — Option B: Manual (temporary)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — Option A: Permanent (recommended)
+
+1. Open **System Properties** → **Environment Variables**
+2. Add a new **System variable**:
+   - Name: `OLLAMA_ORIGINS`
+   - Value: `*`
+3. Click **OK** and restart Ollama from the system tray (right-click → Quit, then start it again)
+
+#### Windows — Option B: Temporary (Command Prompt)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> On Windows, run these commands **after** closing Ollama from the system tray.
 
 ### 4. Load the extension in your browser
 

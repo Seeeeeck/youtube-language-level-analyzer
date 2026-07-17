@@ -31,11 +31,17 @@
 
 ### 1. Ollama स्थापित करें
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+[ollama.com/download](https://ollama.com/download) से इंस्टॉलर डाउनलोड करें और चलाएँ। Ollama स्वचालित रूप से बैकग्राउंड सेवा के रूप में शुरू हो जाएगा।
+
 ### 2. एक मॉडल डाउनलोड करें
+
+टर्मिनल (Windows में कमांड प्रॉम्प्ट) खोलें और चलाएँ:
 
 ```bash
 ollama pull gemma3:1b
@@ -47,7 +53,7 @@ ollama pull gemma3:1b
 
 एक्सटेंशन को YouTube वेबसाइट से Ollama से बात करने की अनुमति चाहिए।
 
-#### विकल्प A: Systemd (स्थायी, अनुशंसित)
+#### Linux — विकल्प A: Systemd (स्थायी, अनुशंसित)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -59,12 +65,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### विकल्प B: मैन्युअल (अस्थायी)
+#### Linux — विकल्प B: मैन्युअल (अस्थायी)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — विकल्प A: स्थायी (अनुशंसित)
+
+1. सिस्टम गुण → पर्यावरण चर खोलें
+2. नया सिस्टम चर जोड़ें:
+   - नाम: `OLLAMA_ORIGINS`
+   - मान: `*`
+3. OK पर क्लिक करें और सिस्टम ट्रे से Ollama को पुनरारंभ करें (राइट-क्लिक → बंद करें, फिर पुनः प्रारंभ करें)
+
+#### Windows — विकल्प B: अस्थायी (कमांड प्रॉम्प्ट)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> Windows में, सिस्टम ट्रे से Ollama बंद करने के बाद ये कमांड चलाएँ।
 
 ### 4. ब्राउज़र में एक्सटेंशन लोड करें
 

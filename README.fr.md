@@ -35,11 +35,17 @@ Fonctionne pour **toutes les langues** (anglais, espagnol, français, allemand, 
 
 ### 1. Installer Ollama
 
+**Linux / macOS :**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows :**
+Téléchargez l'installateur depuis [ollama.com/download](https://ollama.com/download) et exécutez-le. Ollama démarrera automatiquement en tant que service d'arrière-plan.
+
 ### 2. Télécharger un modèle
+
+Ouvrez un terminal (Invité de commandes sous Windows) et exécutez :
 
 ```bash
 ollama pull gemma3:1b
@@ -51,7 +57,7 @@ ollama pull gemma3:1b
 
 L'extension a besoin d'autorisation pour communiquer avec Ollama depuis le site YouTube.
 
-#### Option A : Systemd (permanent, recommandé)
+#### Linux — Option A : Systemd (permanent, recommandé)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -63,12 +69,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Option B : Manuel (temporaire)
+#### Linux — Option B : Manuel (temporaire)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — Option A : Permanent (recommandé)
+
+1. Ouvrez **Propriétés système** → **Variables d'environnement**
+2. Ajoutez une nouvelle **Variable système** :
+   - Nom : `OLLAMA_ORIGINS`
+   - Valeur : `*`
+3. Cliquez sur **OK** et redémarrez Ollama depuis la barre d'état système (clic droit → Quitter, puis redémarrez-le)
+
+#### Windows — Option B : Temporaire (Invité de commandes)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> Sous Windows, exécutez ces commandes **après** avoir fermé Ollama depuis la barre d'état système.
 
 ### 4. Charger l'extension dans votre navigateur
 

@@ -31,11 +31,17 @@
 
 ### 1. تثبيت Ollama
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+قم بتنزيل المثبت من [ollama.com/download](https://ollama.com/download) وقم بتشغيله. سيبدأ Ollama تلقائياً كخدمة خلفية.
+
 ### 2. تنزيل نموذج
+
+افتح الطرفية (موجه الأوامر في Windows) وقم بتشغيل:
 
 ```bash
 ollama pull gemma3:1b
@@ -47,7 +53,7 @@ ollama pull gemma3:1b
 
 الإضافة تحتاج إلى إذن للتواصل مع Ollama من موقع YouTube الإلكتروني.
 
-#### الخيار A: Systemd (دائم، موصى به)
+#### Linux — الخيار A: Systemd (دائم، موصى به)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -59,12 +65,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### الخيار B: يدوي (مؤقت)
+#### Linux — الخيار B: يدوي (مؤقت)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — الخيار A: دائم (موصى به)
+
+1. افتح خصائص النظام → متغيرات البيئة
+2. أضف متغير نظام جديد:
+   - الاسم: `OLLAMA_ORIGINS`
+   - القيمة: `*`
+3. انقر موافق وأعد تشغيل Ollama من علبة النظام (انقر بزر الماوس الأيمن → إنهاء، ثم ابدأ تشغيله مرة أخرى)
+
+#### Windows — الخيار B: مؤقت (موجه الأوامر)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> في Windows، قم بتشغيل هذه الأوامر بعد إغلاق Ollama من علبة النظام.
 
 ### 4. تحميل الإضافة في المتصفح
 

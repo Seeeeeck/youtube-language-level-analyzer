@@ -31,11 +31,17 @@
 
 ### 1. Ollama 설치
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+설치 프로그램을 [ollama.com/download](https://ollama.com/download)에서 다운로드하여 실행하세요. Ollama가 백그라운드 서비스로 자동 시작됩니다.
+
 ### 2. 모델 다운로드
+
+터미널(Windows의 경우 명령 프롬프트)을 열고 다음을 실행하세요:
 
 ```bash
 ollama pull gemma3:1b
@@ -47,7 +53,7 @@ ollama pull gemma3:1b
 
 확장 프로그램이 YouTube 웹사이트에서 Ollama와 통신하려면 권한이 필요합니다.
 
-#### 방법 A: Systemd (영구적, 권장)
+#### Linux — 방법 A: Systemd (영구적, 권장)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -59,12 +65,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### 방법 B: 수동 (임시)
+#### Linux — 방법 B: 수동 (임시)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — 방법 A: 영구적 (권장)
+
+1. 시스템 속성 → 환경 변수 열기
+2. 새 시스템 변수 추가:
+   - 이름: `OLLAMA_ORIGINS`
+   - 값: `*`
+3. 확인을 클릭하고 시스템 트레이에서 Ollama를 다시 시작하세요 (마우스 오른쪽 버튼 → 종료, 다시 시작)
+
+#### Windows — 방법 B: 임시 (명령 프롬프트)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> Windows에서는 시스템 트레이에서 Ollama를 종료한 후 이 명령어를 실행하세요.
 
 ### 4. 브라우저에 확장 프로그램 로드
 

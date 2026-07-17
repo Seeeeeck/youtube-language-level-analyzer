@@ -31,11 +31,17 @@ Funciona para **cualquier idioma**. La extensión obtiene la transcripción del 
 
 ### 1. Instalar Ollama
 
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+**Windows:**
+Descarga el instalador desde [ollama.com/download](https://ollama.com/download) y ejecútalo. Ollama se iniciará automáticamente como servicio de fondo.
+
 ### 2. Descargar un modelo
+
+Abre una terminal (Símbolo del sistema en Windows) y ejecuta:
 
 ```bash
 ollama pull gemma3:1b
@@ -47,7 +53,7 @@ ollama pull gemma3:1b
 
 La extensión necesita comunicarse con Ollama desde el sitio de YouTube.
 
-#### Opción A: Systemd (permanente, recomendada)
+#### Linux — Opción A: Systemd (permanente, recomendada)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -59,12 +65,29 @@ sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Opción B: Manual (temporal)
+#### Linux — Opción B: Manual (temporal)
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
+
+#### Windows — Opción A: Permanente (recomendada)
+
+1. Abre **Propiedades del sistema** → **Variables de entorno**
+2. Agrega una nueva **Variable del sistema**:
+   - Nombre: `OLLAMA_ORIGINS`
+   - Valor: `*`
+3. Haz clic en **Aceptar** y reinicia Ollama desde la bandeja del sistema (clic derecho → Salir, luego inícialo de nuevo)
+
+#### Windows — Opción B: Temporal (Símbolo del sistema)
+
+```cmd
+set OLLAMA_ORIGINS=*
+ollama serve
+```
+
+> En Windows, ejecuta estos comandos **después** de cerrar Ollama desde la bandeja del sistema.
 
 ### 4. Cargar la extensión
 

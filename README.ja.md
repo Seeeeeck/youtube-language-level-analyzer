@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icons/icon128.png" alt="YT Level" width="80">
+  <img src="yl.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>YouTube Language Level Analyzer</strong></p>
   <p>ローカル AI を使用して YouTube 動画の CEFR レベル（A1～C2）を分析 — API キーもインターネットも不要。</p>

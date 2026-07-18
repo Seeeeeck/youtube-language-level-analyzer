@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icons/icon128.png" alt="YT Level" width="80">
+  <img src="yl.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>Analizador de Nivel de YouTube</strong></p>
   <p>Analiza el nivel MCER (A1–C2) de cualquier video de YouTube usando IA local — sin API keys, sin conexión a internet.</p>

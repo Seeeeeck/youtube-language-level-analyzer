@@ -37,12 +37,6 @@ async function fetchModels(server) {
   return (data?.models || []).map(m => m.name)
 }
 
-const README_BASE = 'https://github.com/Seeeeeck/youtube-language-level-analyzer/blob/master/README'
-
-function readmeUrl(lang) {
-  return lang === 'en' ? README_BASE + '.md' : README_BASE + '.' + lang + '.md'
-}
-
 function applyLang(lang, els) {
   const tr = LANG[lang] || LANG.es
   els.title.textContent = tr.title
@@ -179,16 +173,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   applyLang(lang || 'es', els)
 
+  const PAGES_URL = 'https://seeeeeck.github.io/youtube-language-level-analyzer/'
+
   nanoInstructionsBtn.addEventListener('click', e => {
     e.preventDefault()
-    const l = langSelect.value || 'en'
-    chrome.tabs.create({ url: readmeUrl(l) })
+    chrome.tabs.create({ url: PAGES_URL })
   })
 
   els.instructionsBtn.addEventListener('click', e => {
     e.preventDefault()
-    const l = langSelect.value || 'en'
-    chrome.tabs.create({ url: readmeUrl(l) })
+    chrome.tabs.create({ url: PAGES_URL })
   })
 
   langSelect.addEventListener('change', async () => {

@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const nanoInstructionsBtn = document.getElementById('nanoInstructionsBtn')
 
-  if (aiEngine === 'nano') switchTab('nano')
+  switchTab(aiEngine === 'ollama' ? 'ollama' : 'nano')
 
   applyLang(lang || 'es', els)
 

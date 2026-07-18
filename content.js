@@ -161,7 +161,7 @@ async function setServer(server) {
 
 async function getEngine() {
   const { aiEngine } = await chrome.storage.local.get('aiEngine')
-  return aiEngine || 'ollama'
+  return aiEngine || 'nano'
 }
 
 async function setEngine(engine) {

@@ -198,14 +198,19 @@ async function analyzeWithNano(text, mode) {
     const { nanoLang } = await chrome.storage.local.get('nanoLang')
     const lang = nanoLang || 'en'
 
-    const availability = await LanguageModel.availability()
+    const nanoInputLang = ['en','es','ja'].includes(lang) ? lang : 'en'
+
+    const availability = await LanguageModel.availability({
+      expectedInputs: [{ type: 'text', languages: [nanoInputLang] }],
+      expectedOutputs: [{ type: 'text', languages: ['en'] }]
+    })
     if (availability !== 'available') {
       console.log('[YT-Level] Gemini Nano not available:', availability)
       return null
     }
 
     const session = await LanguageModel.create({
-      expectedInputs: [{ type: 'text', languages: [lang] }],
+      expectedInputs: [{ type: 'text', languages: [nanoInputLang] }],
       expectedOutputs: [{ type: 'text', languages: ['en'] }]
     })
 

@@ -298,9 +298,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     await sendToContent({ type: 'set_model', model })
   })
 
-  document.getElementById('reloadBtn').addEventListener('click', () => {
-    chrome.runtime.reload()
-  })
-
   refreshAll()
 })

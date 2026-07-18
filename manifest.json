@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "YouTube English Level Analyzer",
+  "name": "YT Level - YouTube Language Level Analyzer",
   "version": "1.0",
-  "description": "Analiza el nivel de inglés (A1-C2) de videos en YouTube usando IA local",
+  "description": "Analiza el nivel CEFR (A1-C2) de cualquier video de YouTube usando IA local",
   "permissions": ["storage", "scripting"],
   "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "http://*/*"],
   "content_scripts": [

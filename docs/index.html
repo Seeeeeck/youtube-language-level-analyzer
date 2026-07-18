@@ -13,73 +13,77 @@
       line-height: 1.6;
     }
     .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
-    header { text-align: center; padding: 60px 0 40px; }
+
+    header { text-align: center; padding: 60px 0 40px; border-bottom: 1px solid #eee; }
     header img { width: 80px; margin-bottom: 16px; }
     header h1 { font-size: 36px; color: #333; }
     header h1 span { color: #4CAF50; }
     header p { font-size: 16px; color: #666; max-width: 500px; margin: 12px auto; }
     .btn {
-      display: inline-block;
-      padding: 12px 32px;
-      background: #4CAF50;
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 16px;
-      margin-top: 20px;
-      transition: background .2s;
+      display: inline-block; padding: 12px 32px; background: #4CAF50; color: #fff;
+      border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;
+      margin-top: 20px; transition: background .2s;
     }
     .btn:hover { background: #388E3C; }
-    section { padding: 40px 0; }
-    section h2 {
-      font-size: 24px;
-      color: #333;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #4CAF50;
+    .btn-sm {
+      display: inline-block; padding: 8px 20px; background: #4CAF50; color: #fff;
+      border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 14px;
+      transition: background .2s;
     }
-    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .feature {
-      padding: 16px;
-      background: #f9f9f9;
-      border-radius: 8px;
-      border-left: 3px solid #4CAF50;
-    }
-    .feature h3 { font-size: 14px; color: #333; margin-bottom: 4px; }
-    .feature p { font-size: 13px; color: #666; }
-    .langs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      padding: 20px 0;
-    }
+    .btn-sm:hover { background: #388E3C; }
+
+    .langs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 24px 0; }
     .langs a {
-      padding: 8px 16px;
-      background: #f5f5f5;
-      border-radius: 6px;
-      text-decoration: none;
-      color: #555;
-      font-size: 13px;
-      transition: all .2s;
+      padding: 6px 14px; background: #f5f5f5; border-radius: 6px;
+      text-decoration: none; color: #555; font-size: 13px; transition: all .2s;
     }
     .langs a:hover { background: #4CAF50; color: #fff; }
+
+    section { padding: 32px 0; border-bottom: 1px solid #eee; }
+    section:last-child { border-bottom: none; }
+    section h2 { font-size: 24px; color: #333; margin-bottom: 16px; }
+    section h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    section h4 { font-size: 15px; color: #555; margin: 16px 0 8px; }
+    section p { margin: 8px 0; color: #555; }
+    section ul, section ol { padding-left: 24px; margin: 8px 0; }
+    section li { margin: 4px 0; color: #555; }
+
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .feature {
+      padding: 16px; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #4CAF50;
+    }
+    .feature h3 { font-size: 14px; color: #333; margin: 0 0 4px; }
+    .feature p { font-size: 13px; color: #666; margin: 0; }
+
     .screenshots { text-align: center; }
-    .screenshots img {
-      max-width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.1);
-      margin: 12px 0;
-    }
+    .screenshots img { max-width: 100%; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.1); margin: 12px 0; }
     .screenshots .caption { font-size: 13px; color: #999; margin-bottom: 24px; }
-    footer {
-      text-align: center;
-      padding: 40px 0;
-      color: #999;
-      font-size: 13px;
-      border-top: 1px solid #eee;
+
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #f5f5f5; font-weight: 600; color: #333; }
+    td { color: #555; }
+
+    code {
+      background: #f5f5f5; padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #333;
     }
+    pre {
+      background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto;
+      margin: 12px 0; border: 1px solid #eee;
+    }
+    pre code { background: none; padding: 0; }
+
+    .install-box {
+      text-align: center; padding: 24px; background: #f9f9f9;
+      border-radius: 8px; margin: 16px 0;
+    }
+    .install-box p { color: #888; font-size: 14px; margin-top: 12px; }
+
+    .tip { background: #e8f5e9; padding: 12px 16px; border-radius: 6px; color: #2e7d32; font-size: 14px; margin: 12px 0; }
+
+    footer { text-align: center; padding: 40px 0; color: #999; font-size: 13px; }
+
     @media (max-width: 600px) {
       .features { grid-template-columns: 1fr; }
       header h1 { font-size: 28px; }
@@ -91,7 +95,9 @@
     <header>
       <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/icons/icon128.png" alt="YT Level">
       <h1>YT <span>Level</span></h1>
-      <p>Analyze the CEFR level (A1–C2) of any YouTube video using local AI. No API keys, no internet required.</p>
+      <p>YouTube Language Level Analyzer</p>
+      <p>Analyze the CEFR level (A1–C2) of any YouTube video using local AI — no API keys, no internet required.</p>
+      <p>Choose between two AI engines: <strong>Gemini Nano</strong> (built into Chrome) or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
       <a class="btn" href="#">Available on Chrome Web Store</a>
     </header>
 
@@ -113,28 +119,6 @@
       </div>
     </section>
 
-    <section>
-      <h2>Features</h2>
-      <div class="features">
-        <div class="feature">
-          <h3>🏷️ CEFR Badges</h3>
-          <p>Colored circles (A1–C2) on YouTube video thumbnails</p>
-        </div>
-        <div class="feature">
-          <h3>🤖 Two AI Engines</h3>
-          <p>Use Gemini Nano (built-in Chrome AI) or Ollama (local models)</p>
-        </div>
-        <div class="feature">
-          <h3>🌍 Multi-language</h3>
-          <p>Analyzes videos in English, Spanish, French, German, Japanese, and more</p>
-        </div>
-        <div class="feature">
-          <h3>🔒 100% Private</h3>
-          <p>Everything runs locally — no data leaves your machine</p>
-        </div>
-      </div>
-    </section>
-
     <section class="screenshots">
       <h2>Screenshots</h2>
       <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/screenshots/badges.svg" alt="CEFR badges on YouTube" width="700">
@@ -143,9 +127,150 @@
       <p class="caption">Configuration popup with Gemini Nano and Ollama tabs</p>
     </section>
 
+    <section>
+      <h2>Features</h2>
+      <div class="features">
+        <div class="feature"><h3>🏷️ CEFR Badges</h3><p>Colored circles (A1–C2) on YouTube video thumbnails</p></div>
+        <div class="feature"><h3>🤖 Two AI Engines</h3><p>Use Gemini Nano (built-in Chrome AI) or Ollama (local models)</p></div>
+        <div class="feature"><h3>🌍 Multi-language</h3><p>Analyzes videos in English, Spanish, French, German, Japanese, and more</p></div>
+        <div class="feature"><h3>🔒 100% Private</h3><p>Everything runs locally — no data leaves your machine</p></div>
+        <div class="feature"><h3>🎨 Custom Server</h3><p>Point to any Ollama instance on your network</p></div>
+        <div class="feature"><h3>⚡ Fast Cache</h3><p>Results are cached locally to avoid re-analysis</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Requirements</h2>
+      <ul>
+        <li><strong>Chrome 128+</strong>, <strong>Brave</strong>, or any Chromium-based browser</li>
+        <li><strong>Gemini Nano</strong>: Chrome 128+ with Prompt API enabled</li>
+        <li><strong>Ollama</strong>: Ollama installed and running (<a href="https://ollama.com">ollama.com</a>) with at least one model downloaded</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Gemini Nano</h2>
+      <p>Gemini Nano is Chrome's built-in AI model. No downloads or servers needed.</p>
+
+      <h3>1. Enable the Prompt API flag</h3>
+      <ol>
+        <li>Open <strong><code>chrome://flags/#prompt-api-for-gemini-nano</code></strong></li>
+        <li>Set the flag to <strong>"Enabled"</strong></li>
+        <li>Click <strong>"Relaunch"</strong> to restart Chrome</li>
+      </ol>
+
+      <h3>2. Check the model status</h3>
+      <p>Open the YT Level popup and select the <strong>Gemini Nano</strong> tab:</p>
+      <table>
+        <tr><th>Status</th><th>Meaning</th></tr>
+        <tr><td><strong>Available</strong></td><td>Ready to use</td></tr>
+        <tr><td><strong>Downloading</strong></td><td>Model is being downloaded</td></tr>
+        <tr><td><strong>Downloadable</strong></td><td>Needs to download first</td></tr>
+        <tr><td><strong>Unavailable</strong></td><td>Not supported in your browser</td></tr>
+      </table>
+
+      <h3>3. Choose the analysis language</h3>
+      <p>Select the language of the video you want to analyze:</p>
+      <table>
+        <tr><th>Code</th><th>Language</th></tr>
+        <tr><td>en</td><td>English</td></tr>
+        <tr><td>es</td><td>Spanish</td></tr>
+        <tr><td>ja</td><td>Japanese</td></tr>
+        <tr><td>de</td><td>German</td></tr>
+        <tr><td>fr</td><td>French</td></tr>
+      </table>
+
+      <h3>4. Choose effort mode</h3>
+      <ul>
+        <li><strong>Quick</strong> — fast classification with a simple prompt</li>
+        <li><strong>Deep</strong> — detailed CEFR evaluation with a comprehensive prompt</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Ollama</h2>
+
+      <h3>1. Install Ollama</h3>
+      <p><strong>Linux / macOS:</strong></p>
+      <pre><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+      <p><strong>Windows:</strong></p>
+      <p>Download the installer from <a href="https://ollama.com/download">ollama.com/download</a> and run it.</p>
+
+      <h3>2. Download a model</h3>
+      <pre><code>ollama pull gemma3:1b</code></pre>
+      <div class="tip">You can use any model. Select it from the Ollama tab in the extension popup.</div>
+
+      <h3>3. Configure CORS</h3>
+      <p>The extension needs permission to talk to Ollama from YouTube.</p>
+
+      <h4>Linux — Systemd (permanent)</h4>
+      <pre><code>sudo mkdir -p /etc/systemd/system/ollama.service.d
+echo '[Service]
+Environment=OLLAMA_ORIGINS=*' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+sudo systemctl daemon-reload
+sudo systemctl restart ollama</code></pre>
+
+      <h4>Linux — Temporary</h4>
+      <pre><code>sudo systemctl stop ollama
+OLLAMA_ORIGINS=* ollama serve</code></pre>
+
+      <h4>Windows — Permanent</h4>
+      <ol>
+        <li>Open <strong>System Properties</strong> → <strong>Environment Variables</strong></li>
+        <li>Add a new <strong>System variable</strong>: <code>OLLAMA_ORIGINS</code> = <code>*</code></li>
+        <li>Click <strong>OK</strong> and restart Ollama</li>
+      </ol>
+
+      <h4>Windows — Temporary (PowerShell)</h4>
+      <pre><code>$env:OLLAMA_ORIGINS="*"
+ollama serve</code></pre>
+
+      <h3>4. Configure in the extension</h3>
+      <ol>
+        <li>Click the extension icon</li>
+        <li>Select the <strong>Ollama</strong> tab</li>
+        <li>Set your server URL (default: <code>http://localhost:11434</code>)</li>
+        <li>Click <strong>OK</strong> to test the connection</li>
+        <li>Select a model from the dropdown</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Using the Extension</h2>
+      <ol>
+        <li>Go to <strong>https://www.youtube.com</strong></li>
+        <li>Videos with transcripts show a green spinner while analyzing</li>
+        <li>A colored circle appears with the level: <strong>A1</strong>, <strong>A2</strong>, <strong>B1</strong>, <strong>B2</strong>, <strong>C1</strong>, or <strong>C2</strong></li>
+        <li>Hover over the badge to see which engine and model was used</li>
+        <li>Click the extension icon to open the popup and switch between engines</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>How It Works</h2>
+      <ol>
+        <li>Extracts each video ID from the YouTube feed</li>
+        <li>Fetches the transcript via <code>youtube-transcript.ai</code></li>
+        <li>Sends the transcript to the selected AI engine (Gemini Nano or Ollama) for CEFR classification</li>
+        <li>Displays the result as a circular badge on the video thumbnail</li>
+        <li>Results are cached locally to avoid re-analysis</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Custom Ollama Server</h2>
+      <p>By default the extension connects to <code>http://localhost:11434</code>. To change it:</p>
+      <ol>
+        <li>Open the extension popup</li>
+        <li>Select the <strong>Ollama</strong> tab</li>
+        <li>Enter your server URL (e.g. <code>http://192.168.1.100:11434</code>)</li>
+        <li>Click <strong>OK</strong> — the extension will test the connection and load available models</li>
+      </ol>
+    </section>
+
     <footer>
-      <p>YT Level — YouTube Language Level Analyzer</p>
       <p>No API key or internet connection required. All data stays local.</p>
+      <p>YT Level — YouTube Language Level Analyzer</p>
     </footer>
   </div>
 </body>

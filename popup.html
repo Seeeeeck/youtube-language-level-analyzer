@@ -133,6 +133,11 @@
 <body>
   <h2>YT <span>Level</span></h2>
 
+  <div class="row" id="langRow" style="border:none;margin-bottom:8px;">
+    <label>Idioma de la extensión</label>
+    <select id="langSelect"></select>
+  </div>
+
   <div class="tabs">
     <button id="tabNano" class="tab-btn">Gemini Nano</button>
     <button id="tabOllama" class="tab-btn active">Ollama</button>
@@ -167,11 +172,6 @@
 
   <div id="ollamaSection" class="section active">
     <div id="aiStatus" class="status"></div>
-
-    <div class="row" id="langRow" style="border:none;">
-      <label>Idioma</label>
-      <select id="langSelect"></select>
-    </div>
 
     <div class="server-row" id="serverRow">
       <label>Servidor</label>

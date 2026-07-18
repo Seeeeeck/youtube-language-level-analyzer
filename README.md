@@ -27,9 +27,9 @@
 ## Screenshots
 
 <p align="center">
-  <img src="yl.png" alt="CEFR badges on YouTube videos" width="700">
+  <img src="yl.png" alt="YT Level icon" width="700">
   <br>
-  <em>CEFR level badges (A1–C2) overlaid on YouTube thumbnails</em>
+  <em>YT Level icon</em>
 </p>
 
 <p align="center">

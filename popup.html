@@ -104,20 +104,6 @@
       background: #4CAF50;
       color: #fff;
     }
-    .effort-row {
-      display: flex; gap: 0; padding: 8px 0;
-      border-bottom: 1px solid #333;
-    }
-    .effort-btn {
-      flex: 1; padding: 6px 0; font-size: 12px; font-weight: bold;
-      border: 1px solid #555; cursor: pointer; transition: all 0.2s;
-      background: #333; color: #888;
-    }
-    .effort-btn:first-child { border-radius: 4px 0 0 4px; }
-    .effort-btn:last-child { border-radius: 0 4px 4px 0; }
-    .effort-btn.effort-active {
-      background: #4CAF50; color: #fff; border-color: #4CAF50;
-    }
     .nano-status {
       padding: 8px 12px;
       border-radius: 6px;
@@ -157,14 +143,6 @@
       </select>
     </div>
 
-    <div class="row" style="border:none;flex-direction:column;gap:6px;align-items:stretch;">
-      <label id="nanoEffortLabel" style="font-size:12px;color:#aaa;">Tipo de esfuerzo</label>
-      <div style="display:flex;gap:0;">
-        <button id="nanoEffortMinBtn" class="effort-btn effort-active">Mínimo</button>
-        <button id="nanoEffortMaxBtn" class="effort-btn">Máximo</button>
-      </div>
-    </div>
-
     <div style="text-align:center;padding:8px 0 0">
       <a href="#" id="nanoInstructionsBtn" class="instructions-btn">Instrucciones</a>
     </div>
@@ -183,14 +161,6 @@
     <div class="row" id="modelRow" style="display:none;border:none;">
       <label>Modelo</label>
       <select id="modelSelect"></select>
-    </div>
-
-    <div class="row" style="border:none;flex-direction:column;gap:6px;align-items:stretch;">
-      <label id="effortLabel" style="font-size:12px;color:#aaa;">Tipo de esfuerzo</label>
-      <div style="display:flex;gap:0;">
-        <button id="effortMinBtn" class="effort-btn effort-active">Mínimo</button>
-        <button id="effortMaxBtn" class="effort-btn">Máximo</button>
-      </div>
     </div>
 
     <div style="text-align:center;padding:8px 0 0">

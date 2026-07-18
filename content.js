@@ -17,9 +17,7 @@ const CARD_SELECTORS = [
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
-const PROMPT_EFFORT = {
-  min: text => `Classify the CEFR (MCER) level of this transcript as A1/A2/B1/B2/C1/C2. Reply ONLY the code.\n\n${text.slice(0, 1000)}`,
-  max: text => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
+const DEEP_PROMPT = text => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
 
 Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference.
 
@@ -49,8 +47,7 @@ Any other response format is considered invalid.
 Transcript:
 """
 ${text.slice(0, 1000)}
-"""`,
-}
+"""`
 
 const GRAMMAR_PATTERNS = [
   { level: 0, regex: /\b(is|am|are|have|has|do|does|like|want|need|can)\b/gi },
@@ -114,10 +111,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setServer(msg.server).then(sendResponse)
     return true
   }
-  if (msg.type === 'set_effort') {
-    setEffort(msg.mode).then(sendResponse)
-    return true
-  }
   if (msg.type === 'set_engine') {
     setEngine(msg.engine).then(sendResponse)
     return true
@@ -154,19 +147,6 @@ async function getModel() {
   return 'gemma3:1b'
 }
 
-async function getEffortMode() {
-  const { effortMode } = await chrome.storage.local.get('effortMode')
-  return effortMode || 'min'
-}
-
-async function setEffort(mode) {
-  await chrome.storage.local.set({ effortMode: mode })
-  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
-  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
-  setTimeout(scanFeed, 100)
-  return true
-}
-
 async function setServer(server) {
   await chrome.storage.local.set({ ollamaServer: server })
   const all = await chrome.storage.local.get(null)
@@ -192,8 +172,8 @@ async function setEngine(engine) {
   return true
 }
 
-async function analyzeWithNano(text, mode) {
-  console.log('[YT-Level] analyzeWithNano called, text length:', text.length, 'mode:', mode)
+async function analyzeWithNano(text) {
+  console.log('[YT-Level] analyzeWithNano called, text length:', text.length)
   try {
     const { nanoLang } = await chrome.storage.local.get('nanoLang')
     const lang = nanoLang || 'en'
@@ -214,7 +194,7 @@ async function analyzeWithNano(text, mode) {
       expectedOutputs: [{ type: 'text', languages: ['en'] }]
     })
 
-    const response = await session.prompt(PROMPT_EFFORT[mode](text))
+    const response = await session.prompt(DEEP_PROMPT(text))
     session.destroy()
 
     const trimmed = response.trim().toUpperCase()
@@ -228,14 +208,13 @@ async function analyzeWithNano(text, mode) {
   }
 }
 
-async function analyzeWithOllama(text, model, mode) {
-  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model, 'mode:', mode)
+async function analyzeWithOllama(text, model) {
+  console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
   try {
     const result = await chrome.runtime.sendMessage({
       type: 'ollama_generate',
       model,
-      prompt: PROMPT_EFFORT[mode](text),
-      mode
+      prompt: DEEP_PROMPT(text)
     })
     if (!result || result.error) {
       console.log('[YT-Level] Ollama error:', result?.error)
@@ -255,16 +234,15 @@ async function analyzeWithOllama(text, model, mode) {
 
 async function analyzeLevel(text) {
   const engine = await getEngine()
-  const mode = await getEffortMode()
 
   if (engine === 'nano') {
-    const level = await analyzeWithNano(text, mode)
+    const level = await analyzeWithNano(text)
     if (level) return { level, method: 'nano', model: 'Gemini Nano' }
     return null
   }
 
   const model = await getModel()
-  const ollamaLevel = await analyzeWithOllama(text, model, mode)
+  const ollamaLevel = await analyzeWithOllama(text, model)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 
   return null

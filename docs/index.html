@@ -255,6 +255,7 @@ ollama serve</code></pre>
     </footer>
   </div>
 
+  <script src="translations.js"></script>
   <script>
     function get(key, lang) { return T[lang] && T[lang][key] !== undefined ? T[lang][key] : T.en[key]; }
     function switchLang(lang) {
@@ -276,6 +277,5 @@ ollama serve</code></pre>
     const saved = localStorage.getItem('ytlevel_lang');
     if (saved && T[saved]) switchLang(saved);
   </script>
-  <script src="translations.js"></script>
 </body>
 </html>

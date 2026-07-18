@@ -1,8 +1,12 @@
 # YT Level — Analizador de Nivel de YouTube
 
-**Analiza el nivel MCER (A1–C2) de cualquier video de YouTube usando IA local — sin API keys, sin internet.**
+**Analiza el nivel MCER (A1–C2) de cualquier video de YouTube usando IA local — sin API keys, sin conexión a internet.**
 
-Funciona para **cualquier idioma**. La extensión obtiene la transcripción del video y la envía a un modelo local de Ollama para clasificación CEFR. Un badge de color aparece en cada miniatura de video.
+Elige entre dos motores de IA: **Gemini Nano** (integrado en Chrome) u **Ollama** (servidor local). Funciona para **cualquier idioma** (inglés, español, francés, alemán, chino, etc.). La extensión obtiene la transcripción del video y clasifica su nivel MCER. Un badge de color aparece en cada miniatura de video.
+
+<p align="center">
+  <img src="icons/icon128.png" alt="Icono de YT Level" width="64">
+</p>
 
 ---
 
@@ -23,25 +27,81 @@ Funciona para **cualquier idioma**. La extensión obtiene la transcripción del 
 <p align="center">
   <img src="screenshots/popup.svg" alt="Popup de la extensión" width="300">
   <br>
-  <em>Popup de configuración — servidor, modelo e idioma</em>
+  <em>Popup de configuración — selector de motor con pestañas Gemini Nano y Ollama</em>
 </p>
 
 ## Características
 
 - 🏷️ **Badges CEFR** — círculos de color (A1–C2) en las miniaturas de YouTube
-- 🤖 **IA local** — funciona con cualquier modelo de Ollama (gemma, llama, mistral, etc.)
-- 🌍 **Multi-idioma** — analiza videos en cualquier lengua
-- 🎨 **Servidor personalizado** — apunta a cualquier instancia de Ollama en tu red
+- 🤖 **Dos motores de IA** — usa **Gemini Nano** (IA integrada en Chrome) u **Ollama** (modelos locales)
+- 🌍 **Multi-idioma** — analiza videos en cualquier idioma
+- 🎨 **Servidor Ollama personalizado** — apunta a cualquier instancia de Ollama en tu red
 - ⚡ **Caché rápida** — los resultados se guardan localmente para evitar re-análisis
 - 🔒 **100% privado** — todo corre localmente, ningún dato sale de tu máquina
 
 ## Requisitos
 
 - **Chrome 128+**, **Brave** o cualquier navegador basado en Chromium
-- **Ollama** instalado y ejecutándose ([ollama.com](https://ollama.com))
-- Al menos **un modelo de Ollama** descargado (ej. `ollama pull gemma3:1b`)
+- **Gemini Nano**: Chrome 128+ con Prompt API habilitado (ver más abajo)
+- **Ollama**: Ollama instalado y ejecutándose ([ollama.com](https://ollama.com)) con al menos un modelo descargado
 
-## Instalación — Paso a Paso
+---
+
+## Instalación — Gemini Nano
+
+Gemini Nano es el modelo de IA integrado en Chrome. No necesita descargas ni servidores.
+
+### 1. Activar el flag de Prompt API
+
+1. Abre **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Establece el flag en **"Enabled"**
+3. Haz clic en **"Relaunch"** para reiniciar Chrome
+
+### 2. Verificar el estado del modelo en la extensión
+
+1. Haz clic en el ícono de la extensión YT Level
+2. Selecciona la pestaña **Gemini Nano**
+3. El estado mostrará:
+   - **Available** — listo para usar
+   - **Downloading** — el modelo se está descargando
+   - **Downloadable** — necesita descargarse primero (haz clic para iniciar la descarga)
+   - **Unavailable** — no compatible con tu navegador
+
+### 3. Elegir el idioma de análisis
+
+En la pestaña Gemini Nano, selecciona el idioma del video que quieres analizar:
+
+| Código | Idioma   |
+|--------|----------|
+| en     | Inglés   |
+| es     | Español  |
+| ja     | Japonés  |
+| de     | Alemán   |
+| fr     | Francés  |
+
+### 4. Elegir modo de esfuerzo
+
+- **Quick** — clasificación rápida con un prompt simple
+- **Deep** — evaluación CEFR detallada con un prompt completo
+
+### 5. Cargar la extensión
+
+1. Ve a **`chrome://extensions`** (o **`brave://extensions`**)
+2. Activa **"Modo desarrollador"** (esquina superior derecha)
+3. Haz clic en **"Cargar descomprimida"**
+4. Selecciona la carpeta del proyecto
+
+### 6. Conceder permisos (IMPORTANTE)
+
+1. En `chrome://extensions`, haz clic en **"Detalles"** en **YT Level**
+2. Activa **"Permitir que esta extensión lea y modifique todos tus datos en los sitios web que visitas"**
+3. Si aparece un cuadro de permiso, haz clic en **"Permitir"**
+
+> Sin este paso, la extensión se carga pero no funciona en las páginas de YouTube.
+
+---
+
+## Instalación — Ollama
 
 ### 1. Instalar Ollama
 
@@ -105,48 +165,43 @@ ollama serve
 
 ### 4. Cargar la extensión
 
-1. Ve a **`chrome://extensions`** (o **`brave://extensions`**)
-2. Activa **"Modo desarrollador"** (esquina superior derecha)
-3. Haz clic en **"Cargar descomprimida"**
-4. Selecciona la carpeta del proyecto
+Mismos pasos 5 y 6 de la sección de Gemini Nano.
 
-### 5. Conceder permisos (IMPORTANTE)
+### 5. Usar la extensión con Ollama
 
-Algunos navegadores requieren permiso explícito para que la extensión funcione:
+1. Haz clic en el ícono de la extensión
+2. Selecciona la pestaña **Ollama**
+3. Establece la URL de tu servidor (predeterminado: `http://localhost:11434`)
+4. Haz clic en **OK** para probar la conexión
+5. Selecciona un modelo del menú desplegable
 
-1. En `chrome://extensions`, haz clic en **"Detalles"** en **YT Level**
-2. Activa **"Permitir que esta extensión lea y modifique todos tus datos en los sitios web que visitas"**
-3. Si aparece un cuadro de permiso, haz clic en **"Permitir"**
+---
 
-> Sin este paso, la extensión se carga pero no funciona en las páginas de YouTube.
-
-### 6. Usar la extensión
+## Usar la Extensión
 
 1. Ve a **https://www.youtube.com**
 2. Los videos con transcripción mostrarán un spinner verde mientras se analizan
-3. Aparece un círculo con el nivel: **A1**, **A2**, **B1**, **B2**, **C1** o **C2**
-4. Mouse encima del badge muestra el modelo usado
-5. Haz clic en el ícono de la extensión para abrir el popup:
-   - **Servidor** — cambia la URL de tu servidor Ollama
-   - **Modelo** — selecciona qué modelo usar
-   - **Idioma** — cambia el idioma de la interfaz
+3. Aparece un círculo de color con el nivel: **A1**, **A2**, **B1**, **B2**, **C1** o **C2**
+4. Pasa el mouse sobre el badge para ver qué motor y modelo se usó
+5. Haz clic en el ícono de la extensión para abrir el popup y cambiar entre motores
 
 ## Cómo Funciona
 
 1. Extrae el ID de cada video del feed de YouTube
 2. Obtiene la transcripción via `youtube-transcript.ai`
-3. Envía la transcripción a tu modelo local de Ollama pidiendo clasificación CEFR
-4. Muestra el resultado como badge circular sobre el video
-5. Los resultados se guardan en caché local
+3. Envía la transcripción al motor de IA seleccionado (Gemini Nano u Ollama) para clasificación CEFR
+4. Muestra el resultado como badge circular sobre la miniatura del video
+5. Los resultados se guardan en caché local para evitar re-análisis
 
 ## Servidor Ollama Personalizado
 
 Por defecto la extensión se conecta a `http://localhost:11434`. Puedes cambiarlo:
 
 1. Haz clic en el ícono de la extensión
-2. Ingresa la URL del servidor (ej. `http://192.168.1.100:11434`)
-3. Haz clic en **OK** — la extensión probará la conexión y cargará los modelos
-4. Haz clic en **↺** para restaurar el valor por defecto
+2. Selecciona la pestaña **Ollama**
+3. Ingresa la URL del servidor (ej. `http://192.168.1.100:11434`)
+4. Haz clic en **OK** — la extensión probará la conexión y cargará los modelos disponibles
+5. Haz clic en **↺** para restaurar el valor por defecto
 
 ## Estructura de Archivos
 
@@ -158,14 +213,14 @@ Por defecto la extensión se conecta a `http://localhost:11434`. Puedes cambiarl
 ├── popup.js           Lógica del popup
 ├── styles.css         Estilos adicionales
 ├── analyzer.js        Analizador heurístico (respaldo)
-├── icons/             Iconos
-└── README.es.md       Este archivo
+├── icons/             Iconos de la extensión
+└── README.md          Este archivo
 ```
 
 ## Notas
 
 - Solo analiza videos que tengan **transcripción disponible** en YouTube
-- El tiempo de análisis depende de tu hardware y tamaño del modelo (20–60 segundos por video en CPU)
-- Si Ollama no está corriendo o no hay modelo instalado, no se muestran badges
-- No se necesita API key ni conexión a internet (una vez descargado el modelo)
+- El tiempo de análisis depende de tu hardware (más rápido con Gemini Nano, 20–60 segundos por video en CPU con Ollama)
+- Si ningún motor está disponible, no se muestran badges
+- No se necesita API key ni conexión a internet
 - Todos los datos quedan locales — nada se envía a servidores externos

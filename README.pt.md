@@ -1,8 +1,8 @@
-# YT Level — Analisador de Nível de Idioma do YouTube
+# YT Level — Analisador de Nível do YouTube
 
 **Analise o nível CEFR (A1–C2) de qualquer vídeo do YouTube usando IA local — sem chaves de API, sem necessidade de Internet.**
 
-Funciona para **qualquer idioma** (inglês, espanhol, francês, alemão, chinês, etc.). A extensão obtém a transcrição do vídeo e a envia para um modelo Ollama local para classificação CEFR. Um selo colorido aparece em cada miniatura de vídeo.
+Escolha entre dois motores de IA: **Gemini Nano** (IA integrada no Chrome) ou **Ollama** (servidor local). Funciona para **qualquer idioma** (inglês, espanhol, francês, alemão, chinês, etc.). A extensão obtém a transcrição do vídeo e classifica seu nível CEFR. Um selo colorido aparece em cada miniatura de vídeo.
 
 <p align="center">
   <img src="icons/icon128.png" alt="Ícone do YT Level" width="64">
@@ -21,31 +21,87 @@ Funciona para **qualquer idioma** (inglês, espanhol, francês, alemão, chinês
 <p align="center">
   <img src="screenshots/badges.svg" alt="Selos CEFR em vídeos do YouTube" width="600">
   <br>
-  <em>Selos de nível CEFR (A1–C2) nas miniaturas do YouTube</em>
+  <em>Selos de nível CEFR (A1–C2) sobrepostos nas miniaturas do YouTube</em>
 </p>
 
 <p align="center">
   <img src="screenshots/popup.svg" alt="Popup da extensão" width="300">
   <br>
-  <em>Popup de configuração — servidor, modelo e idioma</em>
+  <em>Popup de configuração — seletor de motor com abas Gemini Nano e Ollama</em>
 </p>
 
 ## Funcionalidades
 
 - 🏷️ **Selos CEFR** — círculos coloridos (A1–C2) nas miniaturas de vídeos do YouTube
-- 🤖 **IA local** — funciona com qualquer modelo Ollama (gemma, llama, mistral, etc.)
+- 🤖 **Dois motores de IA** — use o **Gemini Nano** (IA integrada no Chrome) ou **Ollama** (modelos locais)
 - 🌍 **Multi-idioma** — analisa vídeos em qualquer idioma
-- 🎨 **Servidor personalizado** — aponte para qualquer instância Ollama na sua rede
+- 🎨 **Servidor Ollama personalizado** — aponte para qualquer instância Ollama na sua rede
 - ⚡ **Cache rápido** — resultados são armazenados em cache localmente para evitar reanálise
 - 🔒 **100% privado** — tudo é executado localmente, nenhum dado sai da sua máquina
 
 ## Requisitos
 
 - **Chrome 128+**, **Brave** ou qualquer navegador baseado em Chromium
-- **Ollama** instalado e em execução ([ollama.com](https://ollama.com))
-- Pelo menos **um modelo Ollama** baixado (ex. `ollama pull gemma3:1b`)
+- **Gemini Nano**: Chrome 128+ com Prompt API ativada (veja abaixo)
+- **Ollama**: Ollama instalado e em execução ([ollama.com](https://ollama.com)) com pelo menos um modelo baixado
 
-## Instalação — Passo a Passo
+---
+
+## Instalação — Gemini Nano
+
+O Gemini Nano é o modelo de IA integrado do Chrome. Sem downloads ou servidores necessários.
+
+### 1. Ativar a flag da Prompt API
+
+1. Abra **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Defina a flag como **"Enabled"**
+3. Clique em **"Relaunch"** para reiniciar o Chrome
+
+### 2. Verificar o status do modelo na extensão
+
+1. Clique no ícone da extensão YT Level
+2. Selecione a aba **Gemini Nano**
+3. O status exibirá:
+   - **Available** — pronto para uso
+   - **Downloading** — o modelo está sendo baixado
+   - **Downloadable** — precisa baixar primeiro (clique para iniciar o download)
+   - **Unavailable** — não suportado no seu navegador
+
+### 3. Escolher o idioma de análise
+
+Na aba Gemini Nano, selecione o idioma do vídeo que deseja analisar:
+
+| Código | Idioma   |
+|--------|----------|
+| en     | Inglês   |
+| es     | Espanhol |
+| ja     | Japonês  |
+| de     | Alemão   |
+| fr     | Francês  |
+
+### 4. Escolher o modo de esforço
+
+- **Quick** — classificação rápida com um prompt simples
+- **Deep** — avaliação CEFR detalhada com um prompt abrangente
+
+### 5. Carregar a extensão
+
+1. Acesse **`chrome://extensions`** (ou **`brave://extensions`**)
+2. Ative o **"Modo do desenvolvedor"** (canto superior direito)
+3. Clique em **"Carregar sem compactação"**
+4. Selecione a pasta do projeto
+
+### 6. Conceder permissões (IMPORTANTE)
+
+1. Em `chrome://extensions`, clique em **"Detalhes"** em **YT Level**
+2. Ative **"Permitir que esta extensão leia e altere todos os seus dados nos sites que você visita"**
+3. Se solicitado, clique em **"Permitir"**
+
+> Sem esta etapa, a extensão carrega mas não funciona nas páginas do YouTube.
+
+---
+
+## Instalação — Ollama
 
 ### 1. Instalar o Ollama
 
@@ -58,8 +114,6 @@ curl -fsSL https://ollama.com/install.sh | sh
 Baixe o instalador de [ollama.com/download](https://ollama.com/download) e execute-o. O Ollama iniciará automaticamente como um serviço em segundo plano.
 
 ### 2. Baixar um modelo
-
-Abra um terminal (Prompt de Comando no Windows) e execute:
 
 ```bash
 ollama pull gemma3:1b
@@ -98,48 +152,42 @@ OLLAMA_ORIGINS=* ollama serve
    - Valor: `*`
 3. Clique em **OK** e reinicie o Ollama pela bandeja do sistema (clique direito → Sair, e então inicie novamente)
 
-#### Windows — Opção B: Temporário (Prompt de Comando)
+#### Windows — Opção B: Temporário (PowerShell)
 
-```cmd
-set OLLAMA_ORIGINS=*
+```powershell
+$env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
 
 > No Windows, execute estes comandos **após** fechar o Ollama pela bandeja do sistema.
 
-### 4. Carregar a extensão no seu navegador
+### 4. Carregar a extensão
 
-1. Acesse **`chrome://extensions`** (ou **`brave://extensions`**)
-2. Ative o **"Modo do desenvolvedor"** (canto superior direito)
-3. Clique em **"Carregar sem compactação"**
-4. Selecione a pasta do projeto
+Mesmos passos 5 e 6 da seção Gemini Nano acima.
 
-### 5. Conceder permissões (IMPORTANTE)
+### 5. Usar a extensão com Ollama
 
-Alguns navegadores exigem permissão explícita para extensões executarem em sites:
+1. Clique no ícone da extensão
+2. Selecione a aba **Ollama**
+3. Defina a URL do seu servidor (padrão: `http://localhost:11434`)
+4. Clique em **OK** para testar a conexão
+5. Selecione um modelo na lista suspensa
 
-1. Em `chrome://extensions`, clique em **"Detalhes"** em **YT Level**
-2. Ative **"Permitir que esta extensão leia e altere todos os seus dados nos sites que você visita"**
-3. Se solicitado, clique em **"Permitir"**
+---
 
-> Sem esta etapa, a extensão carrega mas não funciona nas páginas do YouTube.
-
-### 6. Usar a extensão
+## Usando a Extensão
 
 1. Acesse **https://www.youtube.com**
 2. Vídeos com transcrições mostram um spinner verde durante a análise
 3. Um círculo colorido aparece com o nível: **A1**, **A2**, **B1**, **B2**, **C1** ou **C2**
-4. Passe o mouse sobre o selo para ver qual modelo foi usado
-5. Clique no ícone da extensão para abrir o popup:
-   - **Servidor** — altere a URL do seu servidor Ollama se necessário
-   - **Modelo** — selecione qual modelo instalado usar
-   - **Idioma** — altere o idioma da interface da extensão
+4. Passe o mouse sobre o selo para ver qual motor e modelo foram usados
+5. Clique no ícone da extensão para abrir o popup e alternar entre os motores
 
 ## Como Funciona
 
 1. Extrai cada ID de vídeo do feed do YouTube
 2. Obtém a transcrição via `youtube-transcript.ai`
-3. Envia a transcrição para seu modelo Ollama local solicitando classificação CEFR
+3. Envia a transcrição para o motor de IA selecionado (Gemini Nano ou Ollama) para classificação CEFR
 4. Exibe o resultado como um selo circular na miniatura do vídeo
 5. Os resultados são armazenados em cache localmente para evitar reanálise
 
@@ -148,9 +196,10 @@ Alguns navegadores exigem permissão explícita para extensões executarem em si
 Por padrão, a extensão se conecta a `http://localhost:11434`. Você pode alterar isso:
 
 1. Clique no ícone da extensão
-2. Insira a URL do seu servidor (ex. `http://192.168.1.100:11434`)
-3. Clique em **OK** — a extensão testará a conexão e carregará os modelos disponíveis
-4. Clique em **↺** para restaurar o padrão
+2. Selecione a aba **Ollama**
+3. Insira a URL do seu servidor (ex. `http://192.168.1.100:11434`)
+4. Clique em **OK** — a extensão testará a conexão e carregará os modelos disponíveis
+5. Clique em **↺** para restaurar o padrão
 
 ## Estrutura de Arquivos
 
@@ -169,7 +218,7 @@ Por padrão, a extensão se conecta a `http://localhost:11434`. Você pode alter
 ## Observações
 
 - Analisa apenas vídeos que têm **transcrições disponíveis** no YouTube
-- O tempo de análise depende do seu hardware e do tamanho do modelo (20–60 segundos por vídeo na CPU)
-- Se o Ollama não estiver em execução ou nenhum modelo estiver instalado, nenhum selo é exibido
-- Nenhuma chave de API ou conexão com a Internet é necessária (uma vez que o modelo é baixado)
+- O tempo de análise depende do seu hardware (mais rápido com Gemini Nano, 20–60 segundos por vídeo na CPU com Ollama)
+- Se nenhum motor estiver disponível, nenhum selo é exibido
+- Nenhuma chave de API ou conexão com a Internet é necessária
 - Todos os dados permanecem locais — nada é enviado para servidores externos

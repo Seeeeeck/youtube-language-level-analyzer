@@ -270,12 +270,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   refreshAll()
 })
 
-const kofiScript = document.createElement('script')
-kofiScript.src = 'https://storage.ko-fi.com/cdn/widget/Widget_2.js'
-kofiScript.onload = () => {
-  kofiwidget2.init('Supports the extension 🙂', '#0ac700', 'T7S223FL1U')
-  kofiwidget2.draw()
-}
-document.body.appendChild(kofiScript)
+const kofiBtn = document.createElement('a')
+kofiBtn.href = 'https://ko-fi.com/T7S223FL1U'
+kofiBtn.target = '_blank'
+kofiBtn.textContent = 'Supports the extension 🙂'
+Object.assign(kofiBtn.style, {
+  display: 'block', textAlign: 'center', marginTop: '12px', padding: '8px 16px',
+  background: '#0ac700', color: '#fff', borderRadius: '6px', textDecoration: 'none',
+  fontSize: '13px', fontWeight: 'bold'
+})
+document.body.appendChild(kofiBtn)
 
 

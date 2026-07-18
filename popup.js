@@ -22,7 +22,22 @@ const LANG_NAMES = {
 
 const LANG_ORDER = ['es', 'en', 'fr', 'pt', 'de', 'it', 'zh', 'ja', 'ko', 'ar', 'hi', 'ru']
 
-const NANO_LANGS = { en: 'Inglés', es: 'Español', ja: 'Japonés', de: 'Alemán', fr: 'Francés' }
+const NANO_LANG_NAMES = {
+  en: { en: 'English', es: 'Inglés', ja: 'Japanese', de: 'German', fr: 'French' },
+  es: { en: 'Inglés', es: 'Español', ja: 'Japonés', de: 'Alemán', fr: 'Francés' },
+  fr: { en: 'Anglais', es: 'Espagnol', ja: 'Japonais', de: 'Allemand', fr: 'Français' },
+  pt: { en: 'Inglês', es: 'Espanhol', ja: 'Japonês', de: 'Alemão', fr: 'Francês' },
+  de: { en: 'Englisch', es: 'Spanisch', ja: 'Japanisch', de: 'Deutsch', fr: 'Französisch' },
+  it: { en: 'Inglese', es: 'Spagnolo', ja: 'Giapponese', de: 'Tedesco', fr: 'Francese' },
+  zh: { en: '英语', es: '西班牙语', ja: '日语', de: '德语', fr: '法语' },
+  ja: { en: '英語', es: 'スペイン語', ja: '日本語', de: 'ドイツ語', fr: 'フランス語' },
+  ko: { en: '영어', es: '스페인어', ja: '일본어', de: '독일어', fr: '프랑스어' },
+  ar: { en: 'الإنجليزية', es: 'الإسبانية', ja: 'اليابانية', de: 'الألمانية', fr: 'الفرنسية' },
+  hi: { en: 'अंग्रेज़ी', es: 'स्पेनिश', ja: 'जापानी', de: 'जर्मन', fr: 'फ़्रेंच' },
+  ru: { en: 'Английский', es: 'Испанский', ja: 'Японский', de: 'Немецкий', fr: 'Французский' },
+}
+
+const NANO_LANG_CODES = ['en', 'es', 'ja', 'de', 'fr']
 
 function setStatus(el, type, msg) {
   el.className = 'status ' + type
@@ -35,6 +50,21 @@ async function fetchModels(server) {
   if (!resp.ok) return []
   const data = await resp.json()
   return (data?.models || []).map(m => m.name)
+}
+
+function populateNanoLangSelect(lang) {
+  const select = document.getElementById('nanoLangSelect')
+  if (!select) return
+  const currentVal = select.value
+  const names = NANO_LANG_NAMES[lang] || NANO_LANG_NAMES.en
+  select.innerHTML = ''
+  NANO_LANG_CODES.forEach(code => {
+    const opt = document.createElement('option')
+    opt.value = code
+    opt.textContent = `${code} — ${names[code]}`
+    select.appendChild(opt)
+  })
+  if (NANO_LANG_CODES.includes(currentVal)) select.value = currentVal
 }
 
 function applyLang(lang, els) {
@@ -56,6 +86,7 @@ function applyLang(lang, els) {
     else els.nanoStatus.textContent = tr.nanoUnavail
   }
   if (els.analLangLabel) els.analLangLabel.textContent = tr.analLang
+  populateNanoLangSelect(lang)
 }
 
 async function checkNanoStatus() {

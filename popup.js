@@ -270,4 +270,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   refreshAll()
 })
 
+const kofiScript = document.createElement('script')
+kofiScript.src = 'https://storage.ko-fi.com/cdn/widget/Widget_2.js'
+kofiScript.onload = () => {
+  kofiwidget2.init('Supports the extension 🙂', '#0ac700', 'T7S223FL1U')
+  kofiwidget2.draw()
+}
+document.body.appendChild(kofiScript)
+
 

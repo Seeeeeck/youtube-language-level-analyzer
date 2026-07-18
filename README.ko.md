@@ -75,7 +75,13 @@ Gemini Nano는 Chrome에 내장된 AI 모델입니다. 다운로드나 서버가
 2. 플래그를 **"Enabled"**로 설정
 3. **"Relaunch"**를 클릭하여 Chrome 다시 시작
 
-### 2. 모델 상태 확인
+### 2. 다국어 감지 플래그 활성화
+
+1. **`chrome://flags/#language-detection-api-for-gemini-nano`** 열기
+2. 플래그를 **"Enabled"**로 설정
+3. **"Relaunch"**를 클릭하여 Chrome 다시 시작
+
+### 3. 모델 상태 확인
 
 YT Level 팝업을 열고 **Gemini Nano** 탭을 선택하세요:
 
@@ -86,7 +92,7 @@ YT Level 팝업을 열고 **Gemini Nano** 탭을 선택하세요:
 | **Downloadable** | 다운로드 필요 |
 | **Unavailable** | 브라우저에서 지원되지 않음 |
 
-### 3. 분석 언어 선택
+### 4. 분석 언어 선택
 
 분석하려는 동영상의 언어를 선택하세요:
 
@@ -98,7 +104,7 @@ YT Level 팝업을 열고 **Gemini Nano** 탭을 선택하세요:
 | de | 독일어 |
 | fr | 프랑스어 |
 
-### 4. 분석 모드 선택
+### 5. 분석 모드 선택
 
 - **Quick** — 간단한 프롬프트로 빠른 분류
 - **Deep** — 포괄적인 프롬프트로 상세한 CEFR 평가
@@ -182,7 +188,7 @@ ollama serve
 ## 작동 방식
 
 1. YouTube 피드에서 각 동영상 ID 추출
-2. `youtube-transcript.ai`를 통해 자막 가져오기
+2. YouTube에서 자막 가져오기
 3. 자막을 선택한 AI 엔진(Gemini Nano 또는 Ollama)으로 전송하여 CEFR 분류 요청
 4. 결과를 동영상 썸네일에 원형 배지로 표시
 5. 결과를 로컬에 캐시하여 재분석 방지

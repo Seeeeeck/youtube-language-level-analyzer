@@ -75,7 +75,13 @@ Gemini Nano è il modello AI integrato di Chrome. Nessun download o server neces
 2. Imposta il flag su **"Enabled"**
 3. Clicca **"Relaunch"** per riavviare Chrome
 
-### 2. Controlla lo stato del modello
+### 2. Abilita il flag di rilevamento multilingua
+
+1. Apri **`chrome://flags/#language-detection-api-for-gemini-nano`**
+2. Imposta il flag su **"Enabled"**
+3. Clicca **"Relaunch"** per riavviare Chrome
+
+### 3. Controlla lo stato del modello
 
 Apri il popup di YT Level e seleziona la scheda **Gemini Nano**:
 
@@ -86,7 +92,7 @@ Apri il popup di YT Level e seleziona la scheda **Gemini Nano**:
 | **Downloadable** | Deve essere scaricato prima |
 | **Unavailable** | Non supportato nel tuo browser |
 
-### 3. Scegli la lingua di analisi
+### 4. Scegli la lingua di analisi
 
 Seleziona la lingua del video che vuoi analizzare:
 
@@ -98,7 +104,7 @@ Seleziona la lingua del video che vuoi analizzare:
 | de | Tedesco |
 | fr | Francese |
 
-### 4. Scegli la modalità di sforzo
+### 5. Scegli la modalità di sforzo
 
 - **Quick** — classificazione veloce con un prompt semplice
 - **Deep** — valutazione CEFR dettagliata con un prompt completo
@@ -182,7 +188,7 @@ ollama serve
 ## Come Funziona
 
 1. Estrae ogni ID video dal feed di YouTube
-2. Recupera la trascrizione tramite `youtube-transcript.ai`
+2. Recupera la trascrizione da YouTube
 3. Invia la trascrizione al motore AI selezionato (Gemini Nano o Ollama) per la classificazione CEFR
 4. Mostra il risultato come badge circolare sulla miniatura del video
 5. I risultati vengono memorizzati nella cache locale per evitare rianalisi

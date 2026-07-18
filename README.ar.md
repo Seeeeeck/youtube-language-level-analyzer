@@ -1,5 +1,5 @@
 <div align="center" dir="rtl">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>محلّل مستوى اللغة على YouTube</strong></p>
   <p>حلّل مستوى CEFR (A1–C2) لأي فيديو على YouTube باستخدام الذكاء الاصطناعي المحلي — بدون مفاتيح API، بدون اتصال بالإنترنت.</p>
@@ -27,7 +27,7 @@
 ## لقطات الشاشة
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="شارات CEFR على فيديوهات YouTube" width="700">
+  <img src="yl.png" alt="شارات CEFR على فيديوهات YouTube" width="700">
   <br>
   <em>شارات مستوى CEFR (A1–C2) على الصور المصغّرة لفيديوهات YouTube</em>
 </p>

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>Analyseur de Niveau Linguistique YouTube</strong></p>
   <p>Analysez le niveau CECR (A1–C2) de n'importe quelle vidéo YouTube avec une IA locale — sans clé API, sans connexion Internet.</p>
@@ -27,7 +27,7 @@
 ## Captures d'écran
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="Badges CECR sur les vidéos YouTube" width="700">
+  <img src="yl.png" alt="Badges CECR sur les vidéos YouTube" width="700">
   <br>
   <em>Badges de niveau CECR (A1–C2) superposés sur les vignettes YouTube</em>
 </p>

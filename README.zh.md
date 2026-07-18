@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>YouTube 语言级别分析器</strong></p>
   <p>使用本地 AI 分析任何 YouTube 视频的 CEFR 级别（A1–C2）——无需 API 密钥，无需互联网。</p>
@@ -27,7 +27,7 @@
 ## 屏幕截图
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="YouTube 视频上的 CEFR 徽章" width="700">
+  <img src="yl.png" alt="YouTube 视频上的 CEFR 徽章" width="700">
   <br>
   <em>YouTube 缩略图上的 CEFR 等级徽章（A1–C2）</em>
 </p>

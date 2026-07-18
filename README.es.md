@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>Analizador de Nivel de YouTube</strong></p>
   <p>Analiza el nivel MCER (A1–C2) de cualquier video de YouTube usando IA local — sin API keys, sin conexión a internet.</p>
@@ -27,7 +27,7 @@
 ## Capturas
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="Badges CEFR en videos de YouTube" width="700">
+  <img src="yl.png" alt="Badges CEFR en videos de YouTube" width="700">
   <br>
   <em>Badges de nivel CEFR (A1–C2) sobre miniaturas de YouTube</em>
 </p>

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>YouTube 언어 수준 분석기</strong></p>
   <p>로컬 AI를 사용하여 모든 YouTube 동영상의 CEFR 수준(A1–C2)을 분석합니다 — API 키 불필요, 인터넷 불필요.</p>
@@ -27,7 +27,7 @@
 ## 스크린샷
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="YouTube 동영상의 CEFR 배지" width="700">
+  <img src="yl.png" alt="YouTube 동영상의 CEFR 배지" width="700">
   <br>
   <em>YouTube 썸네일 위에 표시된 CEFR 레벨 배지(A1–C2)</em>
 </p>

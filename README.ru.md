@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="yl.png" alt="YT Level" width="80">
+  <img src="yl-icon.png" alt="YT Level" width="80">
   <h1>YT Level</h1>
   <p><strong>Анализатор уровня языка YouTube</strong></p>
   <p>Анализируйте уровень CEFR (A1–C2) любого видео на YouTube с помощью локального ИИ — без API-ключей, без интернета.</p>
@@ -27,7 +27,7 @@
 ## Скриншоты
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="Значки CEFR на видео YouTube" width="700">
+  <img src="yl.png" alt="Значки CEFR на видео YouTube" width="700">
   <br>
   <em>Значки уровня CEFR (A1–C2) на миниатюрах YouTube</em>
 </p>

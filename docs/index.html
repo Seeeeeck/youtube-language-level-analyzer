@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT Level — YouTube Language Level Analyzer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+    header { text-align: center; padding: 60px 0 40px; }
+    header img { width: 80px; margin-bottom: 16px; }
+    header h1 { font-size: 36px; color: #333; }
+    header h1 span { color: #4CAF50; }
+    header p { font-size: 16px; color: #666; max-width: 500px; margin: 12px auto; }
+    .btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background: #4CAF50;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 20px;
+      transition: background .2s;
+    }
+    .btn:hover { background: #388E3C; }
+    section { padding: 40px 0; }
+    section h2 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #4CAF50;
+    }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .feature {
+      padding: 16px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 3px solid #4CAF50;
+    }
+    .feature h3 { font-size: 14px; color: #333; margin-bottom: 4px; }
+    .feature p { font-size: 13px; color: #666; }
+    .langs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 20px 0;
+    }
+    .langs a {
+      padding: 8px 16px;
+      background: #f5f5f5;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #555;
+      font-size: 13px;
+      transition: all .2s;
+    }
+    .langs a:hover { background: #4CAF50; color: #fff; }
+    .screenshots { text-align: center; }
+    .screenshots img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.1);
+      margin: 12px 0;
+    }
+    .screenshots .caption { font-size: 13px; color: #999; margin-bottom: 24px; }
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #999;
+      font-size: 13px;
+      border-top: 1px solid #eee;
+    }
+    @media (max-width: 600px) {
+      .features { grid-template-columns: 1fr; }
+      header h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="../icons/icon128.png" alt="YT Level">
+      <h1>YT <span>Level</span></h1>
+      <p>Analyze the CEFR level (A1–C2) of any YouTube video using local AI. No API keys, no internet required.</p>
+      <a class="btn" href="#">Available on Chrome Web Store</a>
+    </header>
+
+    <section>
+      <h2>🌐 Language</h2>
+      <div class="langs">
+        <a href="../README.md">🇬🇧 English</a>
+        <a href="../README.es.md">🇪🇸 Español</a>
+        <a href="../README.fr.md">🇫🇷 Français</a>
+        <a href="../README.pt.md">🇵🇹 Português</a>
+        <a href="../README.de.md">🇩🇪 Deutsch</a>
+        <a href="../README.it.md">🇮🇹 Italiano</a>
+        <a href="../README.zh.md">🇨🇳 中文</a>
+        <a href="../README.ja.md">🇯🇵 日本語</a>
+        <a href="../README.ko.md">🇰🇷 한국어</a>
+        <a href="../README.ar.md">🇸🇦 العربية</a>
+        <a href="../README.hi.md">🇮🇳 हिन्दी</a>
+        <a href="../README.ru.md">🇷🇺 Русский</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>Features</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>🏷️ CEFR Badges</h3>
+          <p>Colored circles (A1–C2) on YouTube video thumbnails</p>
+        </div>
+        <div class="feature">
+          <h3>🤖 Two AI Engines</h3>
+          <p>Use Gemini Nano (built-in Chrome AI) or Ollama (local models)</p>
+        </div>
+        <div class="feature">
+          <h3>🌍 Multi-language</h3>
+          <p>Analyzes videos in English, Spanish, French, German, Japanese, and more</p>
+        </div>
+        <div class="feature">
+          <h3>🔒 100% Private</h3>
+          <p>Everything runs locally — no data leaves your machine</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screenshots">
+      <h2>Screenshots</h2>
+      <img src="../screenshots/badges.svg" alt="CEFR badges on YouTube" width="700">
+      <p class="caption">CEFR level badges (A1–C2) overlaid on YouTube thumbnails</p>
+      <img src="../screenshots/popup.svg" alt="Extension popup" width="280">
+      <p class="caption">Configuration popup with Gemini Nano and Ollama tabs</p>
+    </section>
+
+    <footer>
+      <p>YT Level — YouTube Language Level Analyzer</p>
+      <p>No API key or internet connection required. All data stays local.</p>
+    </footer>
+  </div>
+</body>
+</html>

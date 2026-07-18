@@ -1,12 +1,10 @@
-# YT Level — Analizzatore di Livello YouTube
-
-**Analizza il livello CEFR (A1–C2) di qualsiasi video di YouTube usando AI locale — niente chiavi API, niente internet.**
-
-Scegli tra due motori AI: **Gemini Nano** (integrato in Chrome) o **Ollama** (server locale). Funziona per **qualsiasi lingua** (inglese, spagnolo, francese, tedesco, cinese, ecc.). L'estensione recupera la trascrizione del video e ne classifica il livello CEFR. Un badge colorato appare su ogni miniatura del video.
-
-<p align="center">
-  <img src="icons/icon128.png" alt="Icona YT Level" width="64">
-</p>
+<div align="center">
+  <img src="icons/icon128.png" alt="YT Level" width="80">
+  <h1>YT Level</h1>
+  <p><strong>Analizzatore del Livello Linguistico di YouTube</strong></p>
+  <p>Analizza il livello CEFR (A1–C2) di qualsiasi video di YouTube usando AI locale — niente chiavi API, niente internet.</p>
+  <p>Scegli tra due motori AI: <strong>Gemini Nano</strong> (integrato in Chrome) o <strong>Ollama</strong> (server locale). Funziona per <strong>qualsiasi lingua</strong>.</p>
+</div>
 
 ---
 
@@ -16,19 +14,31 @@ Scegli tra due motori AI: **Gemini Nano** (integrato in Chrome) o **Ollama** (se
 
 ---
 
+## Installazione
+
+<div align="center">
+  <a href="#" style="display:inline-block;padding:12px 32px;background:#4CAF50;color:#fff;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px;">Disponibile sul Chrome Web Store</a>
+</div>
+
+> Una volta installata, l'estensione funziona automaticamente su YouTube. Clicca l'icona dell'estensione per configurare.
+
+---
+
 ## Screenshot
 
 <p align="center">
-  <img src="screenshots/badges.svg" alt="Badge CEFR sui video YouTube" width="600">
+  <img src="screenshots/badges.svg" alt="Badge CEFR sui video YouTube" width="700">
   <br>
   <em>Badge di livello CEFR (A1–C2) sulle miniature di YouTube</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/popup.svg" alt="Popup dell'estensione" width="300">
+  <img src="screenshots/popup.svg" alt="Popup dell'estensione" width="280">
   <br>
   <em>Popup di configurazione — selettore motore con schede Gemini Nano e Ollama</em>
 </p>
+
+---
 
 ## Caratteristiche
 
@@ -39,15 +49,17 @@ Scegli tra due motori AI: **Gemini Nano** (integrato in Chrome) o **Ollama** (se
 - ⚡ **Cache veloce** — i risultati vengono salvati in locale per evitare rianalisi
 - 🔒 **100% privato** — tutto funziona in locale, nessun dato lascia il tuo computer
 
+---
+
 ## Requisiti
 
 - **Chrome 128+**, **Brave**, o qualsiasi browser basato su Chromium
-- **Gemini Nano**: Chrome 128+ con Prompt API abilitato (vedi sotto)
+- **Gemini Nano**: Chrome 128+ con Prompt API abilitato
 - **Ollama**: Ollama installato e in esecuzione ([ollama.com](https://ollama.com)) con almeno un modello scaricato
 
 ---
 
-## Installazione — Gemini Nano
+## Gemini Nano
 
 Gemini Nano è il modello AI integrato di Chrome. Nessun download o server necessario.
 
@@ -57,51 +69,37 @@ Gemini Nano è il modello AI integrato di Chrome. Nessun download o server neces
 2. Imposta il flag su **"Enabled"**
 3. Clicca **"Relaunch"** per riavviare Chrome
 
-### 2. Controlla lo stato del modello nell'estensione
+### 2. Controlla lo stato del modello
 
-1. Clicca l'icona dell'estensione YT Level
-2. Seleziona la scheda **Gemini Nano**
-3. Lo stato mostrerà:
-   - **Available** — pronto all'uso
-   - **Downloading** — il modello è in fase di download
-   - **Downloadable** — deve essere scaricato (clicca per avviare il download)
-   - **Unavailable** — non supportato nel tuo browser
+Apri il popup di YT Level e seleziona la scheda **Gemini Nano**:
+
+| Stato | Significato |
+|--------|-------------|
+| **Available** | Pronto all'uso |
+| **Downloading** | Il modello è in fase di download |
+| **Downloadable** | Deve essere scaricato prima |
+| **Unavailable** | Non supportato nel tuo browser |
 
 ### 3. Scegli la lingua di analisi
 
-Nella scheda Gemini Nano, seleziona la lingua del video che vuoi analizzare:
+Seleziona la lingua del video che vuoi analizzare:
 
-| Codice | Lingua  |
-|--------|---------|
-| en     | Inglese |
-| es     | Spagnolo|
-| ja     | Giapponese|
-| de     | Tedesco |
-| fr     | Francese|
+| Codice | Lingua |
+|------|----------|
+| en | Inglese |
+| es | Spagnolo |
+| ja | Giapponese |
+| de | Tedesco |
+| fr | Francese |
 
 ### 4. Scegli la modalità di sforzo
 
 - **Quick** — classificazione veloce con un prompt semplice
 - **Deep** — valutazione CEFR dettagliata con un prompt completo
 
-### 5. Carica l'estensione
-
-1. Vai su **`chrome://extensions`** (o **`brave://extensions`**)
-2. Attiva **"Modalità sviluppatore"** (angolo in alto a destra)
-3. Clicca **"Carica estensione non pacchettizzata"**
-4. Seleziona la cartella del progetto
-
-### 6. Concedi i permessi (IMPORTANTE)
-
-1. In `chrome://extensions`, clicca **"Dettagli"** su **YT Level**
-2. Attiva **"Consenti a questa estensione di leggere e modificare tutti i tuoi dati sui siti web che visiti"**
-3. Se richiesto, clicca **"Consenti"**
-
-> Senza questo passaggio, l'estensione viene caricata ma non funziona sulle pagine di YouTube.
-
 ---
 
-## Installazione — Ollama
+## Ollama
 
 ### 1. Installa Ollama
 
@@ -111,7 +109,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
-Scarica l'installer da [ollama.com/download](https://ollama.com/download) ed eseguilo. Ollama si avvierà automaticamente come servizio in background.
+Scarica l'installer da [ollama.com/download](https://ollama.com/download) ed eseguilo.
 
 ### 2. Scarica un modello
 
@@ -119,53 +117,43 @@ Scarica l'installer da [ollama.com/download](https://ollama.com/download) ed ese
 ollama pull gemma3:1b
 ```
 
-> Puoi usare qualsiasi modello. L'estensione ti permette di selezionare quale usare dal popup.
+> Puoi usare qualsiasi modello. Selezionalo dalla scheda Ollama nel popup dell'estensione.
 
-### 3. Configura CORS in Ollama
+### 3. Configura CORS
 
 L'estensione necessita dell'autorizzazione per comunicare con Ollama dal sito di YouTube.
 
-#### Linux — Opzione A: Systemd (permanente, consigliata)
+#### Linux — Systemd (permanente)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
-
 echo '[Service]
 Environment=OLLAMA_ORIGINS=*' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
-
 sudo systemctl daemon-reload
 sudo systemctl restart ollama
 ```
 
-#### Linux — Opzione B: Manuale (temporanea)
+#### Linux — Temporanea
 
 ```bash
 sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
 
-#### Windows — Opzione A: Permanente (consigliata)
+#### Windows — Permanente
 
 1. Apri **Proprietà del sistema** → **Variabili d'ambiente**
-2. Aggiungi una nuova **Variabile di sistema**:
-   - Nome: `OLLAMA_ORIGINS`
-   - Valore: `*`
-3. Clicca **OK** e riavvia Ollama dalla barra delle applicazioni (tasto destro → Esci, poi riavvialo)
+2. Aggiungi una nuova **Variabile di sistema**: `OLLAMA_ORIGINS` = `*`
+3. Clicca **OK** e riavvia Ollama
 
-#### Windows — Opzione B: Temporanea (PowerShell)
+#### Windows — Temporanea (PowerShell)
 
 ```powershell
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
 
-> Su Windows, esegui questi comandi **dopo** aver chiuso Ollama dalla barra delle applicazioni.
-
-### 4. Carica l'estensione
-
-Come i passaggi 5 e 6 nella sezione Gemini Nano qui sopra.
-
-### 5. Usa l'estensione con Ollama
+### 4. Configura nell'estensione
 
 1. Clicca l'icona dell'estensione
 2. Seleziona la scheda **Ollama**
@@ -183,6 +171,8 @@ Come i passaggi 5 e 6 nella sezione Gemini Nano qui sopra.
 4. Passa il mouse sul badge per vedere quale motore e modello è stato usato
 5. Clicca l'icona dell'estensione per aprire il popup e cambiare motore
 
+---
+
 ## Come Funziona
 
 1. Estrae ogni ID video dal feed di YouTube
@@ -191,34 +181,19 @@ Come i passaggi 5 e 6 nella sezione Gemini Nano qui sopra.
 4. Mostra il risultato come badge circolare sulla miniatura del video
 5. I risultati vengono memorizzati nella cache locale per evitare rianalisi
 
+---
+
 ## Server Ollama Personalizzato
 
-Per impostazione predefinita l'estensione si connette a `http://localhost:11434`. Puoi cambiarlo:
+Per impostazione predefinita l'estensione si connette a `http://localhost:11434`. Per cambiarlo:
 
-1. Clicca l'icona dell'estensione
+1. Apri il popup dell'estensione
 2. Seleziona la scheda **Ollama**
 3. Inserisci l'URL del tuo server (es. `http://192.168.1.100:11434`)
 4. Clicca **OK** — l'estensione testerà la connessione e caricherà i modelli disponibili
-5. Clicca **↺** per ripristinare il valore predefinito
 
-## Struttura dei File
+---
 
-```
-├── manifest.json      Configurazione dell'estensione
-├── content.js         Script principale (iniettato in YouTube)
-├── background.js      Service worker
-├── popup.html         Popup dell'estensione
-├── popup.js           Logica del popup
-├── styles.css         Stili aggiuntivi
-├── analyzer.js        Analizzatore euristico (fallback)
-├── icons/             Icone dell'estensione
-└── README.md          Questo file
-```
-
-## Note
-
-- Analizza solo video che hanno **trascrizioni disponibili** su YouTube
-- Il tempo di analisi dipende dall'hardware (più veloce con Gemini Nano, 20–60 secondi per video su CPU con Ollama)
-- Se nessun motore è disponibile, non vengono mostrati badge
-- Nessuna chiave API o connessione internet richiesta
-- Tutti i dati rimangono in locale — nulla viene inviato a server esterni
+<div align="center">
+  <sub>Nessuna chiave API o connessione internet richiesta. Tutti i dati rimangono in locale.</sub>
+</div>

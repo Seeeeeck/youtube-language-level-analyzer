@@ -19,6 +19,35 @@
     h2 span {
       color: #4CAF50;
     }
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #555;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      font-size: 12px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #333;
+      color: #888;
+    }
+    .tab-btn.active {
+      background: #4CAF50;
+      color: #fff;
+    }
+    .section {
+      display: none;
+    }
+    .section.active {
+      display: block;
+    }
     .status {
       padding: 8px 12px;
       border-radius: 6px;
@@ -89,40 +118,80 @@
     .effort-btn.effort-active {
       background: #4CAF50; color: #fff; border-color: #4CAF50;
     }
+    .nano-status {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 12px;
+      background: #1b5e20;
+      color: #a5d6a7;
+    }
+    .nano-status.downloading { background: #e65100; color: #ffcc80; }
+    .nano-status.unavailable { background: #b71c1c; color: #ef9a9a; }
   </style>
 </head>
 <body>
   <h2>YT <span>Level</span></h2>
 
-  <div id="aiStatus" class="status"></div>
-
-  <div class="row" id="langRow" style="border:none;">
-    <label>Idioma</label>
-    <select id="langSelect"></select>
+  <div class="tabs">
+    <button id="tabNano" class="tab-btn">Gemini Nano</button>
+    <button id="tabOllama" class="tab-btn active">Ollama</button>
   </div>
 
-  <div class="server-row" id="serverRow">
-    <label>Servidor</label>
-    <input type="text" id="serverInput" class="server-input" placeholder="http://localhost:11434">
-    <button class="btn" id="saveServerBtn">OK</button>
-    <button class="btn-reset" id="resetServerBtn">↺</button>
-  </div>
+  <div id="geminiSection" class="section">
+    <div id="nanoStatus" class="nano-status unavailable">No disponible</div>
 
-  <div class="row" id="modelRow" style="display:none;border:none;">
-    <label>Modelo</label>
-    <select id="modelSelect"></select>
-  </div>
+    <div class="row" style="border:none;">
+      <label id="analLangLabel">Idioma de análisis</label>
+      <select id="nanoLangSelect">
+        <option value="en">en — Inglés</option>
+        <option value="es">es — Español</option>
+        <option value="ja">ja — Japonés</option>
+        <option value="de">de — Alemán</option>
+        <option value="fr">fr — Francés</option>
+      </select>
+    </div>
 
-  <div class="row" id="effortRow" style="border:none;flex-direction:column;gap:6px;align-items:stretch;">
-    <label id="effortLabel" style="font-size:12px;color:#aaa;">Tipo de esfuerzo</label>
-    <div style="display:flex;gap:0;">
-      <button id="effortMinBtn" class="effort-btn effort-active">Mínimo</button>
-      <button id="effortMaxBtn" class="effort-btn">Máximo</button>
+    <div class="row" style="border:none;flex-direction:column;gap:6px;align-items:stretch;">
+      <label id="nanoEffortLabel" style="font-size:12px;color:#aaa;">Tipo de esfuerzo</label>
+      <div style="display:flex;gap:0;">
+        <button id="nanoEffortMinBtn" class="effort-btn effort-active">Mínimo</button>
+        <button id="nanoEffortMaxBtn" class="effort-btn">Máximo</button>
+      </div>
     </div>
   </div>
 
-  <div style="text-align:center;padding:8px 0 0">
-    <a href="#" id="instructionsBtn" class="instructions-btn">Instrucciones</a>
+  <div id="ollamaSection" class="section active">
+    <div id="aiStatus" class="status"></div>
+
+    <div class="row" id="langRow" style="border:none;">
+      <label>Idioma</label>
+      <select id="langSelect"></select>
+    </div>
+
+    <div class="server-row" id="serverRow">
+      <label>Servidor</label>
+      <input type="text" id="serverInput" class="server-input" placeholder="http://localhost:11434">
+      <button class="btn" id="saveServerBtn">OK</button>
+      <button class="btn-reset" id="resetServerBtn">↺</button>
+    </div>
+
+    <div class="row" id="modelRow" style="display:none;border:none;">
+      <label>Modelo</label>
+      <select id="modelSelect"></select>
+    </div>
+
+    <div class="row" style="border:none;flex-direction:column;gap:6px;align-items:stretch;">
+      <label id="effortLabel" style="font-size:12px;color:#aaa;">Tipo de esfuerzo</label>
+      <div style="display:flex;gap:0;">
+        <button id="effortMinBtn" class="effort-btn effort-active">Mínimo</button>
+        <button id="effortMaxBtn" class="effort-btn">Máximo</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;padding:8px 0 0">
+      <a href="#" id="instructionsBtn" class="instructions-btn">Instrucciones</a>
+    </div>
   </div>
 
   <script src="popup.js"></script>

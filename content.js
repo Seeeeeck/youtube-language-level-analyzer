@@ -118,6 +118,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setEffort(msg.mode).then(sendResponse)
     return true
   }
+  if (msg.type === 'set_engine') {
+    setEngine(msg.engine).then(sendResponse)
+    return true
+  }
 })
 
 async function getModels() {
@@ -175,6 +179,50 @@ async function setServer(server) {
   return true
 }
 
+async function getEngine() {
+  const { aiEngine } = await chrome.storage.local.get('aiEngine')
+  return aiEngine || 'ollama'
+}
+
+async function setEngine(engine) {
+  await chrome.storage.local.set({ aiEngine: engine })
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(scanFeed, 100)
+  return true
+}
+
+async function analyzeWithNano(text, mode) {
+  console.log('[YT-Level] analyzeWithNano called, text length:', text.length, 'mode:', mode)
+  try {
+    const { nanoLang } = await chrome.storage.local.get('nanoLang')
+    const lang = nanoLang || 'en'
+
+    const availability = await LanguageModel.availability()
+    if (availability !== 'available') {
+      console.log('[YT-Level] Gemini Nano not available:', availability)
+      return null
+    }
+
+    const session = await LanguageModel.create({
+      expectedInputs: [{ type: 'text', languages: [lang] }],
+      expectedOutputs: [{ type: 'text', languages: [lang] }]
+    })
+
+    const response = await session.prompt(PROMPT_EFFORT[mode](text))
+    session.destroy()
+
+    const trimmed = response.trim().toUpperCase()
+    console.log('[YT-Level] Nano raw response:', response)
+    const level = CEFR_LEVELS.find(l => trimmed.includes(l))
+    console.log('[YT-Level] Nano parsed level:', level)
+    return level || null
+  } catch (e) {
+    console.log('[YT-Level] Nano error:', e)
+    return null
+  }
+}
+
 async function analyzeWithOllama(text, model, mode) {
   console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model, 'mode:', mode)
   try {
@@ -201,8 +249,16 @@ async function analyzeWithOllama(text, model, mode) {
 }
 
 async function analyzeLevel(text) {
-  const model = await getModel()
+  const engine = await getEngine()
   const mode = await getEffortMode()
+
+  if (engine === 'nano') {
+    const level = await analyzeWithNano(text, mode)
+    if (level) return { level, method: 'nano', model: 'Gemini Nano' }
+    return null
+  }
+
+  const model = await getModel()
   const ollamaLevel = await analyzeWithOllama(text, model, mode)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 

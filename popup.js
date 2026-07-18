@@ -1,18 +1,18 @@
 const OLLAMA_DEFAULT = 'http://localhost:11434'
 
 const LANG = {
-  es: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instrucciones', effortLabel: 'Tipo de esfuerzo', effortMin: 'Mínimo', effortMax: 'Máximo', noModels: '⚠ Sin modelos disponibles', noConn: '✗ Servidor sin conexión', ready: v => `✓ ${v} listo` },
-  en: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Model', lang: 'Language', instructions: 'Instructions', effortLabel: 'Effort mode', effortMin: 'Quick', effortMax: 'Deep', noModels: '⚠ No models available', noConn: '✗ Server unreachable', ready: v => `✓ ${v} ready` },
-  fr: { title: 'YT Level', server: 'Serveur', ok: 'OK', model: 'Modèle', lang: 'Langue', instructions: 'Instructions', effortLabel: 'Mode d\'effort', effortMin: 'Rapide', effortMax: 'Profond', noModels: '⚠ Aucun modèle', noConn: '✗ Serveur inaccessible', ready: v => `✓ ${v} prêt` },
-  pt: { title: 'YT Level', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instruções', effortLabel: 'Modo de esforço', effortMin: 'Rápido', effortMax: 'Profundo', noModels: '⚠ Sem modelos', noConn: '✗ Servidor sem conexão', ready: v => `✓ ${v} pronto` },
-  de: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modell', lang: 'Sprache', instructions: 'Anleitung', effortLabel: 'Aufwandsmodus', effortMin: 'Schnell', effortMax: 'Tief', noModels: '⚠ Keine Modelle', noConn: '✗ Server nicht erreichbar', ready: v => `✓ ${v} bereit` },
-  it: { title: 'YT Level', server: 'Server', ok: 'OK', model: 'Modello', lang: 'Lingua', instructions: 'Istruzioni', effortLabel: 'Modalità sforzo', effortMin: 'Veloce', effortMax: 'Profondo', noModels: '⚠ Nessun modello', noConn: '✗ Server non raggiungibile', ready: v => `✓ ${v} pronto` },
-  zh: { title: 'YT Level', server: '服务器', ok: '确定', model: '模型', lang: '语言', instructions: '使用说明', effortLabel: '分析模式', effortMin: '快速', effortMax: '深度', noModels: '⚠ 无可用模型', noConn: '✗ 服务器无法连接', ready: v => `✓ ${v} 就绪` },
-  ja: { title: 'YT Level', server: 'サーバー', ok: 'OK', model: 'モデル', lang: '言語', instructions: '説明書', effortLabel: '解析モード', effortMin: '簡易', effortMax: '詳細', noModels: '⚠ モデルがありません', noConn: '✗ サーバーに接続できません', ready: v => `✓ ${v} 準備完了` },
-  ko: { title: 'YT Level', server: '서버', ok: '확인', model: '모델', lang: '언어', instructions: '설명서', effortLabel: '분석 모드', effortMin: '빠름', effortMax: '정밀', noModels: '⚠ 모델 없음', noConn: '✗ 서버 연결 불가', ready: v => `✓ ${v} 준비 완료` },
-  ar: { title: 'YT Level', server: 'الخادم', ok: 'موافق', model: 'النموذج', lang: 'اللغة', instructions: 'التعليمات', effortLabel: 'وضع الجهد', effortMin: 'سريع', effortMax: 'عميق', noModels: '⚠ لا توجد نماذج', noConn: '✗ الخادم غير متاح', ready: v => `✓ ${v} جاهز` },
-  hi: { title: 'YT Level', server: 'सर्वर', ok: 'ठीक', model: 'मॉडल', lang: 'भाषा', instructions: 'निर्देश', effortLabel: 'प्रयास मोड', effortMin: 'त्वरित', effortMax: 'गहन', noModels: '⚠ कोई मॉडल नहीं', noConn: '✗ सर्वर से कनेक्ट नहीं हो सका', ready: v => `✓ ${v} तैयार` },
-  ru: { title: 'YT Level', server: 'Сервер', ok: 'ОК', model: 'Модель', lang: 'Язык', instructions: 'Инструкция', effortLabel: 'Режим анализа', effortMin: 'Быстрый', effortMax: 'Глубокий', noModels: '⚠ Нет моделей', noConn: '✗ Сервер недоступен', ready: v => `✓ ${v} готов` },
+  es: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instrucciones', effortLabel: 'Tipo de esfuerzo', effortMin: 'Mínimo', effortMax: 'Máximo', noModels: '⚠ Sin modelos disponibles', noConn: '✗ Servidor sin conexión', ready: v => `✓ ${v} listo`, nanoUnavail: 'No disponible', nanoReady: 'Disponible', nanoDownloading: 'Descargando...', nanoDownloadable: 'Descargable', analLang: 'Idioma de análisis' },
+  en: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Server', ok: 'OK', model: 'Model', lang: 'Language', instructions: 'Instructions', effortLabel: 'Effort mode', effortMin: 'Quick', effortMax: 'Deep', noModels: '⚠ No models available', noConn: '✗ Server unreachable', ready: v => `✓ ${v} ready`, nanoUnavail: 'Unavailable', nanoReady: 'Available', nanoDownloading: 'Downloading...', nanoDownloadable: 'Downloadable', analLang: 'Analysis language' },
+  fr: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Serveur', ok: 'OK', model: 'Modèle', lang: 'Langue', instructions: 'Instructions', effortLabel: 'Mode d\'effort', effortMin: 'Rapide', effortMax: 'Profond', noModels: '⚠ Aucun modèle', noConn: '✗ Serveur inaccessible', ready: v => `✓ ${v} prêt`, nanoUnavail: 'Indisponible', nanoReady: 'Disponible', nanoDownloading: 'Téléchargement...', nanoDownloadable: 'Téléchargeable', analLang: 'Langue d\'analyse' },
+  pt: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Servidor', ok: 'OK', model: 'Modelo', lang: 'Idioma', instructions: 'Instruções', effortLabel: 'Modo de esforço', effortMin: 'Rápido', effortMax: 'Profundo', noModels: '⚠ Sem modelos', noConn: '✗ Servidor sem conexão', ready: v => `✓ ${v} pronto`, nanoUnavail: 'Indisponível', nanoReady: 'Disponível', nanoDownloading: 'Baixando...', nanoDownloadable: 'Baixável', analLang: 'Idioma de análise' },
+  de: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Server', ok: 'OK', model: 'Modell', lang: 'Sprache', instructions: 'Anleitung', effortLabel: 'Aufwandsmodus', effortMin: 'Schnell', effortMax: 'Tief', noModels: '⚠ Keine Modelle', noConn: '✗ Server nicht erreichbar', ready: v => `✓ ${v} bereit`, nanoUnavail: 'Nicht verfügbar', nanoReady: 'Verfügbar', nanoDownloading: 'Wird heruntergeladen...', nanoDownloadable: 'Herunterladbar', analLang: 'Analysesprache' },
+  it: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Server', ok: 'OK', model: 'Modello', lang: 'Lingua', instructions: 'Istruzioni', effortLabel: 'Modalità sforzo', effortMin: 'Veloce', effortMax: 'Profondo', noModels: '⚠ Nessun modello', noConn: '✗ Server non raggiungibile', ready: v => `✓ ${v} pronto`, nanoUnavail: 'Non disponibile', nanoReady: 'Disponibile', nanoDownloading: 'Download...', nanoDownloadable: 'Scaricabile', analLang: 'Lingua di analisi' },
+  zh: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: '服务器', ok: '确定', model: '模型', lang: '语言', instructions: '使用说明', effortLabel: '分析模式', effortMin: '快速', effortMax: '深度', noModels: '⚠ 无可用模型', noConn: '✗ 服务器无法连接', ready: v => `✓ ${v} 就绪`, nanoUnavail: '不可用', nanoReady: '可用', nanoDownloading: '下载中...', nanoDownloadable: '可下载', analLang: '分析语言' },
+  ja: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'サーバー', ok: 'OK', model: 'モデル', lang: '言語', instructions: '説明書', effortLabel: '解析モード', effortMin: '簡易', effortMax: '詳細', noModels: '⚠ モデルがありません', noConn: '✗ サーバーに接続できません', ready: v => `✓ ${v} 準備完了`, nanoUnavail: '利用不可', nanoReady: '利用可能', nanoDownloading: 'ダウンロード中...', nanoDownloadable: 'ダウンロード可能', analLang: '分析言語' },
+  ko: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: '서버', ok: '확인', model: '모델', lang: '언어', instructions: '설명서', effortLabel: '분석 모드', effortMin: '빠름', effortMax: '정밀', noModels: '⚠ 모델 없음', noConn: '✗ 서버 연결 불가', ready: v => `✓ ${v} 준비 완료`, nanoUnavail: '사용 불가', nanoReady: '사용 가능', nanoDownloading: '다운로드 중...', nanoDownloadable: '다운로드 가능', analLang: '분석 언어' },
+  ar: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'الخادم', ok: 'موافق', model: 'النموذج', lang: 'اللغة', instructions: 'التعليمات', effortLabel: 'وضع الجهد', effortMin: 'سريع', effortMax: 'عميق', noModels: '⚠ لا توجد نماذج', noConn: '✗ الخادم غير متاح', ready: v => `✓ ${v} جاهز`, nanoUnavail: 'غير متاح', nanoReady: 'متاح', nanoDownloading: 'جارٍ التحميل...', nanoDownloadable: 'قابل للتحميل', analLang: 'لغة التحليل' },
+  hi: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'सर्वर', ok: 'ठीक', model: 'मॉडल', lang: 'भाषा', instructions: 'निर्देश', effortLabel: 'प्रयास मोड', effortMin: 'त्वरित', effortMax: 'गहन', noModels: '⚠ कोई मॉडल नहीं', noConn: '✗ सर्वर से कनेक्ट नहीं हो सका', ready: v => `✓ ${v} तैयार`, nanoUnavail: 'अनुपलब्ध', nanoReady: 'उपलब्ध', nanoDownloading: 'डाउनलोड हो रहा है...', nanoDownloadable: 'डाउनलोड योग्य', analLang: 'विश्लेषण भाषा' },
+  ru: { title: 'YT Level', nano: 'Gemini Nano', ollama: 'Ollama', server: 'Сервер', ok: 'ОК', model: 'Модель', lang: 'Язык', instructions: 'Инструкция', effortLabel: 'Режим анализа', effortMin: 'Быстрый', effortMax: 'Глубокий', noModels: '⚠ Нет моделей', noConn: '✗ Сервер недоступен', ready: v => `✓ ${v} готов`, nanoUnavail: 'Недоступно', nanoReady: 'Доступно', nanoDownloading: 'Загрузка...', nanoDownloadable: 'Загружаемый', analLang: 'Язык анализа' },
 }
 
 const LANG_NAMES = {
@@ -21,6 +21,8 @@ const LANG_NAMES = {
 }
 
 const LANG_ORDER = ['es', 'en', 'fr', 'pt', 'de', 'it', 'zh', 'ja', 'ko', 'ar', 'hi', 'ru']
+
+const NANO_LANGS = { en: 'Inglés', es: 'Español', ja: 'Japonés', de: 'Alemán', fr: 'Francés' }
 
 function setStatus(el, type, msg) {
   el.className = 'status ' + type
@@ -44,6 +46,8 @@ function readmeUrl(lang) {
 function applyLang(lang, els) {
   const tr = LANG[lang] || LANG.es
   els.title.textContent = tr.title
+  els.tabNano.textContent = tr.nano
+  els.tabOllama.textContent = tr.ollama
   els.serverLabel.textContent = tr.server
   els.saveBtn.textContent = tr.ok
   els.modelLabel.textContent = tr.model
@@ -52,6 +56,46 @@ function applyLang(lang, els) {
   if (els.effortLabel) els.effortLabel.textContent = tr.effortLabel
   els.effortMinBtn.textContent = tr.effortMin
   els.effortMaxBtn.textContent = tr.effortMax
+  if (els.nanoStatus) {
+    const state = els.nanoStatus.dataset.state || 'unavailable'
+    if (state === 'available') els.nanoStatus.textContent = tr.nanoReady
+    else if (state === 'downloading') els.nanoStatus.textContent = tr.nanoDownloading
+    else if (state === 'downloadable') els.nanoStatus.textContent = tr.nanoDownloadable
+    else els.nanoStatus.textContent = tr.nanoUnavail
+  }
+  if (els.nanoEffortLabel) els.nanoEffortLabel.textContent = tr.effortLabel
+  if (els.nanoEffortMinBtn) els.nanoEffortMinBtn.textContent = tr.effortMin
+  if (els.nanoEffortMaxBtn) els.nanoEffortMaxBtn.textContent = tr.effortMax
+  if (els.analLangLabel) els.analLangLabel.textContent = tr.analLang
+}
+
+async function checkNanoStatus() {
+  const nanoStatusEl = document.getElementById('nanoStatus')
+  const tr = LANG[document.getElementById('langSelect').value] || LANG.es
+  try {
+    const state = await LanguageModel.availability()
+    if (state === 'available') {
+      nanoStatusEl.className = 'nano-status'
+      nanoStatusEl.dataset.state = 'available'
+      nanoStatusEl.textContent = tr.nanoReady
+    } else if (state === 'downloading') {
+      nanoStatusEl.className = 'nano-status downloading'
+      nanoStatusEl.dataset.state = 'downloading'
+      nanoStatusEl.textContent = tr.nanoDownloading
+    } else if (state === 'downloadable') {
+      nanoStatusEl.className = 'nano-status downloading'
+      nanoStatusEl.dataset.state = 'downloadable'
+      nanoStatusEl.textContent = tr.nanoDownloadable
+    } else {
+      nanoStatusEl.className = 'nano-status unavailable'
+      nanoStatusEl.dataset.state = 'unavailable'
+      nanoStatusEl.textContent = tr.nanoUnavail
+    }
+  } catch {
+    nanoStatusEl.className = 'nano-status unavailable'
+    nanoStatusEl.dataset.state = 'unavailable'
+    nanoStatusEl.textContent = tr.nanoUnavail
+  }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -62,13 +106,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveServerBtn = document.getElementById('saveServerBtn')
   const resetServerBtn = document.getElementById('resetServerBtn')
   const langSelect = document.getElementById('langSelect')
-  const langRow = document.getElementById('langRow')
+  const tabNano = document.getElementById('tabNano')
+  const tabOllama = document.getElementById('tabOllama')
+  const geminiSection = document.getElementById('geminiSection')
+  const ollamaSection = document.getElementById('ollamaSection')
 
   const effortMinBtn = document.getElementById('effortMinBtn')
   const effortMaxBtn = document.getElementById('effortMaxBtn')
 
+  const nanoEffortMinBtn = document.getElementById('nanoEffortMinBtn')
+  const nanoEffortMaxBtn = document.getElementById('nanoEffortMaxBtn')
+  const nanoLangSelect = document.getElementById('nanoLangSelect')
+
   const els = {
     title: document.querySelector('h2'),
+    tabNano,
+    tabOllama,
     serverLabel: document.querySelector('#serverRow label'),
     saveBtn: saveServerBtn,
     modelLabel: document.querySelector('#modelRow label'),
@@ -77,9 +130,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     effortLabel: document.getElementById('effortLabel'),
     effortMinBtn,
     effortMaxBtn,
+    nanoStatus: document.getElementById('nanoStatus'),
+    nanoEffortLabel: document.getElementById('nanoEffortLabel'),
+    nanoEffortMinBtn,
+    nanoEffortMaxBtn,
+    analLangLabel: document.getElementById('analLangLabel'),
   }
 
-  const { ollamaModel, ollamaServer, lang, effortMode } = await chrome.storage.local.get(['ollamaModel', 'ollamaServer', 'lang', 'effortMode'])
+  async function switchTab(tab) {
+    tabNano.classList.toggle('active', tab === 'nano')
+    tabOllama.classList.toggle('active', tab === 'ollama')
+    geminiSection.classList.toggle('active', tab === 'nano')
+    ollamaSection.classList.toggle('active', tab === 'ollama')
+    const engine = tab === 'nano' ? 'nano' : 'ollama'
+    await chrome.storage.local.set({ aiEngine: engine })
+    await sendToContent({ type: 'set_engine', engine })
+    if (tab === 'nano') checkNanoStatus()
+  }
+
+  tabNano.addEventListener('click', () => switchTab('nano'))
+  tabOllama.addEventListener('click', () => switchTab('ollama'))
+
+  const { ollamaModel, ollamaServer, lang, effortMode, nanoLang, aiEngine } = await chrome.storage.local.get(['ollamaModel', 'ollamaServer', 'lang', 'effortMode', 'nanoLang', 'aiEngine'])
   serverInput.value = ollamaServer || OLLAMA_DEFAULT
 
   if (langSelect) {
@@ -91,6 +163,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
     langSelect.value = lang || 'es'
   }
+
+  if (nanoLangSelect) {
+    nanoLangSelect.value = nanoLang || 'en'
+    nanoLangSelect.addEventListener('change', async () => {
+      await chrome.storage.local.set({ nanoLang: nanoLangSelect.value })
+    })
+  }
+
+  if (aiEngine === 'nano') switchTab('nano')
 
   applyLang(lang || 'es', els)
 
@@ -107,19 +188,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     await refreshAll()
   })
 
-  function setEffortUI(mode) {
-    effortMinBtn.classList.toggle('effort-active', mode === 'min')
-    effortMaxBtn.classList.toggle('effort-active', mode === 'max')
+  function setEffortUI(mode, minBtn, maxBtn) {
+    minBtn.classList.toggle('effort-active', mode === 'min')
+    maxBtn.classList.toggle('effort-active', mode === 'max')
   }
 
   let currentEffort = effortMode || 'min'
-  setEffortUI(currentEffort)
+  setEffortUI(currentEffort, effortMinBtn, effortMaxBtn)
+  setEffortUI(currentEffort, nanoEffortMinBtn, nanoEffortMaxBtn)
 
   effortMinBtn.addEventListener('click', async () => {
     if (currentEffort === 'min') return
     currentEffort = 'min'
     await chrome.storage.local.set({ effortMode: 'min' })
-    setEffortUI('min')
+    setEffortUI('min', effortMinBtn, effortMaxBtn)
+    setEffortUI('min', nanoEffortMinBtn, nanoEffortMaxBtn)
     await sendToContent({ type: 'set_effort', mode: 'min' })
   })
 
@@ -127,7 +210,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (currentEffort === 'max') return
     currentEffort = 'max'
     await chrome.storage.local.set({ effortMode: 'max' })
-    setEffortUI('max')
+    setEffortUI('max', effortMinBtn, effortMaxBtn)
+    setEffortUI('max', nanoEffortMinBtn, nanoEffortMaxBtn)
+    await sendToContent({ type: 'set_effort', mode: 'max' })
+  })
+
+  nanoEffortMinBtn.addEventListener('click', async () => {
+    if (currentEffort === 'min') return
+    currentEffort = 'min'
+    await chrome.storage.local.set({ effortMode: 'min' })
+    setEffortUI('min', effortMinBtn, effortMaxBtn)
+    setEffortUI('min', nanoEffortMinBtn, nanoEffortMaxBtn)
+    await sendToContent({ type: 'set_effort', mode: 'min' })
+  })
+
+  nanoEffortMaxBtn.addEventListener('click', async () => {
+    if (currentEffort === 'max') return
+    currentEffort = 'max'
+    await chrome.storage.local.set({ effortMode: 'max' })
+    setEffortUI('max', effortMinBtn, effortMaxBtn)
+    setEffortUI('max', nanoEffortMinBtn, nanoEffortMaxBtn)
     await sendToContent({ type: 'set_effort', mode: 'max' })
   })
 

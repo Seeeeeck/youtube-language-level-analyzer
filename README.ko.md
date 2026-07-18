@@ -33,9 +33,15 @@
 </p>
 
 <p align="center">
-  <img src="screenshots/popup.svg" alt="확장 프로그램 팝업" width="280">
+  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
   <br>
-  <em>설정 팝업 — Gemini Nano 및 Ollama 탭이 있는 엔진 선택기</em>
+  <em>Screenshot 3</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <br>
+  <em>Screenshot 4</em>
 </p>
 
 ---

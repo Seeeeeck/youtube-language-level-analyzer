@@ -33,9 +33,15 @@
 </p>
 
 <p align="center">
-  <img src="screenshots/popup.svg" alt="扩展弹出窗口" width="280">
+  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
   <br>
-  <em>配置弹出窗口 — 带有 Gemini Nano 和 Ollama 选项卡的引擎选择器</em>
+  <em>Screenshot 3</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <br>
+  <em>Screenshot 4</em>
 </p>
 
 ---

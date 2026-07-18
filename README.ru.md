@@ -33,9 +33,15 @@
 </p>
 
 <p align="center">
-  <img src="screenshots/popup.svg" alt="Всплывающее окно расширения" width="280">
+  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
   <br>
-  <em>Окно настройки — выбор движка с вкладками Gemini Nano и Ollama</em>
+  <em>Screenshot 3</em>
+</p>
+
+<p align="center">
+  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <br>
+  <em>Screenshot 4</em>
 </p>
 
 ---

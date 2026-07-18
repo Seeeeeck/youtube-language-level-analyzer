@@ -11,6 +11,8 @@
     screenshots_title: 'Screenshots',
     screenshot1_caption: 'YT Level icon',
     screenshot2_caption: 'Configuration popup — engine selector with Gemini Nano and Ollama tabs',
+    screenshot3_caption: 'Screenshot 3',
+    screenshot4_caption: 'Screenshot 4',
     features_title: 'Features',
     feature_badges: 'CEFR Badges',
     feature_badges_desc: 'Colored circles (A1-C2) on YouTube video thumbnails',

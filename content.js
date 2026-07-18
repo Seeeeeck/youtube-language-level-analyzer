@@ -206,7 +206,7 @@ async function analyzeWithNano(text, mode) {
 
     const session = await LanguageModel.create({
       expectedInputs: [{ type: 'text', languages: [lang] }],
-      expectedOutputs: [{ type: 'text', languages: [lang] }]
+      expectedOutputs: [{ type: 'text', languages: ['en'] }]
     })
 
     const response = await session.prompt(PROMPT_EFFORT[mode](text))

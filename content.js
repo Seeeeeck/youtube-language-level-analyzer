@@ -266,6 +266,8 @@ function getVideoId(element) {
 }
 
 function isCompilationCard(element) {
+  const link = element.querySelector('a[href*="/watch?v="]')
+  if (link && link.getAttribute('href').includes('list=')) return true
   const badges = Array.from(element.querySelectorAll('badge-shape, .badge-shape-wiz__text'))
     .map(b => b.textContent.trim().toLowerCase())
   return badges.some(t => t === 'mix' || /^\d+\s+(video|videos|episodio|episodios)$/.test(t))
@@ -325,6 +327,10 @@ document.documentElement.appendChild(styleEl)
 const videoResultCache = new Map()
 const videoInFlight = new Set()
 
+function badgeAlreadyShown(videoId) {
+  return !!document.querySelector(`[${PROCESSED_ATTR}="${videoId}"] .${BADGE_CLASS}`)
+}
+
 async function processVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
@@ -335,7 +341,7 @@ async function processVideoElement(element) {
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
     element.setAttribute(PROCESSED_ATTR, videoId)
-    if (cached) injectBadge(element, cached.level, cached.method, cached.model)
+    if (cached && !badgeAlreadyShown(videoId)) injectBadge(element, cached.level, cached.method, cached.model)
     return
   }
 
@@ -355,7 +361,7 @@ async function processVideoElement(element) {
     const result = await analyzeLevel(transcript)
     removeSpinner(element)
     videoResultCache.set(videoId, result)
-    if (result) {
+    if (result && !badgeAlreadyShown(videoId)) {
       injectBadge(element, result.level, result.method, result.model)
     }
   } catch (e) {

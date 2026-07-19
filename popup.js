@@ -218,6 +218,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.body.appendChild(kofiBtn)
   els.kofiBtn = kofiBtn
 
+  const versionEl = document.createElement('div')
+  versionEl.textContent = 'v1.0.0'
+  Object.assign(versionEl.style, {
+    textAlign: 'center', padding: '10px 0 0', fontSize: '11px', color: '#666'
+  })
+  document.body.appendChild(versionEl)
+
   switchTab(aiEngine === 'ollama' ? 'ollama' : 'nano')
 
   applyLang(lang || 'en', els)

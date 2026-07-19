@@ -5,13 +5,21 @@ async function getServerUrl() {
   return ollamaServer || OLLAMA_DEFAULT
 }
 
+const generateControllers = new Map()
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'ollama_get_models') {
-    getModels().then(sendResponse)
+    getModels(msg.server).then(sendResponse)
     return true
   }
   if (msg.type === 'ollama_generate') {
-    generate({ model: msg.model, prompt: msg.prompt, mode: msg.mode }).then(sendResponse)
+    generate({ model: msg.model, prompt: msg.prompt, requestId: msg.requestId }).then(sendResponse)
+    return true
+  }
+  if (msg.type === 'ollama_abort_all') {
+    for (const controller of generateControllers.values()) controller.abort()
+    generateControllers.clear()
+    sendResponse(true)
     return true
   }
   if (msg.type === 'fetch_transcript') {
@@ -20,14 +28,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 })
 
-async function getModels() {
+async function getModels(server) {
   try {
-    const base = await getServerUrl()
-    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(8000) })
-    if (!resp.ok) return []
+    const base = server || await getServerUrl()
+    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(30000) })
+    if (!resp.ok) return { error: `HTTP ${resp.status}` }
     const data = await resp.json()
-    return (data?.models || []).map(m => m.name)
-  } catch { return [] }
+    return { models: (data?.models || []).map(m => m.name) }
+  } catch (e) { return { error: e.message } }
 }
 
 async function fetchTranscript(videoId) {
@@ -41,7 +49,10 @@ async function fetchTranscript(videoId) {
   } catch { return null }
 }
 
-async function generate({ model, prompt, mode }) {
+async function generate({ model, prompt, requestId }) {
+  const controller = new AbortController()
+  if (requestId) generateControllers.set(requestId, controller)
+  const timeoutId = setTimeout(() => controller.abort(), 60000)
   try {
     const base = await getServerUrl()
     const resp = await fetch(`${base}/api/generate`, {
@@ -53,12 +64,15 @@ async function generate({ model, prompt, mode }) {
         stream: false,
         options: { temperature: 0.1 }
       }),
-      signal: AbortSignal.timeout(60000)
+      signal: controller.signal
     })
     if (!resp.ok) return { error: `HTTP ${resp.status}` }
     const data = await resp.json()
     return { response: data?.response || '' }
   } catch (e) {
-    return { error: e.message }
+    return { error: e.message, aborted: e.name === 'AbortError' }
+  } finally {
+    clearTimeout(timeoutId)
+    if (requestId) generateControllers.delete(requestId)
   }
 }

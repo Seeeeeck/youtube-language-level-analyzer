@@ -1,6 +1,7 @@
 console.log('[YT-Level] Content script loaded')
 
 const BADGE_CLASS = 'yt-level-badge'
+const ENGINE_BADGE_CLASS = 'yt-level-engine-badge'
 const PROCESSED_ATTR = 'data-level-video'
 
 const LEVEL_COLORS = {
@@ -119,8 +120,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 async function getModels() {
   try {
-    const models = await chrome.runtime.sendMessage({ type: 'ollama_get_models' })
-    return models || []
+    const result = await chrome.runtime.sendMessage({ type: 'ollama_get_models' })
+    return result?.models || []
   } catch { return [] }
 }
 
@@ -133,7 +134,9 @@ async function setModel(model) {
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
-  setTimeout(scanFeed, 100)
+  document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(runScans, 100)
   return true
 }
 
@@ -157,7 +160,9 @@ async function setServer(server) {
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
-  setTimeout(scanFeed, 100)
+  document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(runScans, 100)
   return true
 }
 
@@ -171,7 +176,9 @@ async function setEngine(engine) {
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
-  setTimeout(scanFeed, 100)
+  document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(runScans, 100)
   return true
 }
 
@@ -211,28 +218,29 @@ async function analyzeWithNano(text) {
   }
 }
 
+let requestSeq = 0
+
+class AbortedAnalysisError extends Error {}
+
 async function analyzeWithOllama(text, model) {
   console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
-  try {
-    const result = await chrome.runtime.sendMessage({
-      type: 'ollama_generate',
-      model,
-      prompt: DEEP_PROMPT(text)
-    })
-    if (!result || result.error) {
-      console.log('[YT-Level] Ollama error:', result?.error)
-      return null
-    }
-    const raw = result.response || ''
-    const trimmed = raw.trim().toUpperCase()
-    console.log('[YT-Level] Ollama raw response:', raw)
-    const level = CEFR_LEVELS.find(l => trimmed.includes(l))
-    console.log('[YT-Level] Ollama parsed level:', level)
-    return level || null
-  } catch (e) {
-    console.log('[YT-Level] Ollama fetch error:', e)
+  const result = await chrome.runtime.sendMessage({
+    type: 'ollama_generate',
+    model,
+    prompt: DEEP_PROMPT(text),
+    requestId: `req-${++requestSeq}`
+  })
+  if (!result || result.error) {
+    if (result?.aborted) throw new AbortedAnalysisError('ollama request aborted')
+    console.log('[YT-Level] Ollama error:', result?.error)
     return null
   }
+  const raw = result.response || ''
+  const trimmed = raw.trim().toUpperCase()
+  console.log('[YT-Level] Ollama raw response:', raw)
+  const level = CEFR_LEVELS.find(l => trimmed.includes(l))
+  console.log('[YT-Level] Ollama parsed level:', level)
+  return level || null
 }
 
 async function analyzeLevel(text) {
@@ -296,6 +304,20 @@ function injectBadge(element, level, method, model) {
   })
   anchor.style.position = 'relative'
   anchor.appendChild(badge)
+
+  const engineBadge = document.createElement('div')
+  engineBadge.className = ENGINE_BADGE_CLASS
+  engineBadge.textContent = method === 'nano' ? 'Nano' : 'Ollama'
+  engineBadge.title = model || (method === 'nano' ? 'Gemini Nano' : 'Ollama')
+  Object.assign(engineBadge.style, {
+    position: 'absolute', top: '14px', left: '58px', zIndex: 999,
+    padding: '4px 10px', borderRadius: '999px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: method === 'nano' ? '#1a73e8' : '#0ac700', color: 'white',
+    fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none', whiteSpace: 'nowrap'
+  })
+  anchor.appendChild(engineBadge)
 }
 
 const SPINNER_CLASS = 'yt-level-spinner'
@@ -313,6 +335,7 @@ function injectSpinner(element) {
   spinner.innerHTML = `<svg viewBox="0 0 24 24" style="width:26px;height:26px;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
   anchor.style.position = 'relative'
   anchor.querySelector(`.${BADGE_CLASS}`)?.remove()
+  anchor.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
   anchor.appendChild(spinner)
 }
 
@@ -327,10 +350,6 @@ document.documentElement.appendChild(styleEl)
 const videoResultCache = new Map()
 const videoInFlight = new Set()
 
-function badgeAlreadyShown(videoId) {
-  return !!document.querySelector(`[${PROCESSED_ATTR}="${videoId}"] .${BADGE_CLASS}`)
-}
-
 async function processVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
@@ -341,7 +360,7 @@ async function processVideoElement(element) {
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
     element.setAttribute(PROCESSED_ATTR, videoId)
-    if (cached && !badgeAlreadyShown(videoId)) injectBadge(element, cached.level, cached.method, cached.model)
+    if (cached) injectBadge(element, cached.level, cached.method, cached.model)
     return
   }
 
@@ -349,6 +368,7 @@ async function processVideoElement(element) {
 
   const existingBadge = element.querySelector(`.${BADGE_CLASS}`)
   if (existingBadge) existingBadge.remove()
+  element.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
   element.setAttribute(PROCESSED_ATTR, videoId)
   videoInFlight.add(videoId)
 
@@ -361,14 +381,53 @@ async function processVideoElement(element) {
     const result = await analyzeLevel(transcript)
     removeSpinner(element)
     videoResultCache.set(videoId, result)
-    if (result && !badgeAlreadyShown(videoId)) {
+    if (result) {
       injectBadge(element, result.level, result.method, result.model)
     }
   } catch (e) {
     removeSpinner(element)
-    console.log('[YT-Level] Error processing', videoId, ':', e.message)
+    if (e instanceof AbortedAnalysisError) {
+      console.log('[YT-Level] Analysis aborted for', videoId)
+      element.removeAttribute(PROCESSED_ATTR)
+    } else {
+      console.log('[YT-Level] Error processing', videoId, ':', e.message)
+    }
   } finally {
     videoInFlight.delete(videoId)
+  }
+}
+
+const MAX_CONCURRENT_ANALYSIS = 2
+let activeAnalysisCount = 0
+const pendingElements = []
+
+function queueVideoElement(element) {
+  const videoId = getVideoId(element)
+  if (!videoId) return
+  if (isCompilationCard(element)) return
+  const processedId = element.getAttribute(PROCESSED_ATTR)
+  if (processedId === videoId) return
+
+  if (videoResultCache.has(videoId)) {
+    processVideoElement(element)
+    return
+  }
+
+  if (videoInFlight.has(videoId) || pendingElements.includes(element)) return
+  injectSpinner(element)
+  pendingElements.push(element)
+  pumpAnalysisQueue()
+}
+
+function pumpAnalysisQueue() {
+  while (activeAnalysisCount < MAX_CONCURRENT_ANALYSIS && pendingElements.length) {
+    const element = pendingElements.shift()
+    if (!element.isConnected) continue
+    activeAnalysisCount++
+    processVideoElement(element).finally(() => {
+      activeAnalysisCount--
+      pumpAnalysisQueue()
+    })
   }
 }
 
@@ -376,23 +435,112 @@ function scanFeed() {
   for (const sel of CARD_SELECTORS) {
     for (const el of document.querySelectorAll(sel)) {
       if (CARD_SELECTORS.some(s => el.parentElement && el.parentElement.closest(s))) continue
-      processVideoElement(el)
+      queueVideoElement(el)
     }
   }
+}
+
+const WATCH_BADGE_CLASS = 'yt-level-watch-badge'
+const WATCH_TITLE_SELECTOR = 'ytd-watch-metadata #title, #above-the-fold #title'
+
+function getWatchVideoId() {
+  const match = location.href.match(/[?&]v=([a-zA-Z0-9_-]{11})/)
+  return match ? match[1] : null
+}
+
+function buildWatchBadgeRow(videoId, result) {
+  const row = document.createElement('div')
+  row.className = WATCH_BADGE_CLASS
+  row.dataset.videoId = videoId
+  Object.assign(row.style, {
+    display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0'
+  })
+
+  const badge = document.createElement('span')
+  badge.textContent = result.level
+  badge.title = `Nivel ${result.level} (${result.model || 'Ollama'})`
+  Object.assign(badge.style, {
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+    width: '32px', height: '32px', borderRadius: '6px',
+    background: LEVEL_COLORS[result.level] || '#666', color: 'white',
+    fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'
+  })
+
+  const engineBadge = document.createElement('span')
+  engineBadge.textContent = result.method === 'nano' ? 'Nano' : 'Ollama'
+  engineBadge.title = result.model || (result.method === 'nano' ? 'Gemini Nano' : 'Ollama')
+  Object.assign(engineBadge.style, {
+    display: 'inline-flex', alignItems: 'center', padding: '4px 10px', borderRadius: '999px',
+    background: result.method === 'nano' ? '#1a73e8' : '#0ac700', color: 'white',
+    fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap'
+  })
+
+  row.appendChild(badge)
+  row.appendChild(engineBadge)
+  return row
+}
+
+async function processWatchPage() {
+  const videoId = getWatchVideoId()
+  if (!videoId) return
+
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => {
+    if (el.dataset.videoId !== videoId) el.remove()
+  })
+
+  const titleContainer = document.querySelector(WATCH_TITLE_SELECTOR)
+  if (!titleContainer) return
+  if (titleContainer.parentElement.querySelector(`.${WATCH_BADGE_CLASS}[data-video-id="${videoId}"]`)) return
+
+  if (videoResultCache.has(videoId)) {
+    const cached = videoResultCache.get(videoId)
+    if (cached) titleContainer.after(buildWatchBadgeRow(videoId, cached))
+    return
+  }
+
+  if (videoInFlight.has(videoId)) return
+  videoInFlight.add(videoId)
+  try {
+    const transcript = await fetchTranscript(videoId)
+    if (!transcript) { videoResultCache.set(videoId, null); return }
+    const result = await analyzeLevel(transcript)
+    videoResultCache.set(videoId, result)
+    if (result) titleContainer.after(buildWatchBadgeRow(videoId, result))
+  } catch (e) {
+    if (e instanceof AbortedAnalysisError) {
+      console.log('[YT-Level] Watch page analysis aborted for', videoId)
+    } else {
+      console.log('[YT-Level] Error processing watch page video', videoId, ':', e.message)
+    }
+  } finally {
+    videoInFlight.delete(videoId)
+  }
+}
+
+function runScans() {
+  scanFeed()
+  processWatchPage()
 }
 
 let scanScheduled = false
 function scheduleScan() {
   if (scanScheduled) return
   scanScheduled = true
-  setTimeout(() => { scanScheduled = false; scanFeed() }, 400)
+  setTimeout(() => { scanScheduled = false; runScans() }, 400)
 }
 
 const observer = new MutationObserver(scheduleScan)
 observer.observe(document.body, { childList: true, subtree: true })
 window.addEventListener('scroll', scheduleScan, { passive: true })
-window.addEventListener('scrollend', scanFeed, { passive: true })
-document.addEventListener('yt-navigate-finish', () => setTimeout(scanFeed, 1000))
-setTimeout(scanFeed, 500)
-setTimeout(scanFeed, 2000)
-scanFeed()
+window.addEventListener('scrollend', runScans, { passive: true })
+document.addEventListener('yt-navigate-finish', () => {
+  pendingElements.forEach(el => removeSpinner(el))
+  pendingElements.length = 0
+  chrome.runtime.sendMessage({ type: 'ollama_abort_all' }).catch(() => {})
+  setTimeout(runScans, 300)
+  setTimeout(runScans, 1000)
+  setTimeout(runScans, 2500)
+})
+setTimeout(runScans, 500)
+setTimeout(runScans, 2000)
+runScans()

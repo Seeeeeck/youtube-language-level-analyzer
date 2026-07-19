@@ -23,7 +23,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 async function getModels() {
   try {
     const base = await getServerUrl()
-    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(3000) })
+    const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(8000) })
     if (!resp.ok) return []
     const data = await resp.json()
     return (data?.models || []).map(m => m.name)

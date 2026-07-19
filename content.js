@@ -130,6 +130,7 @@ async function setModel(model) {
   for (const key of Object.keys(all)) {
     if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
   }
+  videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(scanFeed, 100)
@@ -153,6 +154,7 @@ async function setServer(server) {
   for (const key of Object.keys(all)) {
     if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
   }
+  videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(scanFeed, 100)
@@ -166,6 +168,7 @@ async function getEngine() {
 
 async function setEngine(engine) {
   await chrome.storage.local.set({ aiEngine: engine })
+  videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(scanFeed, 100)
@@ -262,6 +265,12 @@ function getVideoId(element) {
   return match ? match[1] : null
 }
 
+function isCompilationCard(element) {
+  const badges = Array.from(element.querySelectorAll('badge-shape, .badge-shape-wiz__text'))
+    .map(b => b.textContent.trim().toLowerCase())
+  return badges.some(t => t === 'mix' || /^\d+\s+(video|videos|episodio|episodios)$/.test(t))
+}
+
 function injectBadge(element, level, method, model) {
   if (element.querySelector(`.${BADGE_CLASS}`)) return
   const badge = document.createElement('div')
@@ -304,36 +313,54 @@ const styleEl = document.createElement('style')
 styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}`
 document.documentElement.appendChild(styleEl)
 
+const videoResultCache = new Map()
+const videoInFlight = new Set()
+
 async function processVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
+  if (isCompilationCard(element)) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
   if (processedId === videoId) return
+
+  if (videoResultCache.has(videoId)) {
+    const cached = videoResultCache.get(videoId)
+    element.setAttribute(PROCESSED_ATTR, videoId)
+    if (cached) injectBadge(element, cached.level, cached.method, cached.model)
+    return
+  }
+
+  if (videoInFlight.has(videoId)) return
 
   const existingBadge = element.querySelector(`.${BADGE_CLASS}`)
   if (existingBadge) existingBadge.remove()
   element.setAttribute(PROCESSED_ATTR, videoId)
+  videoInFlight.add(videoId)
 
   try {
     injectSpinner(element)
 
     const transcript = await fetchTranscript(videoId)
-    if (!transcript) { removeSpinner(element); return }
+    if (!transcript) { removeSpinner(element); videoResultCache.set(videoId, null); return }
 
     const result = await analyzeLevel(transcript)
     removeSpinner(element)
+    videoResultCache.set(videoId, result)
     if (result) {
       injectBadge(element, result.level, result.method, result.model)
     }
   } catch (e) {
     removeSpinner(element)
     console.log('[YT-Level] Error processing', videoId, ':', e.message)
+  } finally {
+    videoInFlight.delete(videoId)
   }
 }
 
 function scanFeed() {
   for (const sel of CARD_SELECTORS) {
     for (const el of document.querySelectorAll(sel)) {
+      if (CARD_SELECTORS.some(s => el.parentElement && el.parentElement.closest(s))) continue
       processVideoElement(el)
     }
   }

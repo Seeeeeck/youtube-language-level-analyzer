@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   tabNano.addEventListener('click', () => switchTab('nano'))
   tabOllama.addEventListener('click', () => switchTab('ollama'))
 
-  const { ollamaModel, ollamaServer, lang, nanoLang, aiEngine } = await chrome.storage.local.get(['ollamaModel', 'ollamaServer', 'lang', 'nanoLang', 'aiEngine'])
+  const { ollamaServer, lang, nanoLang, aiEngine } = await chrome.storage.local.get(['ollamaServer', 'lang', 'nanoLang', 'aiEngine'])
   serverInput.value = ollamaServer || OLLAMA_DEFAULT
 
   if (langSelect) {
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         opt.textContent = m
         modelSelect.appendChild(opt)
       })
-      const saved = ollamaModel
+      const { ollamaModel: saved } = await chrome.storage.local.get('ollamaModel')
       const selected = saved && models.includes(saved) ? saved : models[0]
       modelSelect.value = selected
       if (selected !== saved) {

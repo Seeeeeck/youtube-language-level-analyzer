@@ -334,21 +334,31 @@ function injectBadge(element, level, method, model) {
 
 const SPINNER_CLASS = 'yt-level-spinner'
 
-function injectSpinner(element) {
+const SPINNER_SVG = {
+  queued: `<svg viewBox="0 0 24 24" style="width:22px;height:22px;animation:ytLevelPulse 1.4s ease-in-out infinite"><circle cx="12" cy="12" r="9" fill="none" stroke="#999" stroke-width="3" stroke-dasharray="3 4" stroke-linecap="round"/></svg>`,
+  active: `<svg viewBox="0 0 24 24" style="width:26px;height:26px;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
+}
+
+function injectSpinner(element, state = 'active') {
   const anchor = getBadgeAnchor(element)
-  if (anchor.querySelector(`.${SPINNER_CLASS}`)) return
-  const spinner = document.createElement('div')
-  spinner.className = SPINNER_CLASS
-  Object.assign(spinner.style, {
-    position: 'absolute', top: '8px', left: '8px', zIndex: 999,
-    width: '44px', height: '44px', borderRadius: '6px',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none'
-  })
-  spinner.innerHTML = `<svg viewBox="0 0 24 24" style="width:26px;height:26px;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
-  anchor.style.position = 'relative'
-  anchor.querySelector(`.${BADGE_CLASS}`)?.remove()
-  anchor.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
-  anchor.appendChild(spinner)
+  let spinner = anchor.querySelector(`.${SPINNER_CLASS}`)
+  if (!spinner) {
+    spinner = document.createElement('div')
+    spinner.className = SPINNER_CLASS
+    Object.assign(spinner.style, {
+      position: 'absolute', top: '8px', left: '8px', zIndex: 999,
+      width: '44px', height: '44px', borderRadius: '6px',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none'
+    })
+    anchor.style.position = 'relative'
+    anchor.querySelector(`.${BADGE_CLASS}`)?.remove()
+    anchor.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
+    anchor.appendChild(spinner)
+  }
+  if (spinner.dataset.state === state) return
+  spinner.dataset.state = state
+  spinner.title = state === 'queued' ? 'En cola de análisis' : 'Analizando ahora'
+  spinner.innerHTML = SPINNER_SVG[state]
 }
 
 function removeSpinner(element) {
@@ -387,6 +397,7 @@ function removePriorityButton(element) {
 
 const styleEl = document.createElement('style')
 styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}
+@keyframes ytLevelPulse{0%,100%{opacity:0.3}50%{opacity:0.9}}
 .${PRIORITY_BTN_CLASS}{opacity:0.55;transition:opacity .15s,transform .1s}
 .${PRIORITY_BTN_CLASS}:hover{opacity:1;transform:scale(1.1)}
 .${PRIORITY_BTN_CLASS}:active{transform:scale(0.92)}
@@ -423,7 +434,7 @@ async function processVideoElement(element) {
   removePriorityButton(element)
 
   try {
-    injectSpinner(element)
+    injectSpinner(element, 'active')
 
     const transcript = await fetchTranscript(videoId)
     if (!transcript) { removeSpinner(element); videoResultCache.set(videoId, null); return }
@@ -463,7 +474,7 @@ function queueVideoElement(element) {
   }
 
   if (videoInFlight.has(videoId) || pendingElements.includes(element)) return
-  injectSpinner(element)
+  injectSpinner(element, 'queued')
   injectPriorityButton(element)
   pendingElements.push(element)
   pumpAnalysisQueue()

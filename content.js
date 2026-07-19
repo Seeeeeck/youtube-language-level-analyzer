@@ -2,24 +2,25 @@ console.log('[YT-Level] Content script loaded')
 
 const BADGE_CLASS = 'yt-level-badge'
 const ENGINE_BADGE_CLASS = 'yt-level-engine-badge'
+const NO_DATA_BADGE_CLASS = 'yt-level-nodata-badge'
 const PRIORITY_BTN_CLASS = 'yt-level-priority-btn'
 const PROCESSED_ATTR = 'data-level-video'
 
 const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang'])
 
 const CONTENT_LANG = {
-  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: '⚡ Priorizar nivel', priorityBtnActive: '⚡ Priorizando…', priorityBtnTitle: 'Priorizar análisis de este video' },
-  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: '⚡ Prioritize level', priorityBtnActive: '⚡ Prioritizing…', priorityBtnTitle: 'Prioritize analysis of this video' },
-  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: '⚡ Prioriser le niveau', priorityBtnActive: '⚡ Priorisation…', priorityBtnTitle: "Prioriser l'analyse de cette vidéo" },
-  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: '⚡ Priorizar nível', priorityBtnActive: '⚡ Priorizando…', priorityBtnTitle: 'Priorizar análise deste vídeo' },
-  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: '⚡ Niveau priorisieren', priorityBtnActive: '⚡ Wird priorisiert…', priorityBtnTitle: 'Analyse dieses Videos priorisieren' },
-  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: '⚡ Priorizza livello', priorityBtnActive: '⚡ Priorizzazione…', priorityBtnTitle: "Priorizza l'analisi di questo video" },
-  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '⚡ 优先分析', priorityBtnActive: '⚡ 优先处理中…', priorityBtnTitle: '优先分析此视频' },
-  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: '⚡ レベルを優先分析', priorityBtnActive: '⚡ 優先処理中…', priorityBtnTitle: 'この動画の分析を優先する' },
-  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '⚡ 레벨 우선 분석', priorityBtnActive: '⚡ 우선 처리 중…', priorityBtnTitle: '이 동영상 분석 우선하기' },
-  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: '⚡ إعطاء الأولوية للمستوى', priorityBtnActive: '⚡ جارٍ إعطاء الأولوية…', priorityBtnTitle: 'إعطاء الأولوية لتحليل هذا الفيديو' },
-  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: '⚡ स्तर प्राथमिकता दें', priorityBtnActive: '⚡ प्राथमिकता दी जा रही है…', priorityBtnTitle: 'इस वीडियो के विश्लेषण को प्राथमिकता दें' },
-  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: '⚡ Приоритет уровня', priorityBtnActive: '⚡ Приоритизация…', priorityBtnTitle: 'Приоритизировать анализ этого видео' },
+  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Los servicios de transcripción están saturados. Click para reintentar' },
+  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: 'Get level', priorityBtnActive: 'Getting…', priorityBtnTitle: "Analyze this video's level", noTranscriptLabel: 'No transcript', noTranscriptTitle: 'No transcript or captions available for this video', rateLimitedLabel: 'Rate limit exceeded', rateLimitedTitle: 'Transcript services are busy right now. Click to retry' },
+  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: 'Obtenir le niveau', priorityBtnActive: 'Obtention…', priorityBtnTitle: 'Analyser le niveau de cette vidéo', noTranscriptLabel: 'Pas de transcription', noTranscriptTitle: "Aucune transcription ni sous-titres disponibles pour cette vidéo", rateLimitedLabel: 'Limite dépassée', rateLimitedTitle: 'Les services de transcription sont surchargés. Cliquez pour réessayer' },
+  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: 'Obter nível', priorityBtnActive: 'Obtendo…', priorityBtnTitle: 'Analisar o nível deste vídeo', noTranscriptLabel: 'Sem transcrição', noTranscriptTitle: 'Sem transcrição ou legendas disponíveis para este vídeo', rateLimitedLabel: 'Limite excedido', rateLimitedTitle: 'Os serviços de transcrição estão sobrecarregados. Clique para tentar novamente' },
+  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: 'Niveau abrufen', priorityBtnActive: 'Wird abgerufen…', priorityBtnTitle: 'Niveau dieses Videos analysieren', noTranscriptLabel: 'Kein Transkript', noTranscriptTitle: 'Kein Transkript oder Untertitel für dieses Video verfügbar', rateLimitedLabel: 'Limit überschritten', rateLimitedTitle: 'Die Transkriptionsdienste sind überlastet. Klicken zum Wiederholen' },
+  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: 'Ottieni livello', priorityBtnActive: 'Recupero…', priorityBtnTitle: 'Analizza il livello di questo video', noTranscriptLabel: 'Nessuna trascrizione', noTranscriptTitle: 'Nessuna trascrizione o sottotitoli disponibili per questo video', rateLimitedLabel: 'Limite superato', rateLimitedTitle: 'I servizi di trascrizione sono sovraccarichi. Clicca per riprovare' },
+  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '获取级别', priorityBtnActive: '获取中…', priorityBtnTitle: '分析此视频的级别', noTranscriptLabel: '无文字记录', noTranscriptTitle: '此视频没有可用的文字记录或字幕', rateLimitedLabel: '超出限制', rateLimitedTitle: '转录服务繁忙，点击重试' },
+  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: 'レベルを取得', priorityBtnActive: '取得中…', priorityBtnTitle: 'この動画のレベルを分析する', noTranscriptLabel: '文字起こしなし', noTranscriptTitle: 'この動画には文字起こしや字幕がありません', rateLimitedLabel: '制限超過', rateLimitedTitle: '文字起こしサービスが混雑しています。クリックして再試行' },
+  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '레벨 가져오기', priorityBtnActive: '가져오는 중…', priorityBtnTitle: '이 동영상의 레벨 분석하기', noTranscriptLabel: '스크립트 없음', noTranscriptTitle: '이 동영상에는 사용 가능한 스크립트나 자막이 없습니다', rateLimitedLabel: '한도 초과', rateLimitedTitle: '스크립트 서비스가 혼잡합니다. 클릭하여 재시도' },
+  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: 'الحصول على المستوى', priorityBtnActive: 'جارٍ الحصول…', priorityBtnTitle: 'تحليل مستوى هذا الفيديو', noTranscriptLabel: 'لا يوجد نص', noTranscriptTitle: 'لا يوجد نص مكتوب أو ترجمة متاحة لهذا الفيديو', rateLimitedLabel: 'تم تجاوز الحد', rateLimitedTitle: 'خدمات النص مزدحمة حالياً. انقر لإعادة المحاولة' },
+  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: 'स्तर प्राप्त करें', priorityBtnActive: 'प्राप्त हो रहा है…', priorityBtnTitle: 'इस वीडियो के स्तर का विश्लेषण करें', noTranscriptLabel: 'ट्रांसक्रिप्ट नहीं', noTranscriptTitle: 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट या सबटाइटल उपलब्ध नहीं है', rateLimitedLabel: 'सीमा पार हो गई', rateLimitedTitle: 'ट्रांसक्रिप्ट सेवाएं व्यस्त हैं। पुनः प्रयास के लिए क्लिक करें' },
+  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: 'Получить уровень', priorityBtnActive: 'Получение…', priorityBtnTitle: 'Проанализировать уровень этого видео', noTranscriptLabel: 'Нет расшифровки', noTranscriptTitle: 'Для этого видео нет расшифровки или субтитров', rateLimitedLabel: 'Лимит превышен', rateLimitedTitle: 'Сервисы расшифровки перегружены. Нажмите, чтобы повторить' },
 }
 
 let currentLang = 'en'
@@ -34,8 +35,20 @@ async function setLang(lang) {
   const t = T()
   document.querySelectorAll(`.${SPINNER_CLASS}`).forEach(el => renderSpinner(el, el.dataset.state))
   document.querySelectorAll(`.${PRIORITY_BTN_CLASS}`).forEach(el => {
-    el.textContent = el.disabled ? t.priorityBtnActive : t.priorityBtnLabel
-    el.title = t.priorityBtnTitle
+    if (el.disabled) {
+      el.textContent = t.priorityBtnActive
+      el.title = t.priorityBtnTitle
+    } else if (el.dataset.variant === 'rateLimited') {
+      el.textContent = t.rateLimitedLabel
+      el.title = t.rateLimitedTitle
+    } else {
+      el.textContent = t.priorityBtnLabel
+      el.title = t.priorityBtnTitle
+    }
+  })
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => {
+    el.textContent = t.noTranscriptLabel
+    el.title = t.noTranscriptTitle
   })
   return true
 }
@@ -183,6 +196,7 @@ async function setModel(model) {
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(runScans, 100)
   return true
@@ -206,6 +220,7 @@ async function setServer(server) {
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(runScans, 100)
   return true
@@ -222,6 +237,7 @@ async function setEngine(engine) {
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(runScans, 100)
   return true
@@ -233,12 +249,13 @@ async function setNanoLang(lang) {
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => el.remove())
   document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
   setTimeout(runScans, 100)
   return true
 }
 
-async function analyzeWithNano(text) {
+async function analyzeWithNano(text, token) {
   console.log('[YT-Level] analyzeWithNano called, text length:', text.length)
   try {
     const { nanoLang } = await chrome.storage.local.get('nanoLang')
@@ -254,13 +271,14 @@ async function analyzeWithNano(text) {
       console.log('[YT-Level] Gemini Nano not available:', availability)
       return null
     }
+    if (token?.cancelled) throw new AbortedAnalysisError('cancelled before nano session')
 
     const session = await LanguageModel.create({
       expectedInputs: [{ type: 'text', languages: [nanoInputLang] }],
       expectedOutputs: [{ type: 'text', languages: ['en'] }]
     })
 
-    const response = await session.prompt(DEEP_PROMPT(text))
+    const response = await session.prompt(DEEP_PROMPT(text), { signal: token?.abortController?.signal })
     session.destroy()
 
     const trimmed = response.trim().toUpperCase()
@@ -269,6 +287,8 @@ async function analyzeWithNano(text) {
     console.log('[YT-Level] Nano parsed level:', level)
     return level || null
   } catch (e) {
+    if (e instanceof AbortedAnalysisError) throw e
+    if (e?.name === 'AbortError') throw new AbortedAnalysisError('nano aborted')
     console.log('[YT-Level] Nano error:', e)
     return null
   }
@@ -277,15 +297,19 @@ async function analyzeWithNano(text) {
 let requestSeq = 0
 
 class AbortedAnalysisError extends Error {}
+class TranscriptRateLimitedError extends Error {}
 
-async function analyzeWithOllama(text, model) {
+async function analyzeWithOllama(text, model, token) {
   console.log('[YT-Level] analyzeWithOllama called, text length:', text.length, 'model:', model)
+  const requestId = `req-${++requestSeq}`
+  if (token) token.requestId = requestId
   const result = await chrome.runtime.sendMessage({
     type: 'ollama_generate',
     model,
     prompt: DEEP_PROMPT(text),
-    requestId: `req-${++requestSeq}`
+    requestId
   })
+  if (token) token.requestId = null
   if (!result || result.error) {
     if (result?.aborted) throw new AbortedAnalysisError('ollama request aborted')
     console.log('[YT-Level] Ollama error:', result?.error)
@@ -299,17 +323,17 @@ async function analyzeWithOllama(text, model) {
   return level || null
 }
 
-async function analyzeLevel(text) {
+async function analyzeLevel(text, token) {
   const engine = await getEngine()
 
   if (engine === 'nano') {
-    const level = await analyzeWithNano(text)
+    const level = await analyzeWithNano(text, token)
     if (level) return { level, method: 'nano', model: 'Gemini Nano' }
     return null
   }
 
   const model = await getModel()
-  const ollamaLevel = await analyzeWithOllama(text, model)
+  const ollamaLevel = await analyzeWithOllama(text, model, token)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 
   return null
@@ -318,7 +342,7 @@ async function analyzeLevel(text) {
 async function fetchTranscript(videoId) {
   try {
     return await chrome.runtime.sendMessage({ type: 'fetch_transcript', videoId })
-  } catch { return null }
+  } catch { return { transcript: null, rateLimited: false } }
 }
 
 function getVideoId(element) {
@@ -338,13 +362,14 @@ function getBadgeAnchor(element) {
 function injectBadge(element, level, method, model) {
   const anchor = getBadgeAnchor(element)
   removePriorityButton(element)
+  anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)?.remove()
   if (anchor.querySelector(`.${BADGE_CLASS}`)) return
   const badge = document.createElement('div')
   badge.className = BADGE_CLASS
   badge.textContent = level
   badge.title = `Nivel ${level} (${model || 'Ollama'})`
   Object.assign(badge.style, {
-    position: 'absolute', top: '8px', left: '8px', zIndex: 999,
+    position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
     width: '44px', height: '44px', borderRadius: '6px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: LEVEL_COLORS[level] || '#666', color: 'white',
@@ -359,7 +384,7 @@ function injectBadge(element, level, method, model) {
   engineBadge.textContent = method === 'nano' ? 'Nano' : 'Ollama'
   engineBadge.title = model || (method === 'nano' ? 'Gemini Nano' : 'Ollama')
   Object.assign(engineBadge.style, {
-    position: 'absolute', top: '14px', left: '58px', zIndex: 999,
+    position: 'absolute', top: '14px', left: '58px', zIndex: 99999,
     padding: '4px 10px', borderRadius: '999px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: method === 'nano' ? '#1a73e8' : '#0ac700', color: 'white',
@@ -367,6 +392,26 @@ function injectBadge(element, level, method, model) {
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none', whiteSpace: 'nowrap'
   })
   anchor.appendChild(engineBadge)
+}
+
+function injectNoDataBadge(element) {
+  const anchor = getBadgeAnchor(element)
+  removePriorityButton(element)
+  if (anchor.querySelector(`.${BADGE_CLASS}`) || anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)) return
+  const badge = document.createElement('div')
+  badge.className = NO_DATA_BADGE_CLASS
+  badge.textContent = T().noTranscriptLabel
+  badge.title = T().noTranscriptTitle
+  Object.assign(badge.style, {
+    position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
+    height: '26px', padding: '0 10px', borderRadius: '999px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: '#e67e22', color: 'white',
+    fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
+    whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
+  })
+  anchor.style.position = 'relative'
+  anchor.appendChild(badge)
 }
 
 const SPINNER_CLASS = 'yt-level-spinner'
@@ -391,7 +436,7 @@ function injectSpinner(element, state = 'active') {
     spinner = document.createElement('div')
     spinner.className = SPINNER_CLASS
     Object.assign(spinner.style, {
-      position: 'absolute', top: '8px', left: '8px', zIndex: 999,
+      position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
       height: '26px', padding: '0 10px', borderRadius: '999px',
       display: 'flex', alignItems: 'center', gap: '6px', pointerEvents: 'none',
       color: '#fff', fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
@@ -400,6 +445,7 @@ function injectSpinner(element, state = 'active') {
     anchor.style.position = 'relative'
     anchor.querySelector(`.${BADGE_CLASS}`)?.remove()
     anchor.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
+    anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)?.remove()
     anchor.appendChild(spinner)
   }
   if (spinner.dataset.state === state) return
@@ -410,47 +456,110 @@ function removeSpinner(element) {
   getBadgeAnchor(element).querySelector(`.${SPINNER_CLASS}`)?.remove()
 }
 
-function injectPriorityButton(element) {
+function injectPriorityButton(element, variant = 'idle') {
   const anchor = getBadgeAnchor(element)
   if (anchor.querySelector(`.${BADGE_CLASS}`)) return
-  if (anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)) return
-  const btn = document.createElement('button')
-  btn.className = PRIORITY_BTN_CLASS
-  btn.type = 'button'
-  btn.textContent = T().priorityBtnLabel
-  btn.title = T().priorityBtnTitle
-  Object.assign(btn.style, {
-    position: 'absolute', bottom: '8px', left: '8px', zIndex: 1000,
-    height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
-    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
-    background: 'rgba(0,0,0,0.8)', color: '#ffd54f', fontSize: '13px', fontWeight: 'bold',
-    fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
-    cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
-  })
-  btn.addEventListener('click', e => {
-    e.preventDefault()
-    e.stopPropagation()
-    prioritizeVideoElement(element, btn)
-  })
-  anchor.style.position = 'relative'
-  anchor.appendChild(btn)
+  if (anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)) return
+  const t = T()
+  let btn = anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)
+  if (!btn) {
+    btn = document.createElement('button')
+    btn.className = PRIORITY_BTN_CLASS
+    btn.type = 'button'
+    Object.assign(btn.style, {
+      position: 'absolute', bottom: '8px', left: '8px', zIndex: 99999,
+      height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+      color: '#ffffff', fontSize: '13px', fontWeight: 'bold',
+      fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+      cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
+    })
+    btn.addEventListener('click', e => {
+      e.preventDefault()
+      e.stopPropagation()
+      prioritizeVideoElement(element, btn)
+    })
+    anchor.style.position = 'relative'
+    anchor.appendChild(btn)
+  }
+  btn.dataset.variant = variant
+  btn.disabled = false
+  if (variant === 'rateLimited') {
+    btn.textContent = t.rateLimitedLabel
+    btn.title = t.rateLimitedTitle
+    btn.style.background = '#c0392b'
+  } else {
+    btn.textContent = t.priorityBtnLabel
+    btn.title = t.priorityBtnTitle
+    btn.style.background = '#2e7d32'
+  }
 }
 
 function removePriorityButton(element) {
   getBadgeAnchor(element).querySelector(`.${PRIORITY_BTN_CLASS}`)?.remove()
 }
 
+const anchorObservers = new WeakMap()
+
+function stopWatchingAnchor(anchor) {
+  anchorObservers.get(anchor)?.disconnect()
+  anchorObservers.delete(anchor)
+}
+
+function reconcileOverlay(element) {
+  if (!element.isConnected) { stopWatchingAnchor(getBadgeAnchor(element)); return }
+  const videoId = getVideoId(element)
+  if (!videoId) return
+  const anchor = getBadgeAnchor(element)
+
+  if (videoResultCache.has(videoId)) {
+    const cached = videoResultCache.get(videoId)
+    if (cached === 'no_transcript') {
+      if (!anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)) injectNoDataBadge(element)
+    } else if (cached && !anchor.querySelector(`.${BADGE_CLASS}`)) {
+      injectBadge(element, cached.level, cached.method, cached.model)
+    }
+    stopWatchingAnchor(anchor)
+    return
+  }
+
+  if (videoInFlight.has(videoId)) {
+    if (!anchor.querySelector(`.${SPINNER_CLASS}`)) injectSpinner(element, 'active')
+    return
+  }
+
+  if (pendingElements.includes(element)) {
+    if (!anchor.querySelector(`.${SPINNER_CLASS}`)) injectSpinner(element, 'queued')
+    if (!anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)) injectPriorityButton(element)
+    return
+  }
+
+  if (!anchor.querySelector(`.${PRIORITY_BTN_CLASS}`) && !anchor.querySelector(`.${SPINNER_CLASS}`)) {
+    injectPriorityButton(element)
+  }
+}
+
+function watchAnchor(element) {
+  const anchor = getBadgeAnchor(element)
+  if (anchorObservers.has(anchor)) return
+  const obs = new MutationObserver(() => reconcileOverlay(element))
+  obs.observe(anchor, { childList: true })
+  anchorObservers.set(anchor, obs)
+}
+
 const styleEl = document.createElement('style')
 styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}
 @keyframes ytLevelPulse{0%,100%{opacity:0.3}50%{opacity:0.9}}
-.${PRIORITY_BTN_CLASS}{opacity:0.55;transition:opacity .15s,transform .1s}
-.${PRIORITY_BTN_CLASS}:hover{opacity:1;transform:scale(1.1)}
+.${PRIORITY_BTN_CLASS}{opacity:1;transition:transform .1s}
+.${PRIORITY_BTN_CLASS}:hover{transform:scale(1.1)}
 .${PRIORITY_BTN_CLASS}:active{transform:scale(0.92)}
-.${PRIORITY_BTN_CLASS}:disabled{opacity:0.4;cursor:default}`
+.${PRIORITY_BTN_CLASS}:disabled{opacity:0.6;cursor:default}`
 document.documentElement.appendChild(styleEl)
 
 const videoResultCache = new Map()
 const videoInFlight = new Set()
+const elementTokens = new Map()
+const activeElements = []
 
 async function processVideoElement(element) {
   const videoId = getVideoId(element)
@@ -461,7 +570,8 @@ async function processVideoElement(element) {
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
     element.setAttribute(PROCESSED_ATTR, videoId)
-    if (cached) injectBadge(element, cached.level, cached.method, cached.model)
+    if (cached === 'no_transcript') injectNoDataBadge(element)
+    else if (cached) injectBadge(element, cached.level, cached.method, cached.model)
     removePriorityButton(element)
     return
   }
@@ -478,13 +588,19 @@ async function processVideoElement(element) {
   videoInFlight.add(videoId)
   removePriorityButton(element)
 
+  const token = { cancelled: false, requestId: null, abortController: new AbortController() }
+  elementTokens.set(element, token)
+  activeElements.push(element)
+
   try {
     injectSpinner(element, 'active')
 
-    const transcript = await fetchTranscript(videoId)
-    if (!transcript) { removeSpinner(element); videoResultCache.set(videoId, null); return }
+    const { transcript, rateLimited } = await fetchTranscript(videoId)
+    if (token.cancelled) throw new AbortedAnalysisError('cancelled before analysis')
+    if (rateLimited) throw new TranscriptRateLimitedError('transcript API rate limited')
+    if (!transcript) { removeSpinner(element); videoResultCache.set(videoId, 'no_transcript'); injectNoDataBadge(element); return }
 
-    const result = await analyzeLevel(transcript)
+    const result = await analyzeLevel(transcript, token)
     removeSpinner(element)
     videoResultCache.set(videoId, result)
     if (result) {
@@ -495,11 +611,19 @@ async function processVideoElement(element) {
     if (e instanceof AbortedAnalysisError) {
       console.log('[YT-Level] Analysis aborted for', videoId)
       element.removeAttribute(PROCESSED_ATTR)
+      requeueElement(element)
+    } else if (e instanceof TranscriptRateLimitedError) {
+      console.log('[YT-Level] Transcript API rate limited for', videoId)
+      element.removeAttribute(PROCESSED_ATTR)
+      if (element.isConnected) injectPriorityButton(element, 'rateLimited')
     } else {
       console.log('[YT-Level] Error processing', videoId, ':', e.message)
     }
   } finally {
     videoInFlight.delete(videoId)
+    elementTokens.delete(element)
+    const activeIdx = activeElements.indexOf(element)
+    if (activeIdx !== -1) activeElements.splice(activeIdx, 1)
   }
 }
 
@@ -507,7 +631,15 @@ const MAX_CONCURRENT_ANALYSIS = 2
 let activeAnalysisCount = 0
 const pendingElements = []
 
-function queueVideoElement(element) {
+function requeueElement(element) {
+  if (element.isConnected && !pendingElements.includes(element)) {
+    injectSpinner(element, 'queued')
+    injectPriorityButton(element)
+    pendingElements.push(element)
+  }
+}
+
+function presentVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
@@ -519,10 +651,8 @@ function queueVideoElement(element) {
   }
 
   if (videoInFlight.has(videoId) || pendingElements.includes(element)) return
-  injectSpinner(element, 'queued')
   injectPriorityButton(element)
-  pendingElements.push(element)
-  pumpAnalysisQueue()
+  watchAnchor(element)
 }
 
 function pumpAnalysisQueue() {
@@ -537,13 +667,28 @@ function pumpAnalysisQueue() {
   }
 }
 
+function cancelActiveElement(element) {
+  const token = elementTokens.get(element)
+  if (!token) return
+  token.cancelled = true
+  token.abortController.abort()
+  if (token.requestId) {
+    chrome.runtime.sendMessage({ type: 'ollama_abort', requestId: token.requestId }).catch(() => {})
+  }
+}
+
 function prioritizeVideoElement(element, btn) {
   const videoId = getVideoId(element)
   if (!videoId) return
   if (videoResultCache.has(videoId) || videoInFlight.has(videoId)) return
   const idx = pendingElements.indexOf(element)
-  if (idx === -1) return
-  pendingElements.splice(idx, 1)
+  if (idx !== -1) pendingElements.splice(idx, 1)
+  watchAnchor(element)
+
+  if (activeAnalysisCount >= MAX_CONCURRENT_ANALYSIS && activeElements.length) {
+    cancelActiveElement(activeElements[activeElements.length - 1])
+  }
+
   pendingElements.unshift(element)
   if (btn) {
     btn.textContent = T().priorityBtnActive
@@ -556,8 +701,15 @@ function scanFeed() {
   for (const sel of CARD_SELECTORS) {
     for (const el of document.querySelectorAll(sel)) {
       if (CARD_SELECTORS.some(s => el.parentElement && el.parentElement.closest(s))) continue
-      queueVideoElement(el)
+      presentVideoElement(el)
     }
+  }
+  sweepDisconnectedActive()
+}
+
+function sweepDisconnectedActive() {
+  for (const el of [...activeElements]) {
+    if (!el.isConnected) cancelActiveElement(el)
   }
 }
 
@@ -577,6 +729,41 @@ function buildWatchBadge(videoId, result) {
     position: 'absolute', top: '12px', left: '12px', zIndex: 60,
     display: 'flex', alignItems: 'center', gap: '8px', pointerEvents: 'none'
   })
+
+  if (result === 'no_transcript') {
+    const noData = document.createElement('span')
+    noData.textContent = T().noTranscriptLabel
+    noData.title = T().noTranscriptTitle
+    Object.assign(noData.style, {
+      display: 'inline-flex', alignItems: 'center', padding: '5px 13px', borderRadius: '999px',
+      background: '#e67e22', color: 'white',
+      fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
+    })
+    row.appendChild(noData)
+    return row
+  }
+
+  if (result === 'rate_limited') {
+    const retry = document.createElement('button')
+    retry.type = 'button'
+    retry.textContent = T().rateLimitedLabel
+    retry.title = T().rateLimitedTitle
+    Object.assign(retry.style, {
+      display: 'inline-flex', alignItems: 'center', padding: '5px 13px', borderRadius: '999px',
+      background: '#c0392b', color: 'white', border: 'none',
+      fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+      cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
+    })
+    retry.addEventListener('click', e => {
+      e.preventDefault()
+      e.stopPropagation()
+      row.remove()
+      processWatchPage()
+    })
+    row.appendChild(retry)
+    return row
+  }
 
   const badge = document.createElement('span')
   badge.textContent = result.level
@@ -625,8 +812,14 @@ async function processWatchPage() {
   if (videoInFlight.has(videoId)) return
   videoInFlight.add(videoId)
   try {
-    const transcript = await fetchTranscript(videoId)
-    if (!transcript) { videoResultCache.set(videoId, null); return }
+    const { transcript, rateLimited } = await fetchTranscript(videoId)
+    if (rateLimited) throw new TranscriptRateLimitedError('transcript API rate limited')
+    if (!transcript) {
+      videoResultCache.set(videoId, 'no_transcript')
+      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
+      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, 'no_transcript'))
+      return
+    }
     const result = await analyzeLevel(transcript)
     videoResultCache.set(videoId, result)
     if (result) {
@@ -636,6 +829,10 @@ async function processWatchPage() {
   } catch (e) {
     if (e instanceof AbortedAnalysisError) {
       console.log('[YT-Level] Watch page analysis aborted for', videoId)
+    } else if (e instanceof TranscriptRateLimitedError) {
+      console.log('[YT-Level] Transcript API rate limited on watch page for', videoId)
+      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
+      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, 'rate_limited'))
     } else {
       console.log('[YT-Level] Error processing watch page video', videoId, ':', e.message)
     }

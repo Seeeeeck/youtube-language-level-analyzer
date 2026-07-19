@@ -7,6 +7,41 @@ const PROCESSED_ATTR = 'data-level-video'
 
 const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang'])
 
+const CONTENT_LANG = {
+  es: { queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: '⚡ Priorizar nivel', priorityBtnActive: '⚡ Priorizando…', priorityBtnTitle: 'Priorizar análisis de este video' },
+  en: { queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: '⚡ Prioritize level', priorityBtnActive: '⚡ Prioritizing…', priorityBtnTitle: 'Prioritize analysis of this video' },
+  fr: { queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: '⚡ Prioriser le niveau', priorityBtnActive: '⚡ Priorisation…', priorityBtnTitle: "Prioriser l'analyse de cette vidéo" },
+  pt: { queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: '⚡ Priorizar nível', priorityBtnActive: '⚡ Priorizando…', priorityBtnTitle: 'Priorizar análise deste vídeo' },
+  de: { queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: '⚡ Niveau priorisieren', priorityBtnActive: '⚡ Wird priorisiert…', priorityBtnTitle: 'Analyse dieses Videos priorisieren' },
+  it: { queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: '⚡ Priorizza livello', priorityBtnActive: '⚡ Priorizzazione…', priorityBtnTitle: "Priorizza l'analisi di questo video" },
+  zh: { queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '⚡ 优先分析', priorityBtnActive: '⚡ 优先处理中…', priorityBtnTitle: '优先分析此视频' },
+  ja: { queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: '⚡ レベルを優先分析', priorityBtnActive: '⚡ 優先処理中…', priorityBtnTitle: 'この動画の分析を優先する' },
+  ko: { queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '⚡ 레벨 우선 분석', priorityBtnActive: '⚡ 우선 처리 중…', priorityBtnTitle: '이 동영상 분석 우선하기' },
+  ar: { queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: '⚡ إعطاء الأولوية للمستوى', priorityBtnActive: '⚡ جارٍ إعطاء الأولوية…', priorityBtnTitle: 'إعطاء الأولوية لتحليل هذا الفيديو' },
+  hi: { queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: '⚡ स्तर प्राथमिकता दें', priorityBtnActive: '⚡ प्राथमिकता दी जा रही है…', priorityBtnTitle: 'इस वीडियो के विश्लेषण को प्राथमिकता दें' },
+  ru: { queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: '⚡ Приоритет уровня', priorityBtnActive: '⚡ Приоритизация…', priorityBtnTitle: 'Приоритизировать анализ этого видео' },
+}
+
+let currentLang = 'en'
+chrome.storage.local.get('lang').then(({ lang }) => { if (lang) currentLang = lang })
+
+function T() {
+  return CONTENT_LANG[currentLang] || CONTENT_LANG.en
+}
+
+async function setLang(lang) {
+  currentLang = lang
+  const t = T()
+  document.querySelectorAll(`.${SPINNER_CLASS}`).forEach(el => {
+    el.title = el.dataset.state === 'queued' ? t.queuedTitle : t.activeTitle
+  })
+  document.querySelectorAll(`.${PRIORITY_BTN_CLASS}`).forEach(el => {
+    el.textContent = el.disabled ? t.priorityBtnActive : t.priorityBtnLabel
+    el.title = t.priorityBtnTitle
+  })
+  return true
+}
+
 async function clearCachedVideoStorage() {
   const all = await chrome.storage.local.get(null)
   for (const key of Object.keys(all)) {
@@ -124,6 +159,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   if (msg.type === 'set_engine') {
     setEngine(msg.engine).then(sendResponse)
+    return true
+  }
+  if (msg.type === 'set_lang') {
+    setLang(msg.lang).then(sendResponse)
     return true
   }
   if (msg.type === 'set_nano_lang') {
@@ -357,7 +396,7 @@ function injectSpinner(element, state = 'active') {
   }
   if (spinner.dataset.state === state) return
   spinner.dataset.state = state
-  spinner.title = state === 'queued' ? 'En cola de análisis' : 'Analizando ahora'
+  spinner.title = state === 'queued' ? T().queuedTitle : T().activeTitle
   spinner.innerHTML = SPINNER_SVG[state]
 }
 
@@ -372,8 +411,8 @@ function injectPriorityButton(element) {
   const btn = document.createElement('button')
   btn.className = PRIORITY_BTN_CLASS
   btn.type = 'button'
-  btn.textContent = '⚡ Priorizar nivel'
-  btn.title = 'Priorizar análisis de este video'
+  btn.textContent = T().priorityBtnLabel
+  btn.title = T().priorityBtnTitle
   Object.assign(btn.style, {
     position: 'absolute', bottom: '8px', left: '8px', zIndex: 1000,
     height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
@@ -501,7 +540,7 @@ function prioritizeVideoElement(element, btn) {
   pendingElements.splice(idx, 1)
   pendingElements.unshift(element)
   if (btn) {
-    btn.textContent = '⚡ Priorizando…'
+    btn.textContent = T().priorityBtnActive
     btn.disabled = true
   }
   pumpAnalysisQueue()

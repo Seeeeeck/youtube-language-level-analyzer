@@ -269,6 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const l = langSelect.value
     await chrome.storage.local.set({ lang: l })
     applyLang(l, els)
+    await sendToContent({ type: 'set_lang', lang: l })
     await refreshAll()
   })
 

@@ -5,6 +5,15 @@ const ENGINE_BADGE_CLASS = 'yt-level-engine-badge'
 const PRIORITY_BTN_CLASS = 'yt-level-priority-btn'
 const PROCESSED_ATTR = 'data-level-video'
 
+const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang'])
+
+async function clearCachedVideoStorage() {
+  const all = await chrome.storage.local.get(null)
+  for (const key of Object.keys(all)) {
+    if (!SETTINGS_KEYS.has(key) && key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
+  }
+}
+
 const LEVEL_COLORS = {
   A1: '#4CAF50', A2: '#8BC34A',
   B1: '#FFC107', B2: '#FF9800',
@@ -132,10 +141,7 @@ async function getModels() {
 
 async function setModel(model) {
   await chrome.storage.local.set({ ollamaModel: model })
-  const all = await chrome.storage.local.get(null)
-  for (const key of Object.keys(all)) {
-    if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
-  }
+  await clearCachedVideoStorage()
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
@@ -158,10 +164,7 @@ async function getModel() {
 
 async function setServer(server) {
   await chrome.storage.local.set({ ollamaServer: server })
-  const all = await chrome.storage.local.get(null)
-  for (const key of Object.keys(all)) {
-    if (key.match(/^[a-zA-Z0-9_-]{11}$/)) await chrome.storage.local.remove(key)
-  }
+  await clearCachedVideoStorage()
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())

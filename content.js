@@ -288,14 +288,6 @@ function getVideoId(element) {
   return match ? match[1] : null
 }
 
-function isCompilationCard(element) {
-  const link = element.querySelector('a[href*="/watch?v="]')
-  if (link && link.getAttribute('href').includes('list=')) return true
-  const badges = Array.from(element.querySelectorAll('badge-shape, .badge-shape-wiz__text'))
-    .map(b => b.textContent.trim().toLowerCase())
-  return badges.some(t => t === 'mix' || /^\d+\s+(video|videos|episodio|episodios)$/.test(t))
-}
-
 const THUMBNAIL_SELECTOR = 'ytd-thumbnail, yt-thumbnail-view-model, #thumbnail'
 
 function getBadgeAnchor(element) {
@@ -368,7 +360,6 @@ const videoInFlight = new Set()
 async function processVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
-  if (isCompilationCard(element)) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
   if (processedId === videoId) return
 
@@ -419,7 +410,6 @@ const pendingElements = []
 function queueVideoElement(element) {
   const videoId = getVideoId(element)
   if (!videoId) return
-  if (isCompilationCard(element)) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
   if (processedId === videoId) return
 
@@ -456,19 +446,20 @@ function scanFeed() {
 }
 
 const WATCH_BADGE_CLASS = 'yt-level-watch-badge'
-const WATCH_TITLE_SELECTOR = 'ytd-watch-metadata #title, #above-the-fold #title'
+const WATCH_PLAYER_SELECTOR = '#movie_player, .html5-video-player'
 
 function getWatchVideoId() {
   const match = location.href.match(/[?&]v=([a-zA-Z0-9_-]{11})/)
   return match ? match[1] : null
 }
 
-function buildWatchBadgeRow(videoId, result) {
+function buildWatchBadge(videoId, result) {
   const row = document.createElement('div')
   row.className = WATCH_BADGE_CLASS
   row.dataset.videoId = videoId
   Object.assign(row.style, {
-    display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0'
+    position: 'absolute', top: '12px', left: '12px', zIndex: 60,
+    display: 'flex', alignItems: 'center', gap: '8px', pointerEvents: 'none'
   })
 
   const badge = document.createElement('span')
@@ -476,18 +467,20 @@ function buildWatchBadgeRow(videoId, result) {
   badge.title = `Nivel ${result.level} (${result.model || 'Ollama'})`
   Object.assign(badge.style, {
     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-    width: '32px', height: '32px', borderRadius: '6px',
+    width: '47px', height: '47px', borderRadius: '8px',
     background: LEVEL_COLORS[result.level] || '#666', color: 'white',
-    fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'
+    fontSize: '20px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
   })
 
   const engineBadge = document.createElement('span')
   engineBadge.textContent = result.method === 'nano' ? 'Nano' : 'Ollama'
   engineBadge.title = result.model || (result.method === 'nano' ? 'Gemini Nano' : 'Ollama')
   Object.assign(engineBadge.style, {
-    display: 'inline-flex', alignItems: 'center', padding: '4px 10px', borderRadius: '999px',
+    display: 'inline-flex', alignItems: 'center', padding: '5px 13px', borderRadius: '999px',
     background: result.method === 'nano' ? '#1a73e8' : '#0ac700', color: 'white',
-    fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap'
+    fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
   })
 
   row.appendChild(badge)
@@ -503,13 +496,13 @@ async function processWatchPage() {
     if (el.dataset.videoId !== videoId) el.remove()
   })
 
-  const titleContainer = document.querySelector(WATCH_TITLE_SELECTOR)
-  if (!titleContainer) return
-  if (titleContainer.parentElement.querySelector(`.${WATCH_BADGE_CLASS}[data-video-id="${videoId}"]`)) return
+  const player = document.querySelector(WATCH_PLAYER_SELECTOR)
+  if (!player) return
+  if (player.querySelector(`.${WATCH_BADGE_CLASS}[data-video-id="${videoId}"]`)) return
 
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
-    if (cached) titleContainer.after(buildWatchBadgeRow(videoId, cached))
+    if (cached) player.appendChild(buildWatchBadge(videoId, cached))
     return
   }
 
@@ -520,7 +513,10 @@ async function processWatchPage() {
     if (!transcript) { videoResultCache.set(videoId, null); return }
     const result = await analyzeLevel(transcript)
     videoResultCache.set(videoId, result)
-    if (result) titleContainer.after(buildWatchBadgeRow(videoId, result))
+    if (result) {
+      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
+      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, result))
+    }
   } catch (e) {
     if (e instanceof AbortedAnalysisError) {
       console.log('[YT-Level] Watch page analysis aborted for', videoId)

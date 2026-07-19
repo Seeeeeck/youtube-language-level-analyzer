@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 480" width="1240" height="480" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <linearGradient id="thumbA" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3a3f58"/>
+      <stop offset="100%" stop-color="#1f2233"/>
+    </linearGradient>
+    <linearGradient id="thumbB" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5a3d3d"/>
+      <stop offset="100%" stop-color="#2a1a1a"/>
+    </linearGradient>
+    <linearGradient id="thumbC" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2f4a3d"/>
+      <stop offset="100%" stop-color="#152019"/>
+    </linearGradient>
+    <linearGradient id="thumbD" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4a3f2a"/>
+      <stop offset="100%" stop-color="#221c10"/>
+    </linearGradient>
+    <filter id="badgeShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1240" height="480" fill="#0f0f0f"/>
+
+  <!-- ===== Card template macro (manually repeated) ===== -->
+
+  <!-- Card 1 -->
+  <g transform="translate(40,40)">
+    <rect width="260" height="146" rx="10" fill="url(#thumbA)"/>
+    <rect x="204" y="120" width="46" height="18" rx="4" fill="#000" opacity="0.75"/>
+    <text x="227" y="133" text-anchor="middle" fill="#fff" font-size="11">12:34</text>
+    <!-- square CEFR badge -->
+    <rect x="10" y="10" width="44" height="44" rx="8" fill="#4CAF50" filter="url(#badgeShadow)"/>
+    <text x="32" y="38" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">A1</text>
+
+    <g transform="translate(0,160)">
+      <circle cx="14" cy="14" r="14" fill="#555"/>
+      <text x="38" y="14" fill="#eee" font-size="14" font-weight="bold">Easy English Chat</text>
+      <text x="38" y="33" fill="#aaa" font-size="12">Beginner Lessons</text>
+      <text x="38" y="50" fill="#888" font-size="11">18K views &#183; 2 days ago</text>
+    </g>
+  </g>
+
+  <!-- Card 2 -->
+  <g transform="translate(330,40)">
+    <rect width="260" height="146" rx="10" fill="url(#thumbC)"/>
+    <rect x="204" y="120" width="46" height="18" rx="4" fill="#000" opacity="0.75"/>
+    <text x="227" y="133" text-anchor="middle" fill="#fff" font-size="11">8:20</text>
+    <rect x="10" y="10" width="44" height="44" rx="8" fill="#FFC107" filter="url(#badgeShadow)"/>
+    <text x="32" y="38" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">B1</text>
+
+    <g transform="translate(0,160)">
+      <circle cx="14" cy="14" r="14" fill="#555"/>
+      <text x="38" y="14" fill="#eee" font-size="14" font-weight="bold">Daily Conversations</text>
+      <text x="38" y="33" fill="#aaa" font-size="12">Intermediate Topics</text>
+      <text x="38" y="50" fill="#888" font-size="11">42K views &#183; 5 days ago</text>
+    </g>
+  </g>
+
+  <!-- Card 3 -->
+  <g transform="translate(620,40)">
+    <rect width="260" height="146" rx="10" fill="url(#thumbD)"/>
+    <rect x="204" y="120" width="46" height="18" rx="4" fill="#000" opacity="0.75"/>
+    <text x="227" y="133" text-anchor="middle" fill="#fff" font-size="11">15:45</text>
+    <rect x="10" y="10" width="44" height="44" rx="8" fill="#F44336" filter="url(#badgeShadow)"/>
+    <text x="32" y="38" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">C1</text>
+
+    <g transform="translate(0,160)">
+      <circle cx="14" cy="14" r="14" fill="#555"/>
+      <text x="38" y="14" fill="#eee" font-size="14" font-weight="bold">Academic Lecture Series</text>
+      <text x="38" y="33" fill="#aaa" font-size="12">University Level</text>
+      <text x="38" y="50" fill="#888" font-size="11">9.3K views &#183; 1 week ago</text>
+    </g>
+  </g>
+
+  <!-- Card 4 -->
+  <g transform="translate(910,40)">
+    <rect width="260" height="146" rx="10" fill="url(#thumbB)"/>
+    <rect x="204" y="120" width="46" height="18" rx="4" fill="#000" opacity="0.75"/>
+    <text x="227" y="133" text-anchor="middle" fill="#fff" font-size="11">22:10</text>
+    <rect x="10" y="10" width="44" height="44" rx="8" fill="#B71C1C" filter="url(#badgeShadow)"/>
+    <text x="32" y="38" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold">C2</text>
+
+    <g transform="translate(0,160)">
+      <circle cx="14" cy="14" r="14" fill="#555"/>
+      <text x="38" y="14" fill="#eee" font-size="14" font-weight="bold">Native Debate Panel</text>
+      <text x="38" y="33" fill="#aaa" font-size="12">Advanced Discussion</text>
+      <text x="38" y="50" fill="#888" font-size="11">61K views &#183; 3 weeks ago</text>
+    </g>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(40,340)">
+    <text x="0" y="0" fill="#eee" font-size="16" font-weight="bold">CEFR Levels</text>
+    <g transform="translate(0,22)" font-size="13" fill="#ccc">
+      <rect x="0" y="0" width="24" height="24" rx="6" fill="#4CAF50"/><text x="32" y="17">A1 &#8211; Beginner</text>
+      <rect x="200" y="0" width="24" height="24" rx="6" fill="#8BC34A"/><text x="232" y="17">A2 &#8211; Elementary</text>
+      <rect x="420" y="0" width="24" height="24" rx="6" fill="#FFC107"/><text x="452" y="17">B1 &#8211; Intermediate</text>
+      <rect x="670" y="0" width="24" height="24" rx="6" fill="#FF9800"/><text x="702" y="17">B2 &#8211; Upper Int.</text>
+      <rect x="890" y="0" width="24" height="24" rx="6" fill="#F44336"/><text x="922" y="17">C1 &#8211; Advanced</text>
+      <rect x="1080" y="0" width="24" height="24" rx="6" fill="#B71C1C"/><text x="1112" y="17">C2 &#8211; Proficient</text>
+    </g>
+  </g>
+
+  <text x="1160" y="465" text-anchor="end" fill="#555" font-size="11">YT Level &#8211; youtube-language-level-analyzer</text>
+</svg>

@@ -2,6 +2,7 @@ console.log('[YT-Level] Content script loaded')
 
 const BADGE_CLASS = 'yt-level-badge'
 const ENGINE_BADGE_CLASS = 'yt-level-engine-badge'
+const PRIORITY_BTN_CLASS = 'yt-level-priority-btn'
 const PROCESSED_ATTR = 'data-level-video'
 
 const LEVEL_COLORS = {
@@ -296,6 +297,7 @@ function getBadgeAnchor(element) {
 
 function injectBadge(element, level, method, model) {
   const anchor = getBadgeAnchor(element)
+  removePriorityButton(element)
   if (anchor.querySelector(`.${BADGE_CLASS}`)) return
   const badge = document.createElement('div')
   badge.className = BADGE_CLASS
@@ -350,8 +352,41 @@ function removeSpinner(element) {
   getBadgeAnchor(element).querySelector(`.${SPINNER_CLASS}`)?.remove()
 }
 
+function injectPriorityButton(element) {
+  const anchor = getBadgeAnchor(element)
+  if (anchor.querySelector(`.${BADGE_CLASS}`)) return
+  if (anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)) return
+  const btn = document.createElement('button')
+  btn.className = PRIORITY_BTN_CLASS
+  btn.type = 'button'
+  btn.textContent = '⚡'
+  btn.title = 'Priorizar análisis de este video'
+  Object.assign(btn.style, {
+    position: 'absolute', bottom: '8px', left: '8px', zIndex: 1000,
+    width: '28px', height: '28px', borderRadius: '50%', border: 'none',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'rgba(0,0,0,0.7)', color: '#ffd54f', fontSize: '15px',
+    cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
+  })
+  btn.addEventListener('click', e => {
+    e.preventDefault()
+    e.stopPropagation()
+    prioritizeVideoElement(element, btn)
+  })
+  anchor.style.position = 'relative'
+  anchor.appendChild(btn)
+}
+
+function removePriorityButton(element) {
+  getBadgeAnchor(element).querySelector(`.${PRIORITY_BTN_CLASS}`)?.remove()
+}
+
 const styleEl = document.createElement('style')
-styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}`
+styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}
+.${PRIORITY_BTN_CLASS}{opacity:0.55;transition:opacity .15s,transform .1s}
+.${PRIORITY_BTN_CLASS}:hover{opacity:1;transform:scale(1.1)}
+.${PRIORITY_BTN_CLASS}:active{transform:scale(0.92)}
+.${PRIORITY_BTN_CLASS}:disabled{opacity:0.4;cursor:default}`
 document.documentElement.appendChild(styleEl)
 
 const videoResultCache = new Map()
@@ -367,16 +402,21 @@ async function processVideoElement(element) {
     const cached = videoResultCache.get(videoId)
     element.setAttribute(PROCESSED_ATTR, videoId)
     if (cached) injectBadge(element, cached.level, cached.method, cached.model)
+    removePriorityButton(element)
     return
   }
 
-  if (videoInFlight.has(videoId)) return
+  if (videoInFlight.has(videoId)) {
+    removePriorityButton(element)
+    return
+  }
 
   const existingBadge = element.querySelector(`.${BADGE_CLASS}`)
   if (existingBadge) existingBadge.remove()
   element.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
   element.setAttribute(PROCESSED_ATTR, videoId)
   videoInFlight.add(videoId)
+  removePriorityButton(element)
 
   try {
     injectSpinner(element)
@@ -420,6 +460,7 @@ function queueVideoElement(element) {
 
   if (videoInFlight.has(videoId) || pendingElements.includes(element)) return
   injectSpinner(element)
+  injectPriorityButton(element)
   pendingElements.push(element)
   pumpAnalysisQueue()
 }
@@ -434,6 +475,21 @@ function pumpAnalysisQueue() {
       pumpAnalysisQueue()
     })
   }
+}
+
+function prioritizeVideoElement(element, btn) {
+  const videoId = getVideoId(element)
+  if (!videoId) return
+  if (videoResultCache.has(videoId) || videoInFlight.has(videoId)) return
+  const idx = pendingElements.indexOf(element)
+  if (idx === -1) return
+  pendingElements.splice(idx, 1)
+  pendingElements.unshift(element)
+  if (btn) {
+    btn.textContent = '…'
+    btn.disabled = true
+  }
+  pumpAnalysisQueue()
 }
 
 function scanFeed() {
@@ -545,7 +601,7 @@ observer.observe(document.body, { childList: true, subtree: true })
 window.addEventListener('scroll', scheduleScan, { passive: true })
 window.addEventListener('scrollend', runScans, { passive: true })
 document.addEventListener('yt-navigate-finish', () => {
-  pendingElements.forEach(el => removeSpinner(el))
+  pendingElements.forEach(el => { removeSpinner(el); removePriorityButton(el) })
   pendingElements.length = 0
   chrome.runtime.sendMessage({ type: 'ollama_abort_all' }).catch(() => {})
   setTimeout(runScans, 300)

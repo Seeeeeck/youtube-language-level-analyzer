@@ -32,6 +32,7 @@ async function getModels(server) {
   try {
     const base = server || await getServerUrl()
     const resp = await fetch(`${base}/api/tags`, { signal: AbortSignal.timeout(30000) })
+    if (resp.status === 403) return { error: 'CORS', cors: true }
     if (!resp.ok) return { error: `HTTP ${resp.status}` }
     const data = await resp.json()
     return { models: (data?.models || []).map(m => m.name) }

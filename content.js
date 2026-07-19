@@ -362,13 +362,14 @@ function injectPriorityButton(element) {
   const btn = document.createElement('button')
   btn.className = PRIORITY_BTN_CLASS
   btn.type = 'button'
-  btn.textContent = '⚡'
+  btn.textContent = '⚡ Priorizar nivel'
   btn.title = 'Priorizar análisis de este video'
   Object.assign(btn.style, {
     position: 'absolute', bottom: '8px', left: '8px', zIndex: 1000,
-    width: '28px', height: '28px', borderRadius: '50%', border: 'none',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    background: 'rgba(0,0,0,0.7)', color: '#ffd54f', fontSize: '15px',
+    height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+    background: 'rgba(0,0,0,0.8)', color: '#ffd54f', fontSize: '13px', fontWeight: 'bold',
+    fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
     cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
   })
   btn.addEventListener('click', e => {
@@ -489,7 +490,7 @@ function prioritizeVideoElement(element, btn) {
   pendingElements.splice(idx, 1)
   pendingElements.unshift(element)
   if (btn) {
-    btn.textContent = '…'
+    btn.textContent = '⚡ Priorizando…'
     btn.disabled = true
   }
   pumpAnalysisQueue()

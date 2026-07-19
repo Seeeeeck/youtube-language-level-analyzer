@@ -23,7 +23,7 @@ const LANG_NAMES = {
 const LANG_ORDER = ['es', 'en', 'fr', 'pt', 'de', 'it', 'zh', 'ja', 'ko', 'ar', 'hi', 'ru']
 
 const NANO_LANG_NAMES = {
-  en: { en: 'English', es: 'Inglés', ja: 'Japanese', de: 'German', fr: 'French' },
+  en: { en: 'English', es: 'Spanish', ja: 'Japanese', de: 'German', fr: 'French' },
   es: { en: 'Inglés', es: 'Español', ja: 'Japonés', de: 'Alemán', fr: 'Francés' },
   fr: { en: 'Anglais', es: 'Espagnol', ja: 'Japonais', de: 'Allemand', fr: 'Français' },
   pt: { en: 'Inglês', es: 'Espanhol', ja: 'Japonês', de: 'Alemão', fr: 'Francês' },

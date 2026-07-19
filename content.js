@@ -271,42 +271,51 @@ function isCompilationCard(element) {
   return badges.some(t => t === 'mix' || /^\d+\s+(video|videos|episodio|episodios)$/.test(t))
 }
 
+const THUMBNAIL_SELECTOR = 'ytd-thumbnail, yt-thumbnail-view-model, #thumbnail'
+
+function getBadgeAnchor(element) {
+  return element.querySelector(THUMBNAIL_SELECTOR) || element
+}
+
 function injectBadge(element, level, method, model) {
-  if (element.querySelector(`.${BADGE_CLASS}`)) return
+  const anchor = getBadgeAnchor(element)
+  if (anchor.querySelector(`.${BADGE_CLASS}`)) return
   const badge = document.createElement('div')
   badge.className = BADGE_CLASS
   badge.textContent = level
   badge.title = `Nivel ${level} (${model || 'Ollama'})`
   Object.assign(badge.style, {
-    position: 'absolute', top: '8px', left: '8px', zIndex: 10,
-    width: '38px', height: '38px', borderRadius: '50%',
+    position: 'absolute', top: '8px', left: '8px', zIndex: 999,
+    width: '44px', height: '44px', borderRadius: '6px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: LEVEL_COLORS[level] || '#666', color: 'white',
-    fontSize: '16px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
+    fontSize: '18px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
   })
-  element.style.position = 'relative'
-  element.appendChild(badge)
+  anchor.style.position = 'relative'
+  anchor.appendChild(badge)
 }
 
 const SPINNER_CLASS = 'yt-level-spinner'
 
 function injectSpinner(element) {
-  if (element.querySelector(`.${SPINNER_CLASS}`)) return
+  const anchor = getBadgeAnchor(element)
+  if (anchor.querySelector(`.${SPINNER_CLASS}`)) return
   const spinner = document.createElement('div')
   spinner.className = SPINNER_CLASS
   Object.assign(spinner.style, {
-    position: 'absolute', top: '8px', left: '8px', zIndex: 10,
-    width: '38px', height: '38px', display: 'flex', alignItems: 'center', justifyContent: 'center'
+    position: 'absolute', top: '8px', left: '8px', zIndex: 999,
+    width: '44px', height: '44px', borderRadius: '6px',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none'
   })
-  spinner.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px;height:24px;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
-  element.style.position = 'relative'
-  element.querySelector('.yt-level-badge')?.remove()
-  element.appendChild(spinner)
+  spinner.innerHTML = `<svg viewBox="0 0 24 24" style="width:26px;height:26px;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
+  anchor.style.position = 'relative'
+  anchor.querySelector(`.${BADGE_CLASS}`)?.remove()
+  anchor.appendChild(spinner)
 }
 
 function removeSpinner(element) {
-  element.querySelector(`.${SPINNER_CLASS}`)?.remove()
+  getBadgeAnchor(element).querySelector(`.${SPINNER_CLASS}`)?.remove()
 }
 
 const styleEl = document.createElement('style')

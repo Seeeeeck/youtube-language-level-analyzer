@@ -101,7 +101,15 @@ function applyLang(lang, els) {
   populateNanoLangSelect(lang)
 }
 
+let nanoPollTimer = null
+
+function stopNanoPoll() {
+  if (nanoPollTimer) clearTimeout(nanoPollTimer)
+  nanoPollTimer = null
+}
+
 async function checkNanoStatus() {
+  stopNanoPoll()
   const nanoStatusEl = document.getElementById('nanoStatus')
   const nanoFlagHelp = document.getElementById('nanoFlagHelp')
   const nanoFlagBtn = document.getElementById('nanoFlagBtn')
@@ -127,11 +135,13 @@ async function checkNanoStatus() {
       nanoStatusEl.dataset.state = 'downloading'
       nanoStatusEl.textContent = tr.nanoDownloading
       if (nanoFlagHelp) nanoFlagHelp.style.display = 'none'
+      nanoPollTimer = setTimeout(checkNanoStatus, 1500)
     } else if (state === 'downloadable') {
       nanoStatusEl.className = 'nano-status downloading'
       nanoStatusEl.dataset.state = 'downloadable'
       nanoStatusEl.textContent = tr.nanoDownloadable
       if (nanoFlagHelp) nanoFlagHelp.style.display = 'none'
+      nanoPollTimer = setTimeout(checkNanoStatus, 1500)
     } else {
       showUnavailable()
     }
@@ -183,6 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await chrome.storage.local.set({ aiEngine: engine })
     if (currentEngine !== engine) await sendToContent({ type: 'set_engine', engine })
     if (tab === 'nano') checkNanoStatus()
+    else stopNanoPoll()
   }
 
   tabNano.addEventListener('click', () => switchTab('nano'))

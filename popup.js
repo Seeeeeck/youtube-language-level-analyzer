@@ -201,7 +201,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (nanoLangSelect) {
     nanoLangSelect.addEventListener('change', async () => {
-      await chrome.storage.local.set({ nanoLang: nanoLangSelect.value })
+      const { nanoLang: currentNanoLang } = await chrome.storage.local.get('nanoLang')
+      if (currentNanoLang === nanoLangSelect.value) return
+      await sendToContent({ type: 'set_nano_lang', lang: nanoLangSelect.value })
     })
   }
 

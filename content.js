@@ -116,6 +116,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     setEngine(msg.engine).then(sendResponse)
     return true
   }
+  if (msg.type === 'set_nano_lang') {
+    setNanoLang(msg.lang).then(sendResponse)
+    return true
+  }
 })
 
 async function getModels() {
@@ -173,6 +177,17 @@ async function getEngine() {
 
 async function setEngine(engine) {
   await chrome.storage.local.set({ aiEngine: engine })
+  videoResultCache.clear()
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+  setTimeout(runScans, 100)
+  return true
+}
+
+async function setNanoLang(lang) {
+  await chrome.storage.local.set({ nanoLang: lang })
   videoResultCache.clear()
   document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
   document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())

@@ -9,18 +9,18 @@ const PROCESSED_ATTR = 'data-level-video'
 const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang'])
 
 const CONTENT_LANG = {
-  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Los servicios de transcripción están saturados. Click para reintentar' },
-  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: 'Get level', priorityBtnActive: 'Getting…', priorityBtnTitle: "Analyze this video's level", noTranscriptLabel: 'No transcript', noTranscriptTitle: 'No transcript or captions available for this video', rateLimitedLabel: 'Rate limit exceeded', rateLimitedTitle: 'Transcript services are busy right now. Click to retry' },
-  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: 'Obtenir le niveau', priorityBtnActive: 'Obtention…', priorityBtnTitle: 'Analyser le niveau de cette vidéo', noTranscriptLabel: 'Pas de transcription', noTranscriptTitle: "Aucune transcription ni sous-titres disponibles pour cette vidéo", rateLimitedLabel: 'Limite dépassée', rateLimitedTitle: 'Les services de transcription sont surchargés. Cliquez pour réessayer' },
-  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: 'Obter nível', priorityBtnActive: 'Obtendo…', priorityBtnTitle: 'Analisar o nível deste vídeo', noTranscriptLabel: 'Sem transcrição', noTranscriptTitle: 'Sem transcrição ou legendas disponíveis para este vídeo', rateLimitedLabel: 'Limite excedido', rateLimitedTitle: 'Os serviços de transcrição estão sobrecarregados. Clique para tentar novamente' },
-  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: 'Niveau abrufen', priorityBtnActive: 'Wird abgerufen…', priorityBtnTitle: 'Niveau dieses Videos analysieren', noTranscriptLabel: 'Kein Transkript', noTranscriptTitle: 'Kein Transkript oder Untertitel für dieses Video verfügbar', rateLimitedLabel: 'Limit überschritten', rateLimitedTitle: 'Die Transkriptionsdienste sind überlastet. Klicken zum Wiederholen' },
-  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: 'Ottieni livello', priorityBtnActive: 'Recupero…', priorityBtnTitle: 'Analizza il livello di questo video', noTranscriptLabel: 'Nessuna trascrizione', noTranscriptTitle: 'Nessuna trascrizione o sottotitoli disponibili per questo video', rateLimitedLabel: 'Limite superato', rateLimitedTitle: 'I servizi di trascrizione sono sovraccarichi. Clicca per riprovare' },
-  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '获取级别', priorityBtnActive: '获取中…', priorityBtnTitle: '分析此视频的级别', noTranscriptLabel: '无文字记录', noTranscriptTitle: '此视频没有可用的文字记录或字幕', rateLimitedLabel: '超出限制', rateLimitedTitle: '转录服务繁忙，点击重试' },
-  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: 'レベルを取得', priorityBtnActive: '取得中…', priorityBtnTitle: 'この動画のレベルを分析する', noTranscriptLabel: '文字起こしなし', noTranscriptTitle: 'この動画には文字起こしや字幕がありません', rateLimitedLabel: '制限超過', rateLimitedTitle: '文字起こしサービスが混雑しています。クリックして再試行' },
-  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '레벨 가져오기', priorityBtnActive: '가져오는 중…', priorityBtnTitle: '이 동영상의 레벨 분석하기', noTranscriptLabel: '스크립트 없음', noTranscriptTitle: '이 동영상에는 사용 가능한 스크립트나 자막이 없습니다', rateLimitedLabel: '한도 초과', rateLimitedTitle: '스크립트 서비스가 혼잡합니다. 클릭하여 재시도' },
-  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: 'الحصول على المستوى', priorityBtnActive: 'جارٍ الحصول…', priorityBtnTitle: 'تحليل مستوى هذا الفيديو', noTranscriptLabel: 'لا يوجد نص', noTranscriptTitle: 'لا يوجد نص مكتوب أو ترجمة متاحة لهذا الفيديو', rateLimitedLabel: 'تم تجاوز الحد', rateLimitedTitle: 'خدمات النص مزدحمة حالياً. انقر لإعادة المحاولة' },
-  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: 'स्तर प्राप्त करें', priorityBtnActive: 'प्राप्त हो रहा है…', priorityBtnTitle: 'इस वीडियो के स्तर का विश्लेषण करें', noTranscriptLabel: 'ट्रांसक्रिप्ट नहीं', noTranscriptTitle: 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट या सबटाइटल उपलब्ध नहीं है', rateLimitedLabel: 'सीमा पार हो गई', rateLimitedTitle: 'ट्रांसक्रिप्ट सेवाएं व्यस्त हैं। पुनः प्रयास के लिए क्लिक करें' },
-  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: 'Получить уровень', priorityBtnActive: 'Получение…', priorityBtnTitle: 'Проанализировать уровень этого видео', noTranscriptLabel: 'Нет расшифровки', noTranscriptTitle: 'Для этого видео нет расшифровки или субтитров', rateLimitedLabel: 'Лимит превышен', rateLimitedTitle: 'Сервисы расшифровки перегружены. Нажмите, чтобы повторить' },
+  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel del lenguaje', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Los servicios de transcripción están saturados. Click para reintentar', noModelLabel: 'No se seleccionó el servicio de Nano u Ollama', noModelTitle: 'Revisa la configuración de la extensión y elige Gemini Nano u Ollama' },
+  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: 'Get language level', priorityBtnActive: 'Getting…', priorityBtnTitle: "Analyze this video's level", noTranscriptLabel: 'No transcript', noTranscriptTitle: 'No transcript or captions available for this video', rateLimitedLabel: 'Rate limit exceeded', rateLimitedTitle: 'Transcript services are busy right now. Click to retry', noModelLabel: 'No Nano or Ollama service selected', noModelTitle: 'Check the extension settings and choose Gemini Nano or Ollama' },
+  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: 'Obtenir le niveau de langue', priorityBtnActive: 'Obtention…', priorityBtnTitle: 'Analyser le niveau de cette vidéo', noTranscriptLabel: 'Pas de transcription', noTranscriptTitle: "Aucune transcription ni sous-titres disponibles pour cette vidéo", rateLimitedLabel: 'Limite dépassée', rateLimitedTitle: 'Les services de transcription sont surchargés. Cliquez pour réessayer', noModelLabel: "Aucun service Nano ou Ollama sélectionné", noModelTitle: "Vérifiez les paramètres de l'extension et choisissez Gemini Nano ou Ollama" },
+  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: 'Obter nível do idioma', priorityBtnActive: 'Obtendo…', priorityBtnTitle: 'Analisar o nível deste vídeo', noTranscriptLabel: 'Sem transcrição', noTranscriptTitle: 'Sem transcrição ou legendas disponíveis para este vídeo', rateLimitedLabel: 'Limite excedido', rateLimitedTitle: 'Os serviços de transcrição estão sobrecarregados. Clique para tentar novamente', noModelLabel: 'Nenhum serviço Nano ou Ollama selecionado', noModelTitle: 'Verifique as configurações da extensão e escolha Gemini Nano ou Ollama' },
+  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: 'Sprachniveau abrufen', priorityBtnActive: 'Wird abgerufen…', priorityBtnTitle: 'Niveau dieses Videos analysieren', noTranscriptLabel: 'Kein Transkript', noTranscriptTitle: 'Kein Transkript oder Untertitel für dieses Video verfügbar', rateLimitedLabel: 'Limit überschritten', rateLimitedTitle: 'Die Transkriptionsdienste sind überlastet. Klicken zum Wiederholen', noModelLabel: 'Kein Nano- oder Ollama-Dienst ausgewählt', noModelTitle: 'Überprüfe die Erweiterungseinstellungen und wähle Gemini Nano oder Ollama' },
+  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: 'Ottieni livello di lingua', priorityBtnActive: 'Recupero…', priorityBtnTitle: 'Analizza il livello di questo video', noTranscriptLabel: 'Nessuna trascrizione', noTranscriptTitle: 'Nessuna trascrizione o sottotitoli disponibili per questo video', rateLimitedLabel: 'Limite superato', rateLimitedTitle: 'I servizi di trascrizione sono sovraccarichi. Clicca per riprovare', noModelLabel: 'Nessun servizio Nano o Ollama selezionato', noModelTitle: "Controlla le impostazioni dell'estensione e scegli Gemini Nano oppure Ollama" },
+  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '获取语言级别', priorityBtnActive: '获取中…', priorityBtnTitle: '分析此视频的级别', noTranscriptLabel: '无文字记录', noTranscriptTitle: '此视频没有可用的文字记录或字幕', rateLimitedLabel: '超出限制', rateLimitedTitle: '转录服务繁忙，点击重试', noModelLabel: '未选择 Nano 或 Ollama 服务', noModelTitle: '请检查扩展程序设置，并选择 Gemini Nano 或 Ollama' },
+  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: '言語レベルを取得', priorityBtnActive: '取得中…', priorityBtnTitle: 'この動画のレベルを分析する', noTranscriptLabel: '文字起こしなし', noTranscriptTitle: 'この動画には文字起こしや字幕がありません', rateLimitedLabel: '制限超過', rateLimitedTitle: '文字起こしサービスが混雑しています。クリックして再試行', noModelLabel: 'NanoまたはOllamaのサービスが選択されていません', noModelTitle: '拡張機能の設定を確認し、Gemini NanoまたはOllamaを選択してください' },
+  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '언어 레벨 가져오기', priorityBtnActive: '가져오는 중…', priorityBtnTitle: '이 동영상의 레벨 분석하기', noTranscriptLabel: '스크립트 없음', noTranscriptTitle: '이 동영상에는 사용 가능한 스크립트나 자막이 없습니다', rateLimitedLabel: '한도 초과', rateLimitedTitle: '스크립트 서비스가 혼잡합니다. 클릭하여 재시도', noModelLabel: 'Nano 또는 Ollama 서비스가 선택되지 않음', noModelTitle: '확장 프로그램 설정을 확인하고 Gemini Nano 또는 Ollama를 선택하세요' },
+  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: 'الحصول على مستوى اللغة', priorityBtnActive: 'جارٍ الحصول…', priorityBtnTitle: 'تحليل مستوى هذا الفيديو', noTranscriptLabel: 'لا يوجد نص', noTranscriptTitle: 'لا يوجد نص مكتوب أو ترجمة متاحة لهذا الفيديو', rateLimitedLabel: 'تم تجاوز الحد', rateLimitedTitle: 'خدمات النص مزدحمة حالياً. انقر لإعادة المحاولة', noModelLabel: 'لم يتم اختيار خدمة Nano أو Ollama', noModelTitle: 'تحقق من إعدادات الإضافة واختر Gemini Nano أو Ollama' },
+  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: 'भाषा स्तर प्राप्त करें', priorityBtnActive: 'प्राप्त हो रहा है…', priorityBtnTitle: 'इस वीडियो के स्तर का विश्लेषण करें', noTranscriptLabel: 'ट्रांसक्रिप्ट नहीं', noTranscriptTitle: 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट या सबटाइटल उपलब्ध नहीं है', rateLimitedLabel: 'सीमा पार हो गई', rateLimitedTitle: 'ट्रांसक्रिप्ट सेवाएं व्यस्त हैं। पुनः प्रयास के लिए क्लिक करें', noModelLabel: 'Nano या Ollama सेवा चयनित नहीं है', noModelTitle: 'एक्सटेंशन सेटिंग्स जांचें और Gemini Nano या Ollama चुनें' },
+  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: 'Получить уровень языка', priorityBtnActive: 'Получение…', priorityBtnTitle: 'Проанализировать уровень этого видео', noTranscriptLabel: 'Нет расшифровки', noTranscriptTitle: 'Для этого видео нет расшифровки или субтитров', rateLimitedLabel: 'Лимит превышен', rateLimitedTitle: 'Сервисы расшифровки перегружены. Нажмите, чтобы повторить', noModelLabel: 'Не выбрана служба Nano или Ollama', noModelTitle: 'Проверьте настройки расширения и выберите Gemini Nano или Ollama' },
 }
 
 let currentLang = 'en'
@@ -257,6 +257,10 @@ async function setNanoLang(lang) {
 
 async function analyzeWithNano(text, token) {
   console.log('[YT-Level] analyzeWithNano called, text length:', text.length)
+  if (typeof LanguageModel === 'undefined') {
+    console.log('[YT-Level] Gemini Nano API not available in this browser')
+    return 'no_model'
+  }
   try {
     const { nanoLang } = await chrome.storage.local.get('nanoLang')
     const lang = nanoLang || 'en'
@@ -269,7 +273,7 @@ async function analyzeWithNano(text, token) {
     })
     if (availability !== 'available') {
       console.log('[YT-Level] Gemini Nano not available:', availability)
-      return null
+      return 'no_model'
     }
     if (token?.cancelled) throw new AbortedAnalysisError('cancelled before nano session')
 
@@ -328,9 +332,13 @@ async function analyzeLevel(text, token) {
 
   if (engine === 'nano') {
     const level = await analyzeWithNano(text, token)
+    if (level === 'no_model') return 'no_model'
     if (level) return { level, method: 'nano', model: 'Gemini Nano' }
     return null
   }
+
+  const models = await getModels()
+  if (models.length === 0) return 'no_model'
 
   const model = await getModel()
   const ollamaLevel = await analyzeWithOllama(text, model, token)
@@ -414,6 +422,75 @@ function injectNoDataBadge(element) {
   anchor.appendChild(badge)
 }
 
+let toastContainer = null
+function getToastContainer() {
+  if (toastContainer && toastContainer.isConnected) return toastContainer
+  toastContainer = document.createElement('div')
+  toastContainer.id = 'yt-level-toast-container'
+  Object.assign(toastContainer.style, {
+    position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+    zIndex: 2147483647, display: 'flex', flexDirection: 'column', gap: '8px',
+    alignItems: 'center', pointerEvents: 'none'
+  })
+  document.documentElement.appendChild(toastContainer)
+  return toastContainer
+}
+
+let lastToastMessage = ''
+let lastToastTime = 0
+function showToast(message, title) {
+  const now = Date.now()
+  if (message === lastToastMessage && now - lastToastTime < 3000) return
+  lastToastMessage = message
+  lastToastTime = now
+  const container = getToastContainer()
+  const toast = document.createElement('div')
+  toast.title = title || message
+  Object.assign(toast.style, {
+    display: 'flex', alignItems: 'center', gap: '14px',
+    background: '#c0392b', color: '#fff', padding: '16px 22px',
+    borderRadius: '12px', fontFamily: 'Arial, sans-serif',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.55)',
+    border: '1px solid rgba(255,255,255,0.25)', maxWidth: '440px',
+    pointerEvents: 'auto', cursor: 'pointer', opacity: '0',
+    transition: 'opacity .2s ease, transform .2s ease', transform: 'translateY(10px)'
+  })
+
+  const icon = document.createElement('span')
+  icon.textContent = '⚠️'
+  Object.assign(icon.style, { fontSize: '28px', lineHeight: '1', flexShrink: '0' })
+  toast.appendChild(icon)
+
+  const textWrap = document.createElement('div')
+  Object.assign(textWrap.style, { display: 'flex', flexDirection: 'column', gap: '2px' })
+
+  const titleEl = document.createElement('div')
+  titleEl.textContent = message
+  Object.assign(titleEl.style, { fontSize: '16px', fontWeight: 'bold' })
+  textWrap.appendChild(titleEl)
+
+  if (title) {
+    const subEl = document.createElement('div')
+    subEl.textContent = title
+    Object.assign(subEl.style, { fontSize: '13px', fontWeight: 'normal', opacity: '0.9' })
+    textWrap.appendChild(subEl)
+  }
+
+  toast.appendChild(textWrap)
+  container.appendChild(toast)
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1'
+    toast.style.transform = 'translateY(0)'
+  })
+  const dismiss = () => {
+    toast.style.opacity = '0'
+    toast.style.transform = 'translateY(10px)'
+    setTimeout(() => toast.remove(), 200)
+  }
+  toast.addEventListener('click', dismiss)
+  setTimeout(dismiss, 5000)
+}
+
 const SPINNER_CLASS = 'yt-level-spinner'
 
 const SPINNER_ICON = {
@@ -456,18 +533,31 @@ function removeSpinner(element) {
   getBadgeAnchor(element).querySelector(`.${SPINNER_CLASS}`)?.remove()
 }
 
+function ensurePositioned(el) {
+  if (getComputedStyle(el).position === 'static') el.style.position = 'relative'
+}
+
+function positionOverAnchorBottomLeft(el, host, anchor, offset = 8) {
+  const hostRect = host.getBoundingClientRect()
+  const anchorRect = anchor.getBoundingClientRect()
+  el.style.left = `${anchorRect.left - hostRect.left + offset}px`
+  el.style.bottom = `${hostRect.bottom - anchorRect.bottom + offset}px`
+  el.style.top = ''
+}
+
 function injectPriorityButton(element, variant = 'idle') {
   const anchor = getBadgeAnchor(element)
   if (anchor.querySelector(`.${BADGE_CLASS}`)) return
   if (anchor.querySelector(`.${NO_DATA_BADGE_CLASS}`)) return
   const t = T()
-  let btn = anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)
+  ensurePositioned(element)
+  let btn = element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
   if (!btn) {
     btn = document.createElement('button')
     btn.className = PRIORITY_BTN_CLASS
     btn.type = 'button'
     Object.assign(btn.style, {
-      position: 'absolute', bottom: '8px', left: '8px', zIndex: 99999,
+      position: 'absolute', zIndex: 99999,
       height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
       color: '#ffffff', fontSize: '13px', fontWeight: 'bold',
@@ -479,9 +569,9 @@ function injectPriorityButton(element, variant = 'idle') {
       e.stopPropagation()
       prioritizeVideoElement(element, btn)
     })
-    anchor.style.position = 'relative'
-    anchor.appendChild(btn)
+    element.appendChild(btn)
   }
+  positionOverAnchorBottomLeft(btn, element, anchor)
   btn.dataset.variant = variant
   btn.disabled = false
   if (variant === 'rateLimited') {
@@ -496,7 +586,7 @@ function injectPriorityButton(element, variant = 'idle') {
 }
 
 function removePriorityButton(element) {
-  getBadgeAnchor(element).querySelector(`.${PRIORITY_BTN_CLASS}`)?.remove()
+  element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)?.remove()
 }
 
 const anchorObservers = new WeakMap()
@@ -530,11 +620,11 @@ function reconcileOverlay(element) {
 
   if (pendingElements.includes(element)) {
     if (!anchor.querySelector(`.${SPINNER_CLASS}`)) injectSpinner(element, 'queued')
-    if (!anchor.querySelector(`.${PRIORITY_BTN_CLASS}`)) injectPriorityButton(element)
+    injectPriorityButton(element)
     return
   }
 
-  if (!anchor.querySelector(`.${PRIORITY_BTN_CLASS}`) && !anchor.querySelector(`.${SPINNER_CLASS}`)) {
+  if (!anchor.querySelector(`.${SPINNER_CLASS}`)) {
     injectPriorityButton(element)
   }
 }
@@ -602,6 +692,12 @@ async function processVideoElement(element) {
 
     const result = await analyzeLevel(transcript, token)
     removeSpinner(element)
+    if (result === 'no_model') {
+      element.removeAttribute(PROCESSED_ATTR)
+      if (element.isConnected) injectPriorityButton(element)
+      showToast(T().noModelLabel, T().noModelTitle)
+      return
+    }
     videoResultCache.set(videoId, result)
     if (result) {
       injectBadge(element, result.level, result.method, result.model)
@@ -805,7 +901,7 @@ async function processWatchPage() {
 
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
-    if (cached) player.appendChild(buildWatchBadge(videoId, cached))
+    if (cached && cached !== 'no_model') player.appendChild(buildWatchBadge(videoId, cached))
     return
   }
 
@@ -821,6 +917,11 @@ async function processWatchPage() {
       return
     }
     const result = await analyzeLevel(transcript)
+    if (result === 'no_model') {
+      videoResultCache.set(videoId, 'no_model')
+      showToast(T().noModelLabel, T().noModelTitle)
+      return
+    }
     videoResultCache.set(videoId, result)
     if (result) {
       const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)

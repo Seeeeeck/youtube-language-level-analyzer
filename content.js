@@ -529,8 +529,9 @@ function injectSpinner(element, state = 'active') {
     element.querySelector(`:scope > .${ENGINE_BADGE_CLASS}`)?.remove()
     element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
     element.appendChild(spinner)
+    positionOverAnchorTopLeft(spinner, element, anchor)
+    watchAnchorResize(anchor, () => spinner.isConnected && positionOverAnchorTopLeft(spinner, element, anchor))
   }
-  positionOverAnchorTopLeft(spinner, element, anchor)
   if (spinner.dataset.state === state) return
   renderSpinner(spinner, state)
 }
@@ -540,6 +541,8 @@ function removeSpinner(element) {
 }
 
 function ensurePositioned(el) {
+  if (el.dataset.ytLevelPositioned) return
+  el.dataset.ytLevelPositioned = '1'
   if (getComputedStyle(el).position === 'static') el.style.position = 'relative'
 }
 
@@ -557,6 +560,20 @@ function positionOverAnchorTopLeft(el, host, anchor, topOffset = 8, leftOffset =
   el.style.left = `${anchorRect.left - hostRect.left + leftOffset}px`
   el.style.top = `${anchorRect.top - hostRect.top + topOffset}px`
   el.style.bottom = ''
+}
+
+const anchorResizeObservers = new WeakMap()
+
+function watchAnchorResize(anchor, reposition) {
+  let entry = anchorResizeObservers.get(anchor)
+  if (!entry) {
+    const callbacks = new Set()
+    const ro = new ResizeObserver(() => callbacks.forEach(cb => cb()))
+    ro.observe(anchor)
+    entry = { ro, callbacks }
+    anchorResizeObservers.set(anchor, entry)
+  }
+  entry.callbacks.add(reposition)
 }
 
 function injectPriorityButton(element, variant = 'idle') {
@@ -584,8 +601,9 @@ function injectPriorityButton(element, variant = 'idle') {
       prioritizeVideoElement(element, btn)
     })
     element.appendChild(btn)
+    positionOverAnchorBottomLeft(btn, element, anchor)
+    watchAnchorResize(anchor, () => btn.isConnected && positionOverAnchorBottomLeft(btn, element, anchor))
   }
-  positionOverAnchorBottomLeft(btn, element, anchor)
   btn.dataset.variant = variant
   btn.disabled = false
   if (variant === 'rateLimited') {

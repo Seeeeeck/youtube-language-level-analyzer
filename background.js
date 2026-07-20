@@ -94,6 +94,9 @@ async function generate({ model, prompt, requestId }) {
   const timeoutId = setTimeout(() => controller.abort(), 60000)
   try {
     const base = await getServerUrl()
+    // Ollama defaults to a 2048-token context regardless of the model's real
+    // capacity, silently truncating longer prompts. Size it to the prompt.
+    const numCtx = Math.min(32768, Math.max(4096, Math.ceil(prompt.length / 3) + 512))
     const resp = await fetch(`${base}/api/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -101,7 +104,7 @@ async function generate({ model, prompt, requestId }) {
         model,
         prompt,
         stream: false,
-        options: { temperature: 0.1 }
+        options: { temperature: 0.1, num_ctx: numCtx }
       }),
       signal: controller.signal
     })

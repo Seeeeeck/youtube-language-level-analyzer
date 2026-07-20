@@ -142,9 +142,18 @@
 <body>
   <h2>YT <span>Level Language Analyzer</span></h2>
 
-  <div class="row" id="langRow" style="border:none;margin-bottom:8px;">
+  <div class="row" id="langRow" style="border:none;">
     <label>Lenguaje de la extensión</label>
     <select id="langSelect"></select>
+  </div>
+
+  <div class="row" id="sampleCharsRow" style="border:none;margin-bottom:8px;">
+    <label id="sampleCharsLabel">Caracteres a analizar</label>
+    <select id="sampleCharsSelect">
+      <option value="3000">3000 car. (rápido)</option>
+      <option value="6000">6000 car. (equilibrado)</option>
+      <option value="12000">12000 car. (más preciso)</option>
+    </select>
   </div>
 
   <div class="tabs">

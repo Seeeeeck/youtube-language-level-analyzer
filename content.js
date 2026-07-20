@@ -6,7 +6,7 @@ const NO_DATA_BADGE_CLASS = 'yt-level-nodata-badge'
 const PRIORITY_BTN_CLASS = 'yt-level-priority-btn'
 const PROCESSED_ATTR = 'data-level-video'
 
-const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang'])
+const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang', 'sampleChars'])
 
 const CONTENT_LANG = {
   es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel del lenguaje', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Los servicios de transcripción están saturados. Click para reintentar', noModelLabel: 'No se seleccionó el servicio de Nano u Ollama', noModelTitle: 'Revisa la configuración de la extensión y elige Gemini Nano u Ollama' },
@@ -76,7 +76,7 @@ const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
 const DEEP_PROMPT = text => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
 
-Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference.
+Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference. It may be the full transcript, or — for very long videos — separate excerpts taken from the beginning, middle, and end (marked with "[...]" between them); evaluate the language across everything given, not just the first part.
 
 Evaluate based on these criteria, in order of importance:
 1. Grammatical range and accuracy (verb tenses, subordinate structures, agreement)
@@ -103,7 +103,7 @@ Any other response format is considered invalid.
 
 Transcript:
 """
-${text.slice(0, 1000)}
+${text}
 """`
 
 const GRAMMAR_PATTERNS = [
@@ -178,6 +178,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   if (msg.type === 'set_nano_lang') {
     setNanoLang(msg.lang).then(sendResponse)
+    return true
+  }
+  if (msg.type === 'set_sample_chars') {
+    setSampleChars(msg.chars).then(sendResponse)
     return true
   }
 })
@@ -327,11 +331,45 @@ async function analyzeWithOllama(text, model, token) {
   return level || null
 }
 
+const DEFAULT_SAMPLE_CHARS = 6000
+const SAMPLE_CHARS_OPTIONS = [3000, 6000, 12000]
+
+async function getSampleChars() {
+  const { sampleChars } = await chrome.storage.local.get('sampleChars')
+  return SAMPLE_CHARS_OPTIONS.includes(sampleChars) ? sampleChars : DEFAULT_SAMPLE_CHARS
+}
+
+async function setSampleChars(chars) {
+  await chrome.storage.local.set({ sampleChars: chars })
+  await clearCachedVideoStorage()
+  videoResultCache.clear()
+  document.querySelectorAll(`[${PROCESSED_ATTR}]`).forEach(el => el.removeAttribute(PROCESSED_ATTR))
+  document.querySelectorAll(`.${BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${ENGINE_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${NO_DATA_BADGE_CLASS}`).forEach(el => el.remove())
+  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+  currentWatchVideoId = null
+  setTimeout(runScans, 100)
+  return true
+}
+
+function sampleTranscript(text, maxChars) {
+  if (text.length <= maxChars) return text
+  const segmentSize = Math.floor(maxChars / 3)
+  const start = text.slice(0, segmentSize)
+  const midStart = Math.max(segmentSize, Math.floor(text.length / 2 - segmentSize / 2))
+  const middle = text.slice(midStart, midStart + segmentSize)
+  const end = text.slice(text.length - segmentSize)
+  return `${start}\n[...]\n${middle}\n[...]\n${end}`
+}
+
 async function analyzeLevel(text, token) {
   const engine = await getEngine()
+  const cap = await getSampleChars()
+  const sampled = sampleTranscript(text, cap)
 
   if (engine === 'nano') {
-    const level = await analyzeWithNano(text, token)
+    const level = await analyzeWithNano(sampled, token)
     if (level === 'no_model') return 'no_model'
     if (level) return { level, method: 'nano', model: 'Gemini Nano' }
     return null
@@ -341,7 +379,7 @@ async function analyzeLevel(text, token) {
   if (models.length === 0) return 'no_model'
 
   const model = await getModel()
-  const ollamaLevel = await analyzeWithOllama(text, model, token)
+  const ollamaLevel = await analyzeWithOllama(sampled, model, token)
   if (ollamaLevel) return { level: ollamaLevel, method: 'ollama', model }
 
   return null
@@ -895,14 +933,62 @@ function getWatchVideoId() {
   return match ? match[1] : null
 }
 
-function buildWatchBadge(videoId, result) {
+function clearWatchOverlay(player) {
+  player.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => el.remove())
+}
+
+function buildWatchRow(videoId) {
   const row = document.createElement('div')
   row.className = WATCH_BADGE_CLASS
   row.dataset.videoId = videoId
   Object.assign(row.style, {
     position: 'absolute', top: '12px', left: '12px', zIndex: 60,
-    display: 'flex', alignItems: 'center', gap: '8px', pointerEvents: 'none'
+    display: 'flex', alignItems: 'center', gap: '8px'
   })
+  return row
+}
+
+function buildWatchIdleButton(videoId, player) {
+  const row = buildWatchRow(videoId)
+  const t = T()
+  const btn = document.createElement('button')
+  btn.type = 'button'
+  btn.textContent = t.priorityBtnLabel
+  btn.title = t.priorityBtnTitle
+  Object.assign(btn.style, {
+    display: 'inline-flex', alignItems: 'center', padding: '6px 16px', borderRadius: '999px',
+    background: '#2e7d32', color: 'white', border: 'none',
+    fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+    cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
+  })
+  btn.addEventListener('click', e => {
+    e.preventDefault()
+    e.stopPropagation()
+    startWatchAnalysis(videoId, player)
+  })
+  row.appendChild(btn)
+  return row
+}
+
+function buildWatchSpinner(videoId) {
+  const row = buildWatchRow(videoId)
+  const t = T()
+  const spinner = document.createElement('span')
+  Object.assign(spinner.style, {
+    display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 16px', borderRadius: '999px',
+    background: 'rgba(0,0,0,0.8)', color: '#fff',
+    fontSize: '14px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
+  })
+  spinner.innerHTML = `${SPINNER_ICON.active}<span>${t.activeLabel}</span>`
+  spinner.title = t.activeTitle
+  row.appendChild(spinner)
+  return row
+}
+
+function buildWatchBadge(videoId, result) {
+  const row = buildWatchRow(videoId)
+  row.style.pointerEvents = 'none'
 
   if (result === 'no_transcript') {
     const noData = document.createElement('span')
@@ -919,6 +1005,7 @@ function buildWatchBadge(videoId, result) {
   }
 
   if (result === 'rate_limited') {
+    row.style.pointerEvents = ''
     const retry = document.createElement('button')
     retry.type = 'button'
     retry.textContent = T().rateLimitedLabel
@@ -933,7 +1020,8 @@ function buildWatchBadge(videoId, result) {
       e.preventDefault()
       e.stopPropagation()
       row.remove()
-      processWatchPage()
+      const player = document.querySelector(WATCH_PLAYER_SELECTOR)
+      if (player) startWatchAnalysis(videoId, player)
     })
     row.appendChild(retry)
     return row
@@ -965,59 +1053,77 @@ function buildWatchBadge(videoId, result) {
   return row
 }
 
-async function processWatchPage() {
-  const videoId = getWatchVideoId()
-  if (!videoId) return
-
-  document.querySelectorAll(`.${WATCH_BADGE_CLASS}`).forEach(el => {
-    if (el.dataset.videoId !== videoId) el.remove()
-  })
-
-  const player = document.querySelector(WATCH_PLAYER_SELECTOR)
-  if (!player) return
-  if (player.querySelector(`.${WATCH_BADGE_CLASS}[data-video-id="${videoId}"]`)) return
-
-  if (videoResultCache.has(videoId)) {
-    const cached = videoResultCache.get(videoId)
-    if (cached && cached !== 'no_model') player.appendChild(buildWatchBadge(videoId, cached))
-    return
-  }
-
+async function startWatchAnalysis(videoId, player) {
   if (videoInFlight.has(videoId)) return
   videoInFlight.add(videoId)
+  clearWatchOverlay(player)
+  player.appendChild(buildWatchSpinner(videoId))
   try {
     const { transcript, rateLimited } = await fetchTranscript(videoId)
+    if (getWatchVideoId() !== videoId) return
     if (rateLimited) throw new TranscriptRateLimitedError('transcript API rate limited')
     if (!transcript) {
       videoResultCache.set(videoId, 'no_transcript')
-      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
-      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, 'no_transcript'))
+      clearWatchOverlay(player)
+      player.appendChild(buildWatchBadge(videoId, 'no_transcript'))
       return
     }
     const result = await analyzeLevel(transcript)
+    if (getWatchVideoId() !== videoId) return
     if (result === 'no_model') {
       videoResultCache.set(videoId, 'no_model')
+      clearWatchOverlay(player)
+      player.appendChild(buildWatchIdleButton(videoId, player))
       showToast(T().noModelLabel, T().noModelTitle)
       return
     }
     videoResultCache.set(videoId, result)
-    if (result) {
-      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
-      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, result))
-    }
+    clearWatchOverlay(player)
+    if (result) player.appendChild(buildWatchBadge(videoId, result))
+    else player.appendChild(buildWatchIdleButton(videoId, player))
   } catch (e) {
+    if (getWatchVideoId() !== videoId) return
     if (e instanceof AbortedAnalysisError) {
       console.log('[YT-Level] Watch page analysis aborted for', videoId)
     } else if (e instanceof TranscriptRateLimitedError) {
       console.log('[YT-Level] Transcript API rate limited on watch page for', videoId)
-      const currentPlayer = document.querySelector(WATCH_PLAYER_SELECTOR)
-      if (currentPlayer) currentPlayer.appendChild(buildWatchBadge(videoId, 'rate_limited'))
+      clearWatchOverlay(player)
+      player.appendChild(buildWatchBadge(videoId, 'rate_limited'))
     } else {
       console.log('[YT-Level] Error processing watch page video', videoId, ':', e.message)
+      clearWatchOverlay(player)
+      player.appendChild(buildWatchIdleButton(videoId, player))
     }
   } finally {
     videoInFlight.delete(videoId)
   }
+}
+
+let currentWatchVideoId = null
+
+function processWatchPage() {
+  const videoId = getWatchVideoId()
+  if (!videoId) { currentWatchVideoId = null; return }
+
+  const player = document.querySelector(WATCH_PLAYER_SELECTOR)
+  if (!player) return
+
+  if (videoId !== currentWatchVideoId) {
+    currentWatchVideoId = videoId
+    clearWatchOverlay(player)
+  }
+
+  if (player.querySelector(`.${WATCH_BADGE_CLASS}[data-video-id="${videoId}"]`)) return
+  if (videoInFlight.has(videoId)) return
+
+  if (videoResultCache.has(videoId)) {
+    const cached = videoResultCache.get(videoId)
+    if (cached && cached !== 'no_model') player.appendChild(buildWatchBadge(videoId, cached))
+    else player.appendChild(buildWatchIdleButton(videoId, player))
+    return
+  }
+
+  player.appendChild(buildWatchIdleButton(videoId, player))
 }
 
 function runScans() {

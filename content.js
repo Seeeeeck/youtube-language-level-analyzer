@@ -367,64 +367,126 @@ function getBadgeAnchor(element) {
   return element.querySelector(THUMBNAIL_SELECTOR) || element
 }
 
-function injectBadge(element, level, method, model) {
+// All extension overlays (badges/spinner/button) live in this detached layer,
+// never as children of the YouTube video card, so we never write to or
+// mutate the card's own DOM — only read its position via getBoundingClientRect.
+// This guarantees we can't interfere with YouTube's own hover-preview behavior.
+const overlayLayer = document.createElement('div')
+Object.assign(overlayLayer.style, { position: 'absolute', top: '0', left: '0', width: '0', height: '0', overflow: 'visible' })
+document.documentElement.appendChild(overlayLayer)
+
+const overlayHosts = new WeakMap()
+const overlayElements = new Set()
+
+function getOverlayHost(element) {
+  let host = overlayHosts.get(element)
+  if (!host) {
+    host = document.createElement('div')
+    Object.assign(host.style, { position: 'absolute', top: '0', left: '0', width: '0', height: '0', pointerEvents: 'none' })
+    overlayLayer.appendChild(host)
+    overlayHosts.set(element, host)
+  }
+  overlayElements.add(element)
+  return host
+}
+
+function syncOverlayHost(element) {
+  const host = overlayHosts.get(element)
+  if (!host) return
+  const rect = getBadgeAnchor(element).getBoundingClientRect()
+  host.style.top = `${rect.top + window.scrollY}px`
+  host.style.left = `${rect.left + window.scrollX}px`
+  host.style.width = `${rect.width}px`
+  host.style.height = `${rect.height}px`
+}
+
+function removeOverlayHost(element) {
+  overlayHosts.get(element)?.remove()
+  overlayHosts.delete(element)
+  overlayElements.delete(element)
+}
+
+let overlayRafScheduled = false
+function scheduleOverlayReposition() {
+  if (overlayRafScheduled) return
+  overlayRafScheduled = true
+  requestAnimationFrame(() => {
+    overlayRafScheduled = false
+    for (const element of overlayElements) {
+      if (element.isConnected) syncOverlayHost(element)
+      else removeOverlayHost(element)
+    }
+  })
+}
+window.addEventListener('scroll', scheduleOverlayReposition, { passive: true })
+window.addEventListener('resize', scheduleOverlayReposition, { passive: true })
+
+const anchorResizeObservers = new WeakMap()
+function watchAnchorResize(element) {
   const anchor = getBadgeAnchor(element)
+  if (anchorResizeObservers.has(anchor)) return
+  const ro = new ResizeObserver(() => syncOverlayHost(element))
+  ro.observe(anchor)
+  anchorResizeObservers.set(anchor, ro)
+}
+
+function injectBadge(element, level, method, model) {
   removePriorityButton(element)
   removeSpinner(element)
-  element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
-  ensurePositioned(element)
-  if (element.querySelector(`:scope > .${BADGE_CLASS}`)) return
+  const host = getOverlayHost(element)
+  host.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
+  if (host.querySelector(`:scope > .${BADGE_CLASS}`)) return
+  syncOverlayHost(element)
+  watchAnchorResize(element)
   const badge = document.createElement('div')
   badge.className = BADGE_CLASS
   badge.textContent = level
   badge.title = `Nivel ${level} (${model || 'Ollama'})`
   Object.assign(badge.style, {
-    position: 'absolute', zIndex: 99999,
+    position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
     width: '44px', height: '44px', borderRadius: '6px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: LEVEL_COLORS[level] || '#666', color: 'white',
     fontSize: '18px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
   })
-  element.appendChild(badge)
-  positionOverAnchorTopLeft(badge, element, anchor)
+  host.appendChild(badge)
 
   const engineBadge = document.createElement('div')
   engineBadge.className = ENGINE_BADGE_CLASS
   engineBadge.textContent = method === 'nano' ? 'Nano' : 'Ollama'
   engineBadge.title = model || (method === 'nano' ? 'Gemini Nano' : 'Ollama')
   Object.assign(engineBadge.style, {
-    position: 'absolute', zIndex: 99999,
+    position: 'absolute', top: '14px', left: '58px', zIndex: 99999,
     padding: '4px 10px', borderRadius: '999px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: method === 'nano' ? '#1a73e8' : '#0ac700', color: 'white',
     fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
     boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none', whiteSpace: 'nowrap'
   })
-  element.appendChild(engineBadge)
-  positionOverAnchorTopLeft(engineBadge, element, anchor, 14, 58)
+  host.appendChild(engineBadge)
 }
 
 function injectNoDataBadge(element) {
-  const anchor = getBadgeAnchor(element)
   removePriorityButton(element)
   removeSpinner(element)
-  ensurePositioned(element)
-  if (element.querySelector(`:scope > .${BADGE_CLASS}`) || element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) return
+  const host = getOverlayHost(element)
+  if (host.querySelector(`:scope > .${BADGE_CLASS}`) || host.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) return
+  syncOverlayHost(element)
+  watchAnchorResize(element)
   const badge = document.createElement('div')
   badge.className = NO_DATA_BADGE_CLASS
   badge.textContent = T().noTranscriptLabel
   badge.title = T().noTranscriptTitle
   Object.assign(badge.style, {
-    position: 'absolute', zIndex: 99999,
+    position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
     height: '26px', padding: '0 10px', borderRadius: '999px',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: '#e67e22', color: 'white',
     fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
     whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
   })
-  element.appendChild(badge)
-  positionOverAnchorTopLeft(badge, element, anchor)
+  host.appendChild(badge)
 }
 
 let toastContainer = null
@@ -512,68 +574,31 @@ function renderSpinner(spinner, state) {
 }
 
 function injectSpinner(element, state = 'active') {
-  const anchor = getBadgeAnchor(element)
-  ensurePositioned(element)
-  let spinner = element.querySelector(`:scope > .${SPINNER_CLASS}`)
+  const host = getOverlayHost(element)
+  let spinner = host.querySelector(`:scope > .${SPINNER_CLASS}`)
   if (!spinner) {
     spinner = document.createElement('div')
     spinner.className = SPINNER_CLASS
     Object.assign(spinner.style, {
-      position: 'absolute', zIndex: 99999,
+      position: 'absolute', top: '8px', left: '8px', zIndex: 99999,
       height: '26px', padding: '0 10px', borderRadius: '999px',
       display: 'flex', alignItems: 'center', gap: '6px', pointerEvents: 'none',
       color: '#fff', fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
       whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
     })
-    element.querySelector(`:scope > .${BADGE_CLASS}`)?.remove()
-    element.querySelector(`:scope > .${ENGINE_BADGE_CLASS}`)?.remove()
-    element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
-    element.appendChild(spinner)
-    positionOverAnchorTopLeft(spinner, element, anchor)
-    watchAnchorResize(anchor, () => spinner.isConnected && positionOverAnchorTopLeft(spinner, element, anchor))
+    host.querySelector(`:scope > .${BADGE_CLASS}`)?.remove()
+    host.querySelector(`:scope > .${ENGINE_BADGE_CLASS}`)?.remove()
+    host.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
+    host.appendChild(spinner)
+    syncOverlayHost(element)
+    watchAnchorResize(element)
   }
   if (spinner.dataset.state === state) return
   renderSpinner(spinner, state)
 }
 
 function removeSpinner(element) {
-  element.querySelector(`:scope > .${SPINNER_CLASS}`)?.remove()
-}
-
-function ensurePositioned(el) {
-  if (el.dataset.ytLevelPositioned) return
-  el.dataset.ytLevelPositioned = '1'
-  if (getComputedStyle(el).position === 'static') el.style.position = 'relative'
-}
-
-function positionOverAnchorBottomLeft(el, host, anchor, offset = 8) {
-  const hostRect = host.getBoundingClientRect()
-  const anchorRect = anchor.getBoundingClientRect()
-  el.style.left = `${anchorRect.left - hostRect.left + offset}px`
-  el.style.bottom = `${hostRect.bottom - anchorRect.bottom + offset}px`
-  el.style.top = ''
-}
-
-function positionOverAnchorTopLeft(el, host, anchor, topOffset = 8, leftOffset = 8) {
-  const hostRect = host.getBoundingClientRect()
-  const anchorRect = anchor.getBoundingClientRect()
-  el.style.left = `${anchorRect.left - hostRect.left + leftOffset}px`
-  el.style.top = `${anchorRect.top - hostRect.top + topOffset}px`
-  el.style.bottom = ''
-}
-
-const anchorResizeObservers = new WeakMap()
-
-function watchAnchorResize(anchor, reposition) {
-  let entry = anchorResizeObservers.get(anchor)
-  if (!entry) {
-    const callbacks = new Set()
-    const ro = new ResizeObserver(() => callbacks.forEach(cb => cb()))
-    ro.observe(anchor)
-    entry = { ro, callbacks }
-    anchorResizeObservers.set(anchor, entry)
-  }
-  entry.callbacks.add(reposition)
+  overlayHosts.get(element)?.querySelector(`:scope > .${SPINNER_CLASS}`)?.remove()
 }
 
 const priorityButtons = new Set()
@@ -592,18 +617,17 @@ document.addEventListener('click', e => {
 }, true)
 
 function injectPriorityButton(element, variant = 'idle') {
-  const anchor = getBadgeAnchor(element)
-  if (element.querySelector(`:scope > .${BADGE_CLASS}`)) return
-  if (element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) return
+  const host = getOverlayHost(element)
+  if (host.querySelector(`:scope > .${BADGE_CLASS}`)) return
+  if (host.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) return
   const t = T()
-  ensurePositioned(element)
-  let btn = element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
+  let btn = host.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
   if (!btn) {
     btn = document.createElement('button')
     btn.className = PRIORITY_BTN_CLASS
     btn.type = 'button'
     Object.assign(btn.style, {
-      position: 'absolute', zIndex: 99999,
+      position: 'absolute', bottom: '8px', left: '8px', zIndex: 99999,
       height: '32px', padding: '0 14px', borderRadius: '999px', border: 'none',
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
       color: '#ffffff', fontSize: '13px', fontWeight: 'bold',
@@ -611,10 +635,10 @@ function injectPriorityButton(element, variant = 'idle') {
       cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
     })
     btn._ytLevelActivate = () => prioritizeVideoElement(element, btn)
-    element.appendChild(btn)
+    host.appendChild(btn)
     priorityButtons.add(btn)
-    positionOverAnchorBottomLeft(btn, element, anchor)
-    watchAnchorResize(anchor, () => btn.isConnected && positionOverAnchorBottomLeft(btn, element, anchor))
+    syncOverlayHost(element)
+    watchAnchorResize(element)
   }
   btn.dataset.variant = variant
   btn.disabled = false
@@ -630,7 +654,7 @@ function injectPriorityButton(element, variant = 'idle') {
 }
 
 function removePriorityButton(element) {
-  const btn = element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
+  const btn = overlayHosts.get(element)?.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
   if (btn) { priorityButtons.delete(btn); btn.remove() }
 }
 
@@ -642,16 +666,17 @@ function stopWatchingAnchor(anchor) {
 }
 
 function reconcileOverlay(element) {
-  if (!element.isConnected) { stopWatchingAnchor(getBadgeAnchor(element)); return }
+  if (!element.isConnected) { stopWatchingAnchor(getBadgeAnchor(element)); removeOverlayHost(element); return }
   const videoId = getVideoId(element)
   if (!videoId) return
   const anchor = getBadgeAnchor(element)
+  const host = overlayHosts.get(element)
 
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
     if (cached === 'no_transcript') {
-      if (!element.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) injectNoDataBadge(element)
-    } else if (cached && !element.querySelector(`:scope > .${BADGE_CLASS}`)) {
+      if (!host?.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) injectNoDataBadge(element)
+    } else if (cached && !host?.querySelector(`:scope > .${BADGE_CLASS}`)) {
       injectBadge(element, cached.level, cached.method, cached.model)
     }
     stopWatchingAnchor(anchor)
@@ -669,7 +694,7 @@ function reconcileOverlay(element) {
     return
   }
 
-  if (!element.querySelector(`:scope > .${SPINNER_CLASS}`)) {
+  if (!host?.querySelector(`:scope > .${SPINNER_CLASS}`)) {
     injectPriorityButton(element)
   }
 }
@@ -714,9 +739,9 @@ async function processVideoElement(element) {
     return
   }
 
-  const existingBadge = element.querySelector(`.${BADGE_CLASS}`)
-  if (existingBadge) existingBadge.remove()
-  element.querySelector(`.${ENGINE_BADGE_CLASS}`)?.remove()
+  const host = overlayHosts.get(element)
+  host?.querySelector(`:scope > .${BADGE_CLASS}`)?.remove()
+  host?.querySelector(`:scope > .${ENGINE_BADGE_CLASS}`)?.remove()
   element.setAttribute(PROCESSED_ATTR, videoId)
   videoInFlight.add(videoId)
   removePriorityButton(element)

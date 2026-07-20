@@ -135,7 +135,9 @@ async function checkNanoStatus() {
   }
 
   try {
-    const state = typeof LanguageModel !== 'undefined' ? await LanguageModel.availability() : 'unavailable'
+    const state = typeof LanguageModel !== 'undefined' ? await LanguageModel.availability({
+      expectedOutputs: [{ type: 'text', languages: ['en'] }]
+    }) : 'unavailable'
     if (state === 'available') {
       nanoStatusEl.className = 'nano-status'
       nanoStatusEl.dataset.state = 'available'

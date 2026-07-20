@@ -393,7 +393,12 @@ function getOverlayHost(element) {
 function syncOverlayHost(element) {
   const host = overlayHosts.get(element)
   if (!host) return
-  const rect = getBadgeAnchor(element).getBoundingClientRect()
+  if (!element.isConnected) { removeOverlayHost(element); return }
+  const anchor = getBadgeAnchor(element)
+  if (!anchor.isConnected) { removeOverlayHost(element); return }
+  const rect = anchor.getBoundingClientRect()
+  if (rect.width === 0 && rect.height === 0) { host.style.display = 'none'; return }
+  host.style.display = ''
   host.style.top = `${rect.top + window.scrollY}px`
   host.style.left = `${rect.left + window.scrollX}px`
   host.style.width = `${rect.width}px`
@@ -724,6 +729,7 @@ async function processVideoElement(element) {
   if (!videoId) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
   if (processedId === videoId) return
+  if (processedId) removeOverlayHost(element)
 
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
@@ -808,6 +814,7 @@ function presentVideoElement(element) {
   if (!videoId) return
   const processedId = element.getAttribute(PROCESSED_ATTR)
   if (processedId === videoId) return
+  if (processedId) removeOverlayHost(element)
 
   if (videoResultCache.has(videoId)) {
     processVideoElement(element)
@@ -874,6 +881,9 @@ function scanFeed() {
 function sweepDisconnectedActive() {
   for (const el of [...activeElements]) {
     if (!el.isConnected) cancelActiveElement(el)
+  }
+  for (const el of [...overlayElements]) {
+    if (!el.isConnected) removeOverlayHost(el)
   }
 }
 

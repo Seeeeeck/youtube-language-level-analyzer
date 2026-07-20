@@ -576,6 +576,21 @@ function watchAnchorResize(anchor, reposition) {
   entry.callbacks.add(reposition)
 }
 
+const priorityButtons = new Set()
+
+document.addEventListener('click', e => {
+  for (const btn of priorityButtons) {
+    if (!btn.isConnected || btn.disabled) continue
+    const r = btn.getBoundingClientRect()
+    if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+      e.preventDefault()
+      e.stopPropagation()
+      btn._ytLevelActivate()
+      return
+    }
+  }
+}, true)
+
 function injectPriorityButton(element, variant = 'idle') {
   const anchor = getBadgeAnchor(element)
   if (element.querySelector(`:scope > .${BADGE_CLASS}`)) return
@@ -593,14 +608,11 @@ function injectPriorityButton(element, variant = 'idle') {
       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
       color: '#ffffff', fontSize: '13px', fontWeight: 'bold',
       fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap',
-      cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'auto'
+      cursor: 'pointer', boxShadow: '0 2px 4px rgba(0,0,0,0.4)', pointerEvents: 'none'
     })
-    btn.addEventListener('click', e => {
-      e.preventDefault()
-      e.stopPropagation()
-      prioritizeVideoElement(element, btn)
-    })
+    btn._ytLevelActivate = () => prioritizeVideoElement(element, btn)
     element.appendChild(btn)
+    priorityButtons.add(btn)
     positionOverAnchorBottomLeft(btn, element, anchor)
     watchAnchorResize(anchor, () => btn.isConnected && positionOverAnchorBottomLeft(btn, element, anchor))
   }
@@ -618,7 +630,8 @@ function injectPriorityButton(element, variant = 'idle') {
 }
 
 function removePriorityButton(element) {
-  element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)?.remove()
+  const btn = element.querySelector(`:scope > .${PRIORITY_BTN_CLASS}`)
+  if (btn) { priorityButtons.delete(btn); btn.remove() }
 }
 
 const anchorObservers = new WeakMap()
@@ -672,10 +685,8 @@ function watchAnchor(element) {
 const styleEl = document.createElement('style')
 styleEl.textContent = `@keyframes ytLevelSpin{to{transform:rotate(360deg)}}
 @keyframes ytLevelPulse{0%,100%{opacity:0.3}50%{opacity:0.9}}
-.${PRIORITY_BTN_CLASS}{opacity:1;transition:transform .1s}
-.${PRIORITY_BTN_CLASS}:hover{transform:scale(1.1)}
-.${PRIORITY_BTN_CLASS}:active{transform:scale(0.92)}
-.${PRIORITY_BTN_CLASS}:disabled{opacity:0.6;cursor:default}`
+.${PRIORITY_BTN_CLASS}{opacity:1}
+.${PRIORITY_BTN_CLASS}:disabled{opacity:0.6}`
 document.documentElement.appendChild(styleEl)
 
 const videoResultCache = new Map()

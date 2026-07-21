@@ -64,6 +64,14 @@
     }
     pre code { background: none; padding: 0; }
     .tip { background: #e8f5e9; padding: 12px 16px; border-radius: 6px; color: #2e7d32; font-size: 14px; margin: 12px 0; }
+    .copy-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; margin-left: 4px; padding: 0;
+      background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;
+      cursor: pointer; font-size: 12px; line-height: 1; vertical-align: middle;
+    }
+    .copy-btn:hover { background: #e0e0e0; }
+    .copy-btn.copied { background: #4CAF50; border-color: #4CAF50; }
     footer { text-align: center; padding: 40px 0; color: #999; font-size: 13px; }
     @media (max-width: 600px) {
       .features { grid-template-columns: 1fr; }
@@ -140,11 +148,11 @@
 
       <h3 data-i18n="gemini_flag_title">1. Activate Nano AI</h3>
       <ol>
-        <li data-i18n-html="gemini_flag_1">Enter this in the browser address bar:<br><strong><a href="chrome://flags/#prompt-api-for-gemini-nano"><code>chrome://flags/#prompt-api-for-gemini-nano</code></a></strong></li>
+        <li data-i18n-html="gemini_flag_1">Enter this in the browser address bar:<br><strong><a href="chrome://flags/#prompt-api-for-gemini-nano"><code>chrome://flags/#prompt-api-for-gemini-nano</code></a><button class="copy-btn" data-copy="chrome://flags/#prompt-api-for-gemini-nano" onclick="copyFlag(this)" title="Copy">&#128203;</button></strong></li>
         <li data-i18n-html="gemini_flag_2">Set the flag to <strong>&quot;Enabled Multilanguage&quot;</strong></li>
         <li data-i18n-html="gemini_flag_3">Click <strong>&quot;Relaunch&quot;</strong> or restart the browser</li>
       </ol>
-      <div class="tip" data-i18n-html="gemini_flag_bypass">If the model does not start downloading, also enable (recommended): <br><strong><a href="chrome://flags/#optimization-guide-on-device-model"><code>chrome://flags/#optimization-guide-on-device-model</code></a></strong> and select <strong>&quot;Enabled BypassPerfRequirement&quot;</strong></div>
+      <div class="tip" data-i18n-html="gemini_flag_bypass">If the model does not start downloading, also enable (recommended): <br><strong><a href="chrome://flags/#optimization-guide-on-device-model"><code>chrome://flags/#optimization-guide-on-device-model</code></a><button class="copy-btn" data-copy="chrome://flags/#optimization-guide-on-device-model" onclick="copyFlag(this)" title="Copy">&#128203;</button></strong> and select <strong>&quot;Enabled BypassPerfRequirement&quot;</strong></div>
 
       <h3 data-i18n="gemini_status_title">2. Check the model status</h3>
       <p data-i18n-html="gemini_status_desc">Open the YT Level popup and select the <strong>Gemini Nano</strong> tab:</p>
@@ -251,6 +259,14 @@ ollama serve</code></pre>
   <script src="translations.js"></script>
   <script>
     function get(key, lang) { return T[lang] && T[lang][key] !== undefined ? T[lang][key] : T.en[key]; }
+    function copyFlag(btn) {
+      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1200);
+      });
+    }
     function switchLang(lang) {
       const t = T[lang] || T.en;
       document.querySelectorAll('[data-i18n]').forEach(el => {

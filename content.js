@@ -259,6 +259,30 @@ async function setNanoLang(lang) {
   return true
 }
 
+// LanguageModel.availability() only reports state, it never starts the
+// download itself. Left alone, a fresh install stays stuck at
+// 'downloadable' forever because nothing ever calls create(). The popup
+// can trigger it too, but popups close and kill that JS context mid
+// download — this runs from the content script instead, which stays
+// alive for as long as a YouTube tab is open, so the download actually
+// survives long enough to finish.
+let nanoDownloadPrimed = false
+async function primeNanoDownload() {
+  if (nanoDownloadPrimed) return
+  if (typeof LanguageModel === 'undefined') return
+  if ((await getEngine()) !== 'nano') return
+  try {
+    const state = await LanguageModel.availability()
+    if (state !== 'downloadable' && state !== 'downloading') return
+    nanoDownloadPrimed = true
+    const session = await LanguageModel.create()
+    session.destroy()
+  } catch {
+    nanoDownloadPrimed = false
+  }
+}
+primeNanoDownload()
+
 async function analyzeWithNano(text, token) {
   console.log('[YT-Level] analyzeWithNano called, text length:', text.length)
   if (typeof LanguageModel === 'undefined') {

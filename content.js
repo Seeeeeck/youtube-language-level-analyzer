@@ -428,6 +428,24 @@ function getOverlayHost(element) {
   return host
 }
 
+// YouTube's masthead and category chip bar are position:sticky/fixed near the
+// top of the viewport. Our overlays live outside the page's own stacking
+// context (appended to <html>), so without this check their high z-index
+// would render on top of those sticky bars whenever a thumbnail scrolls
+// underneath them, instead of being covered like the real thumbnail is.
+function getStickyOverlayBottom() {
+  let bottom = 0
+  for (const selector of ['#masthead-container', 'ytd-feed-filter-chip-bar-renderer', 'ytd-search-header-renderer']) {
+    const el = document.querySelector(selector)
+    if (!el) continue
+    const style = getComputedStyle(el)
+    if (style.position !== 'sticky' && style.position !== 'fixed') continue
+    const r = el.getBoundingClientRect()
+    if (r.bottom > bottom) bottom = r.bottom
+  }
+  return bottom
+}
+
 function syncOverlayHost(element) {
   const host = overlayHosts.get(element)
   if (!host) return
@@ -436,6 +454,7 @@ function syncOverlayHost(element) {
   if (!anchor.isConnected) { removeOverlayHost(element); return }
   const rect = anchor.getBoundingClientRect()
   if (rect.width === 0 && rect.height === 0) { host.style.display = 'none'; return }
+  if (rect.top < getStickyOverlayBottom()) { host.style.display = 'none'; return }
   host.style.display = ''
   host.style.top = `${rect.top + window.scrollY}px`
   host.style.left = `${rect.left + window.scrollX}px`

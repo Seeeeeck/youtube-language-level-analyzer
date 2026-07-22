@@ -581,7 +581,7 @@ function getToastContainer() {
   toastContainer = document.createElement('div')
   toastContainer.id = 'yt-level-toast-container'
   Object.assign(toastContainer.style, {
-    position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
+    position: 'fixed', top: '24px', left: '50%', transform: 'translateX(-50%)',
     zIndex: 2147483647, display: 'flex', flexDirection: 'column', gap: '8px',
     alignItems: 'center', pointerEvents: 'none'
   })
@@ -606,7 +606,7 @@ function showToast(message, title) {
     boxShadow: '0 8px 24px rgba(0,0,0,0.55)',
     border: '1px solid rgba(255,255,255,0.25)', maxWidth: '440px',
     pointerEvents: 'auto', cursor: 'pointer', opacity: '0',
-    transition: 'opacity .2s ease, transform .2s ease', transform: 'translateY(10px)'
+    transition: 'opacity .2s ease, transform .2s ease', transform: 'translateY(-10px)'
   })
 
   const icon = document.createElement('span')
@@ -637,7 +637,7 @@ function showToast(message, title) {
   })
   const dismiss = () => {
     toast.style.opacity = '0'
-    toast.style.transform = 'translateY(10px)'
+    toast.style.transform = 'translateY(-10px)'
     setTimeout(() => toast.remove(), 200)
   }
   toast.addEventListener('click', dismiss)

@@ -27,33 +27,34 @@
 ## Screenshots
 
 <p align="center">
-  <img src="yl.png" alt="CEFR-Abzeichen auf YouTube-Videos" width="700">
+  <img src="screenshots/levels_design.svg" alt="CEFR-Level-Abzeichen (A1-C2) auf YouTube-Thumbnails" width="700">
   <br>
-  <em>CEFR-Level-Abzeichen (A1–C2) auf YouTube-Thumbnails</em>
+  <em>CEFR-Level-Abzeichen (A1-C2) auf YouTube-Thumbnails</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+  <img src="screenshots/sc2.png" alt="Erweiterungs-Popup — Gemini-Nano-Tab" width="500">
   <br>
-  <em>Screenshot 3</em>
+  <em>Erweiterungs-Popup — Gemini-Nano-Tab</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <img src="screenshots/sc3.png" alt="Erweiterungs-Popup — Ollama-Tab" width="500">
   <br>
-  <em>Screenshot 4</em>
+  <em>Erweiterungs-Popup — Ollama-Tab</em>
 </p>
 
 ---
 
 ## Funktionen
 
-- 🏷️ **CEFR-Abzeichen** — farbige Kreise (A1–C2) auf YouTube-Video-Thumbnails
-- 🤖 **Zwei KI-Engines** — verwenden Sie **Gemini Nano** (in Chrome integrierte KI) oder **Ollama** (lokale Modelle)
-- 🌍 **Mehrsprachig** — analysiert Videos in jeder Sprache
-- 🎨 **Benutzerdefinierter Ollama-Server** — auf jede Ollama-Instanz in Ihrem Netzwerk verweisen
+- 🏷️ **CEFR-Abzeichen** — Farbige Kreise (A1-C2) auf YouTube-Video-Thumbnails
+- 🤖 **Zwei KI-Engines** — Verwenden Sie Gemini Nano (in Chrome integrierte KI) oder Ollama (lokale Modelle)
+- 🌍 **Mehrsprachig** — Analysiert Videos in jeder Sprache
+- 🔒 **100 % privat** — Alles läuft lokal, keine Daten verlassen Ihren Rechner
+- 🎛️ **Benutzerdefinierter Server** — Auf jede Ollama-Instanz in Ihrem Netzwerk verweisen
 - ⚡ **Schneller Cache** — Ergebnisse werden lokal zwischengespeichert, um eine erneute Analyse zu vermeiden
-- 🔒 **100 % privat** — alles läuft lokal, keine Daten verlassen Ihren Rechner
+- 📏 **Anpassbare Stichprobengröße** — Wählen Sie, wie viele Zeichen des Transkripts analysiert werden (3000/6000/12000), um Geschwindigkeit und Genauigkeit abzuwägen
 
 ---
 
@@ -67,51 +68,52 @@
 
 ## Gemini Nano
 
-Gemini Nano ist das integrierte KI-Modell von Chrome. Keine Downloads oder Server erforderlich.
+Gemini Nano ist das integrierte KI-Modell von Chrome. Sie müssen das KI-Modell herunterladen.
 
-### 1. Das Prompt-API-Flag aktivieren
+> Chrome wird für Gemini Nano empfohlen. Es kann in anderen Browsern nicht funktionieren.
 
-1. Öffnen Sie **`chrome://flags/#prompt-api-for-gemini-nano`**
-2. Setzen Sie das Flag auf **"Enabled"**
-3. Klicken Sie auf **"Relaunch"**, um Chrome neu zu starten
+> Funktioniert nicht in Ihrem Browser? Nutzen Sie stattdessen die Ollama-Option unten — sie funktioniert in jedem Chromium-basierten Browser.
 
-### 2. Das Flag für mehrsprachige Erkennung aktivieren
+> Ein Gemini Nano-Modell wird heruntergeladen. Schließen Sie den Browser nicht, bis es bereit ist.
 
-1. Öffnen Sie **`chrome://flags/#language-detection-api-for-gemini-nano`**
-2. Setzen Sie das Flag auf **"Enabled"**
-3. Klicken Sie auf **"Relaunch"**, um Chrome neu zu starten
+### 1. Nano AI aktivieren
 
-### 3. Den Modellstatus überprüfen
+1. Geben Sie dies in die Adressleiste ein: **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Setzen Sie das Flag auf **"Enabled Multilanguage"**
+3. Klicken Sie auf **"Relaunch"** oder starten Sie den Browser neu
+
+> Falls das Modell nicht mit dem Download beginnt, aktivieren Sie zusätzlich (empfohlen): **`chrome://flags/#optimization-guide-on-device-model`** und wählen Sie **"Enabled BypassPerfRequirement"**
+
+### 2. Den Modellstatus überprüfen
 
 Öffnen Sie das YT Level-Popup und wählen Sie den **Gemini Nano**-Tab:
 
 | Status | Bedeutung |
-|--------|-----------|
+|--------|---------|
 | **Available** | Bereit zur Verwendung |
 | **Downloading** | Das Modell wird heruntergeladen |
 | **Downloadable** | Muss zuerst heruntergeladen werden |
-| **Unavailable** | Wird in Ihrem Browser nicht unterstützt |
+| **Unavailable** | Wird in Ihrem Browser nicht unterstützt oder Modell nicht heruntergeladen |
 
-### 4. Die Analysespsprache auswählen
+### 3. Die Analysesprache auswählen
 
 Wählen Sie die Sprache des zu analysierenden Videos:
 
 | Code | Sprache |
-|------|---------|
+|------|----------|
 | en | Englisch |
 | es | Spanisch |
 | ja | Japanisch |
 | de | Deutsch |
 | fr | Französisch |
 
-### 5. Den Aufwandsmodus wählen
-
-- **Quick** — schnelle Klassifizierung mit einem einfachen Prompt
-- **Deep** — detaillierte CEFR-Bewertung mit einem umfassenden Prompt
+> Gemini Nano unterstützt mehrsprachige Analysen. Wählen Sie die Sprache, die zum Videoinhalt passt.
 
 ---
 
 ## Ollama
+
+> Funktioniert in jedem Chromium-basierten Browser: Chrome, Brave, Edge, Vivaldi, Opera und mehr.
 
 ### 1. Ollama installieren
 
@@ -121,15 +123,18 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
+
 Laden Sie das Installationsprogramm von [ollama.com/download](https://ollama.com/download) herunter und führen Sie es aus.
 
 ### 2. Ein Modell herunterladen
+
+Führen Sie dies in einem Terminal (Linux/macOS) oder PowerShell/CMD (Windows) aus:
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-> Sie können jedes Modell verwenden. Wählen Sie es im Ollama-Tab des Erweiterungs-Popups aus.
+> Sie können jedes Modell aus der [Ollama-Modellbibliothek](https://ollama.com/library) verwenden — wählen Sie es im Ollama-Tab des Erweiterungs-Popups aus. Ein leichtes/kleines Modell (wie `gemma3:1b`) wird für schnellere Antworten empfohlen.
 
 ### 3. CORS konfigurieren
 
@@ -154,7 +159,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 #### Windows — Dauerhaft
 
-1. Öffnen Sie **Systemeigenschaften** → **Umgebungsvariablen**
+1. Öffnen Sie **Systemeigenschaften** -> **Umgebungsvariablen**
 2. Fügen Sie eine neue **Systemvariable** hinzu: `OLLAMA_ORIGINS` = `*`
 3. Klicken Sie auf **OK** und starten Sie Ollama neu
 
@@ -164,6 +169,8 @@ OLLAMA_ORIGINS=* ollama serve
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
+
+> Wenn Sie Ollama von einem anderen PC in Ihrem Netzwerk aus verwenden möchten, öffnen Sie die Ollama-Einstellungen und aktivieren Sie "Ollama im Netzwerk verfügbar machen". Dies ermöglicht Verbindungen von anderen Geräten in Ihrem lokalen Netzwerk.
 
 ### 4. In der Erweiterung konfigurieren
 
@@ -188,7 +195,7 @@ ollama serve
 ## So funktioniert es
 
 1. Extrahiert jede Video-ID aus dem YouTube-Feed
-2. Ruft das Transkript von YouTube ab
+2. Ruft das Transkript über `youtube-transcript.ai` ab
 3. Sendet das Transkript an die ausgewählte KI-Engine (Gemini Nano oder Ollama) zur CEFR-Klassifizierung
 4. Zeigt das Ergebnis als kreisförmiges Abzeichen auf dem Video-Thumbnail an
 5. Ergebnisse werden lokal zwischengespeichert, um eine erneute Analyse zu vermeiden
@@ -201,7 +208,7 @@ Standardmäßig verbindet sich die Erweiterung mit `http://localhost:11434`. So 
 
 1. Öffnen Sie das Erweiterungs-Popup
 2. Wählen Sie den **Ollama**-Tab
-3. Geben Sie Ihre Server-URL ein (z. B. `http://192.168.1.100:11434`)
+3. Geben Sie Ihre Server-URL ein (z. B. `http://localhost:11434`)
 4. Klicken Sie auf **OK** — die Erweiterung testet die Verbindung und lädt verfügbare Modelle
 
 ---
@@ -209,3 +216,4 @@ Standardmäßig verbindet sich die Erweiterung mit `http://localhost:11434`. So 
 <div align="center">
   <sub>Kein API-Schlüssel oder Internetverbindung erforderlich. Alle Daten bleiben lokal.</sub>
 </div>
+

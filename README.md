@@ -27,33 +27,34 @@
 ## Screenshots
 
 <p align="center">
-  <img src="yl.png" alt="YT Level icon" width="700">
+  <img src="screenshots/levels_design.svg" alt="CEFR level badges (A1-C2) shown on YouTube video thumbnails" width="700">
   <br>
-  <em>YT Level icon</em>
+  <em>CEFR level badges (A1-C2) shown on YouTube video thumbnails</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+  <img src="screenshots/sc2.png" alt="Extension popup — Gemini Nano tab" width="500">
   <br>
-  <em>Screenshot 3</em>
+  <em>Extension popup — Gemini Nano tab</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <img src="screenshots/sc3.png" alt="Extension popup — Ollama tab" width="500">
   <br>
-  <em>Screenshot 4</em>
+  <em>Extension popup — Ollama tab</em>
 </p>
 
 ---
 
 ## Features
 
-- 🏷️ **CEFR badges** — colored circles (A1–C2) on YouTube video thumbnails
-- 🤖 **Two AI engines** — use **Gemini Nano** (built-in Chrome AI) or **Ollama** (local models)
-- 🌍 **Multi-language** — analyzes videos in any language
-- 🎨 **Custom Ollama server** — point to any Ollama instance on your network
-- ⚡ **Fast cache** — results are cached locally to avoid re-analysis
-- 🔒 **100% private** — everything runs locally, no data leaves your machine
+- 🏷️ **CEFR Badges** — Colored circles (A1-C2) on YouTube video thumbnails
+- 🤖 **Two AI Engines** — Use Gemini Nano (built-in Chrome AI) or Ollama (local models)
+- 🌍 **Multi-language** — Analyzes videos in English, Spanish, French, German, Japanese, and more
+- 🔒 **100% Private** — Everything runs locally — no data leaves your machine
+- 🎛️ **Custom Server** — Point to any Ollama instance on your network
+- ⚡ **Fast Cache** — Results are cached locally to avoid re-analysis
+- 📏 **Adjustable Sample Size** — Choose how many characters of the transcript to analyze (3000/6000/12000) to balance speed and accuracy
 
 ---
 
@@ -67,21 +68,23 @@
 
 ## Gemini Nano
 
-Gemini Nano is Chrome's built-in AI model. No downloads or servers needed.
+Gemini Nano is Chrome's built-in AI model. You need to download the AI model first.
 
-### 1. Enable the Prompt API flag
+> Chrome is recommended for Gemini Nano. It may not work in other browsers.
 
-1. Open **`chrome://flags/#prompt-api-for-gemini-nano`**
-2. Set the flag to **"Enabled"**
-3. Click **"Relaunch"** to restart Chrome
+> Doesn't work in your browser? Use the Ollama option below instead — it works on any Chromium-based browser.
 
-### 2. Enable the multi-language detection flag
+> A Gemini Nano model will be downloaded. Do not close the browser until it is ready.
 
-1. Open **`chrome://flags/#language-detection-api-for-gemini-nano`**
-2. Set the flag to **"Enabled"**
-3. Click **"Relaunch"** to restart Chrome
+### 1. Activate Nano AI
 
-### 3. Check the model status
+1. Enter this in the browser address bar: **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Set the flag to **"Enabled Multilanguage"**
+3. Click **"Relaunch"** or restart the browser
+
+> If the model does not start downloading, also enable (recommended): **`chrome://flags/#optimization-guide-on-device-model`** and select **"Enabled BypassPerfRequirement"**
+
+### 2. Check the model status
 
 Open the YT Level popup and select the **Gemini Nano** tab:
 
@@ -90,9 +93,9 @@ Open the YT Level popup and select the **Gemini Nano** tab:
 | **Available** | Ready to use |
 | **Downloading** | Model is being downloaded |
 | **Downloadable** | Needs to download first |
-| **Unavailable** | Not supported in your browser |
+| **Unavailable** | Not supported in your browser or model not downloaded |
 
-### 4. Choose the analysis language
+### 3. Choose the analysis language
 
 Select the language of the video you want to analyze:
 
@@ -104,14 +107,13 @@ Select the language of the video you want to analyze:
 | de | German |
 | fr | French |
 
-### 5. Choose effort mode
-
-- **Quick** — fast classification with a simple prompt
-- **Deep** — detailed CEFR evaluation with a comprehensive prompt
+> Gemini Nano supports multilingual analysis. Select the language that matches the video content.
 
 ---
 
 ## Ollama
+
+> Works on any Chromium-based browser: Chrome, Brave, Edge, Vivaldi, Opera, and more.
 
 ### 1. Install Ollama
 
@@ -121,15 +123,18 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
+
 Download the installer from [ollama.com/download](https://ollama.com/download) and run it.
 
 ### 2. Download a model
+
+Run this in a terminal (Linux/macOS) or PowerShell/CMD (Windows):
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-> You can use any model. Select it from the Ollama tab in the extension popup.
+> You can use any model from the [Ollama model library](https://ollama.com/library) — select it from the Ollama tab in the extension popup. A lightweight/small model (like `gemma3:1b`) is recommended for faster responses.
 
 ### 3. Configure CORS
 
@@ -154,7 +159,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 #### Windows — Permanent
 
-1. Open **System Properties** → **Environment Variables**
+1. Open **System Properties** -> **Environment Variables**
 2. Add a new **System variable**: `OLLAMA_ORIGINS` = `*`
 3. Click **OK** and restart Ollama
 
@@ -164,6 +169,8 @@ OLLAMA_ORIGINS=* ollama serve
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
+
+> If you want to use Ollama from another PC on your network, open Ollama Settings and enable "Expose Ollama to network". This allows connections from other devices on your local network.
 
 ### 4. Configure in the extension
 
@@ -188,7 +195,7 @@ ollama serve
 ## How It Works
 
 1. Extracts each video ID from the YouTube feed
-2. Fetches the transcript from YouTube
+2. Fetches the transcript via `youtube-transcript.ai`
 3. Sends the transcript to the selected AI engine (Gemini Nano or Ollama) for CEFR classification
 4. Displays the result as a circular badge on the video thumbnail
 5. Results are cached locally to avoid re-analysis
@@ -201,7 +208,7 @@ By default the extension connects to `http://localhost:11434`. To change it:
 
 1. Open the extension popup
 2. Select the **Ollama** tab
-3. Enter your server URL (e.g. `http://192.168.1.100:11434`)
+3. Enter your server URL (e.g. `http://localhost:11434`)
 4. Click **OK** — the extension will test the connection and load available models
 
 ---
@@ -209,3 +216,4 @@ By default the extension connects to `http://localhost:11434`. To change it:
 <div align="center">
   <sub>No API key or internet connection required. All data stays local.</sub>
 </div>
+

@@ -27,33 +27,34 @@
 ## Screenshot
 
 <p align="center">
-  <img src="yl.png" alt="Badge CEFR sui video YouTube" width="700">
+  <img src="screenshots/levels_design.svg" alt="Badge di livello CEFR (A1-C2) sulle miniature di YouTube" width="700">
   <br>
-  <em>Badge di livello CEFR (A1–C2) sulle miniature di YouTube</em>
+  <em>Badge di livello CEFR (A1-C2) sulle miniature di YouTube</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+  <img src="screenshots/sc2.png" alt="Popup dell'estensione — scheda Gemini Nano" width="500">
   <br>
-  <em>Screenshot 3</em>
+  <em>Popup dell'estensione — scheda Gemini Nano</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <img src="screenshots/sc3.png" alt="Popup dell'estensione — scheda Ollama" width="500">
   <br>
-  <em>Screenshot 4</em>
+  <em>Popup dell'estensione — scheda Ollama</em>
 </p>
 
 ---
 
 ## Caratteristiche
 
-- 🏷️ **Badge CEFR** — cerchi colorati (A1–C2) sulle miniature dei video YouTube
-- 🤖 **Due motori AI** — usa **Gemini Nano** (AI integrata di Chrome) o **Ollama** (modelli locali)
-- 🌍 **Multilingua** — analizza video in qualsiasi lingua
-- 🎨 **Server Ollama personalizzato** — punta a qualsiasi istanza Ollama sulla tua rete
-- ⚡ **Cache veloce** — i risultati vengono salvati in locale per evitare rianalisi
-- 🔒 **100% privato** — tutto funziona in locale, nessun dato lascia il tuo computer
+- 🏷️ **Badge CEFR** — Cerchi colorati (A1-C2) sulle miniature dei video YouTube
+- 🤖 **Due motori AI** — Usa Gemini Nano (AI integrata di Chrome) o Ollama (modelli locali)
+- 🌍 **Multilingua** — Analizza video in qualsiasi lingua
+- 🔒 **100% privato** — Tutto funziona in locale, nessun dato lascia il tuo computer
+- 🎛️ **Server personalizzato** — Punta a qualsiasi istanza Ollama sulla tua rete
+- ⚡ **Cache veloce** — I risultati vengono salvati in locale per evitare rianalisi
+- 📏 **Dimensione campione regolabile** — Scegli quanti caratteri della trascrizione analizzare (3000/6000/12000) per bilanciare velocità e precisione
 
 ---
 
@@ -67,32 +68,34 @@
 
 ## Gemini Nano
 
-Gemini Nano è il modello AI integrato di Chrome. Nessun download o server necessario.
+Gemini Nano è il modello AI integrato di Chrome. Devi scaricare il modello AI prima.
 
-### 1. Abilita il flag Prompt API
+> Chrome è consigliato per Gemini Nano. Potrebbe non funzionare in altri browser.
 
-1. Apri **`chrome://flags/#prompt-api-for-gemini-nano`**
-2. Imposta il flag su **"Enabled"**
-3. Clicca **"Relaunch"** per riavviare Chrome
+> Non funziona nel tuo browser? Usa invece l'opzione Ollama qui sotto — funziona su qualsiasi browser basato su Chromium.
 
-### 2. Abilita il flag di rilevamento multilingua
+> Un modello Gemini Nano verrà scaricato. Non chiudere il browser finché non è pronto.
 
-1. Apri **`chrome://flags/#language-detection-api-for-gemini-nano`**
-2. Imposta il flag su **"Enabled"**
-3. Clicca **"Relaunch"** per riavviare Chrome
+### 1. Attiva l'IA Nano
 
-### 3. Controlla lo stato del modello
+1. Inserisci questo nella barra degli indirizzi: **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Imposta il flag su **"Enabled Multilanguage"**
+3. Clicca **"Relaunch"** o riavvia il browser
+
+> Se il modello non inizia a scaricarsi, attiva anche (consigliato): **`chrome://flags/#optimization-guide-on-device-model`** e seleziona **"Enabled BypassPerfRequirement"**
+
+### 2. Controlla lo stato del modello
 
 Apri il popup di YT Level e seleziona la scheda **Gemini Nano**:
 
 | Stato | Significato |
-|--------|-------------|
+|--------|---------|
 | **Available** | Pronto all'uso |
 | **Downloading** | Il modello è in fase di download |
 | **Downloadable** | Deve essere scaricato prima |
-| **Unavailable** | Non supportato nel tuo browser |
+| **Unavailable** | Non supportato nel tuo browser o modello non scaricato |
 
-### 4. Scegli la lingua di analisi
+### 3. Scegli la lingua di analisi
 
 Seleziona la lingua del video che vuoi analizzare:
 
@@ -104,14 +107,13 @@ Seleziona la lingua del video che vuoi analizzare:
 | de | Tedesco |
 | fr | Francese |
 
-### 5. Scegli la modalità di sforzo
-
-- **Quick** — classificazione veloce con un prompt semplice
-- **Deep** — valutazione CEFR dettagliata con un prompt completo
+> Gemini Nano supporta l'analisi multilingue. Seleziona la lingua che corrisponde al contenuto del video.
 
 ---
 
 ## Ollama
+
+> Funziona su qualsiasi browser basato su Chromium: Chrome, Brave, Edge, Vivaldi, Opera e altri.
 
 ### 1. Installa Ollama
 
@@ -121,15 +123,18 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
+
 Scarica l'installer da [ollama.com/download](https://ollama.com/download) ed eseguilo.
 
 ### 2. Scarica un modello
+
+Esegui questo in un terminale (Linux/macOS) o PowerShell/CMD (Windows):
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-> Puoi usare qualsiasi modello. Selezionalo dalla scheda Ollama nel popup dell'estensione.
+> Puoi usare qualsiasi modello dalla [libreria di modelli Ollama](https://ollama.com/library) — selezionalo dalla scheda Ollama nel popup dell'estensione. Si consiglia un modello leggero/piccolo (come `gemma3:1b`) per risposte più veloci.
 
 ### 3. Configura CORS
 
@@ -154,7 +159,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 #### Windows — Permanente
 
-1. Apri **Proprietà del sistema** → **Variabili d'ambiente**
+1. Apri **Proprietà del sistema** -> **Variabili d'ambiente**
 2. Aggiungi una nuova **Variabile di sistema**: `OLLAMA_ORIGINS` = `*`
 3. Clicca **OK** e riavvia Ollama
 
@@ -164,6 +169,8 @@ OLLAMA_ORIGINS=* ollama serve
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
+
+> Se vuoi usare Ollama da un altro PC sulla tua rete, apri le Impostazioni di Ollama e abilita "Esponi Ollama alla rete". Ciò consente connessioni da altri dispositivi sulla tua rete locale.
 
 ### 4. Configura nell'estensione
 
@@ -188,7 +195,7 @@ ollama serve
 ## Come Funziona
 
 1. Estrae ogni ID video dal feed di YouTube
-2. Recupera la trascrizione da YouTube
+2. Recupera la trascrizione tramite `youtube-transcript.ai`
 3. Invia la trascrizione al motore AI selezionato (Gemini Nano o Ollama) per la classificazione CEFR
 4. Mostra il risultato come badge circolare sulla miniatura del video
 5. I risultati vengono memorizzati nella cache locale per evitare rianalisi
@@ -201,7 +208,7 @@ Per impostazione predefinita l'estensione si connette a `http://localhost:11434`
 
 1. Apri il popup dell'estensione
 2. Seleziona la scheda **Ollama**
-3. Inserisci l'URL del tuo server (es. `http://192.168.1.100:11434`)
+3. Inserisci l'URL del tuo server (es. `http://localhost:11434`)
 4. Clicca **OK** — l'estensione testerà la connessione e caricherà i modelli disponibili
 
 ---
@@ -209,3 +216,4 @@ Per impostazione predefinita l'estensione si connette a `http://localhost:11434`
 <div align="center">
   <sub>Nessuna chiave API o connessione internet richiesta. Tutti i dati rimangono in locale.</sub>
 </div>
+

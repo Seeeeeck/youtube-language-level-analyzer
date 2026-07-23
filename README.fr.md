@@ -27,33 +27,34 @@
 ## Captures d'écran
 
 <p align="center">
-  <img src="yl.png" alt="Badges CECR sur les vidéos YouTube" width="700">
+  <img src="screenshots/levels_design.svg" alt="Badges de niveau CECR (A1-C2) superposées sur les vignettes YouTube" width="700">
   <br>
-  <em>Badges de niveau CECR (A1–C2) superposés sur les vignettes YouTube</em>
+  <em>Badges de niveau CECR (A1-C2) superposées sur les vignettes YouTube</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+  <img src="screenshots/sc2.png" alt="Popup de l'extension — onglet Gemini Nano" width="500">
   <br>
-  <em>Screenshot 3</em>
+  <em>Popup de l'extension — onglet Gemini Nano</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <img src="screenshots/sc3.png" alt="Popup de l'extension — onglet Ollama" width="500">
   <br>
-  <em>Screenshot 4</em>
+  <em>Popup de l'extension — onglet Ollama</em>
 </p>
 
 ---
 
 ## Fonctionnalités
 
-- 🏷️ **Badges CECR** — cercles colorés (A1–C2) sur les vignettes des vidéos YouTube
-- 🤖 **Deux moteurs d'IA** — utilisez **Gemini Nano** (IA intégrée dans Chrome) ou **Ollama** (modèles locaux)
-- 🌍 **Multilingue** — analyse les vidéos dans toutes les langues
-- 🎨 **Serveur Ollama personnalisé** — pointer vers n'importe quelle instance Ollama sur votre réseau
-- ⚡ **Cache rapide** — les résultats sont mis en cache localement pour éviter une réanalyse
-- 🔒 **100 % privé** — tout s'exécute localement, aucune donnée ne quitte votre machine
+- 🏷️ **Badges CECR** — Cercles colorés (A1-C2) sur les vignettes des vidéos YouTube
+- 🤖 **Deux moteurs d'IA** — Utilisez Gemini Nano (IA intégrée dans Chrome) ou Ollama (modèles locaux)
+- 🌍 **Multilingue** — Analyse les vidéos dans toutes les langues
+- 🔒 **100 % prive** — Tout s'exécute localement, aucune donnée ne quitte votre machine
+- 🎛️ **Serveur personnalise** — Pointer vers n'importe quelle instance Ollama sur votre réseau
+- ⚡ **Cache rapide** — Les résultats sont mis en cache localement pour éviter une réanalyse
+- 📏 **Taille d'échantillon ajustable** — Choisissez le nombre de caractères de la transcription à analyser (3000/6000/12000) pour équilibrer vitesse et précision
 
 ---
 
@@ -67,51 +68,52 @@
 
 ## Gemini Nano
 
-Gemini Nano est le modèle d'IA intégré de Chrome. Aucun téléchargement ni serveur nécessaire.
+Gemini Nano est le modèle d'IA intégré de Chrome. Vous devez télécharger le modèle d'IA d'abord.
 
-### 1. Activer le flag Prompt API
+> Chrome est recommandé pour Gemini Nano. Il peut ne pas fonctionner dans d'autres navigateurs.
 
-1. Ouvrez **`chrome://flags/#prompt-api-for-gemini-nano`**
-2. Définissez le flag sur **"Enabled"**
-3. Cliquez sur **"Relaunch"** pour redémarrer Chrome
+> Ca ne fonctionne pas dans votre navigateur ? Utilisez plutôt l'option Ollama ci-dessous — elle fonctionne sur tout navigateur basé sur Chromium.
 
-### 2. Activer le flag de détection multilingue
+> Un modèle Gemini Nano sera téléchargé. Ne fermez pas le navigateur jusqu'à ce qu'il soit prêt.
 
-1. Ouvrez **`chrome://flags/#language-detection-api-for-gemini-nano`**
-2. Définissez le flag sur **"Enabled"**
-3. Cliquez sur **"Relaunch"** pour redémarrer Chrome
+### 1. Activer l'IA Nano
 
-### 3. Vérifier l'état du modèle
+1. Saisissez ceci dans la barre d'adresse : **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. Définissez le flag sur **"Enabled Multilanguage"**
+3. Cliquez sur **"Relaunch"** ou redémarrez le navigateur
+
+> Si le modèle ne commence pas à se télécharger, activez aussi (recommandé) : **`chrome://flags/#optimization-guide-on-device-model`** et sélectionnez **"Enabled BypassPerfRequirement"**
+
+### 2. Vérifier l'état du modèle
 
 Ouvrez la popup YT Level et sélectionnez l'onglet **Gemini Nano** :
 
 | Statut | Signification |
-|--------|---------------|
+|--------|---------|
 | **Available** | Prêt à l'emploi |
 | **Downloading** | Le modèle est en cours de téléchargement |
 | **Downloadable** | Doit être téléchargé d'abord |
-| **Unavailable** | Non pris en charge par votre navigateur |
+| **Unavailable** | Non pris en charge par votre navigateur ou modèle non téléchargé |
 
-### 4. Choisir la langue d'analyse
+### 3. Choisir la langue d'analyse
 
 Sélectionnez la langue de la vidéo que vous souhaitez analyser :
 
 | Code | Langue |
-|------|--------|
+|------|----------|
 | en | Anglais |
 | es | Espagnol |
 | ja | Japonais |
 | de | Allemand |
 | fr | Français |
 
-### 5. Choisir le mode d'effort
-
-- **Quick** — classification rapide avec une invite simple
-- **Deep** — évaluation CECR détaillée avec une invite complète
+> Gemini Nano prend en charge l'analyse multilingue. Sélectionnez la langue qui correspond au contenu de la vidéo.
 
 ---
 
 ## Ollama
+
+> Fonctionne sur tout navigateur basé sur Chromium : Chrome, Brave, Edge, Vivaldi, Opera, et plus encore.
 
 ### 1. Installer Ollama
 
@@ -121,15 +123,18 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows :**
+
 Téléchargez l'installateur depuis [ollama.com/download](https://ollama.com/download) et exécutez-le.
 
 ### 2. Télécharger un modèle
+
+Exécutez ceci dans un terminal (Linux/macOS) ou PowerShell/CMD (Windows) :
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-> Vous pouvez utiliser n'importe quel modèle. Sélectionnez-le depuis l'onglet Ollama dans la popup de l'extension.
+> Vous pouvez utiliser n'importe quel modèle de la [bibliothèque de modèles Ollama](https://ollama.com/library) — sélectionnez-le depuis l'onglet Ollama dans la popup de l'extension. Un modèle léger/petit (comme `gemma3:1b`) est recommandé pour des réponses plus rapides.
 
 ### 3. Configurer CORS
 
@@ -154,7 +159,7 @@ OLLAMA_ORIGINS=* ollama serve
 
 #### Windows — Permanent
 
-1. Ouvrez **Propriétés système** → **Variables d'environnement**
+1. Ouvrez **Propriétés système** -> **Variables d'environnement**
 2. Ajoutez une nouvelle **Variable système** : `OLLAMA_ORIGINS` = `*`
 3. Cliquez sur **OK** et redémarrez Ollama
 
@@ -164,6 +169,8 @@ OLLAMA_ORIGINS=* ollama serve
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
+
+> Si vous souhaitez utiliser Ollama depuis un autre PC sur votre réseau, ouvrez les paramètres Ollama et activez "Exposer Ollama au réseau". Cela autorise les connexions depuis d'autres appareils sur votre réseau local.
 
 ### 4. Configurer dans l'extension
 
@@ -188,7 +195,7 @@ ollama serve
 ## Comment ça Marche
 
 1. Extrait chaque ID de vidéo du fil YouTube
-2. Récupère la transcription depuis YouTube
+2. Récupère la transcription via `youtube-transcript.ai`
 3. Envoie la transcription au moteur d'IA sélectionné (Gemini Nano ou Ollama) pour une classification CECR
 4. Affiche le résultat sous forme de badge circulaire sur la vignette de la vidéo
 5. Les résultats sont mis en cache localement pour éviter une réanalyse
@@ -201,7 +208,7 @@ Par défaut, l'extension se connecte à `http://localhost:11434`. Pour le modifi
 
 1. Ouvrez la popup de l'extension
 2. Sélectionnez l'onglet **Ollama**
-3. Saisissez l'URL de votre serveur (ex. `http://192.168.1.100:11434`)
+3. Saisissez l'URL de votre serveur (ex. `http://localhost:11434`)
 4. Cliquez sur **OK** — l'extension testera la connexion et chargera les modèles disponibles
 
 ---
@@ -209,3 +216,4 @@ Par défaut, l'extension se connecte à `http://localhost:11434`. Pour le modifi
 <div align="center">
   <sub>Aucune clé API ni connexion Internet requise. Toutes les données restent locales.</sub>
 </div>
+

@@ -27,74 +27,77 @@
 ## スクリーンショット
 
 <p align="center">
-  <img src="yl.png" alt="YouTube 動画の CEFR バッジ" width="700">
+  <img src="screenshots/levels_design.svg" alt="YouTube動画のサムネイルに表示されるCEFRレベルバッジ(A1-C2)" width="700">
   <br>
-  <em>YouTube サムネイルに表示される CEFR レベルバッジ（A1～C2）</em>
+  <em>YouTube動画のサムネイルに表示されるCEFRレベルバッジ(A1-C2)</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot3.png" alt="Screenshot 3" width="500">
+  <img src="screenshots/sc2.png" alt="拡張機能のポップアップ — Gemini Nanoタブ" width="500">
   <br>
-  <em>Screenshot 3</em>
+  <em>拡張機能のポップアップ — Gemini Nanoタブ</em>
 </p>
 
 <p align="center">
-  <img src="screenshots/screenshot4.png" alt="Screenshot 4" width="500">
+  <img src="screenshots/sc3.png" alt="拡張機能のポップアップ — Ollamaタブ" width="500">
   <br>
-  <em>Screenshot 4</em>
+  <em>拡張機能のポップアップ — Ollamaタブ</em>
 </p>
 
 ---
 
 ## 機能
 
-- 🏷️ **CEFR バッジ** — YouTube 動画サムネイルに色付きの円（A1～C2）を表示
-- 🤖 **2 つの AI エンジン** — **Gemini Nano**（Chrome 組み込み AI）または **Ollama**（ローカルモデル）を使用
-- 🌍 **多言語対応** — あらゆる言語の動画を分析
-- 🎨 **カスタム Ollama サーバー** — ネットワーク上の任意の Ollama インスタンスを指定可能
-- ⚡ **高速キャッシュ** — 結果をローカルにキャッシュして再分析を防止
-- 🔒 **100% プライベート** — すべてローカルで実行、データは外部に送信されません
+- 🏷️ **CEFRバッジ** — YouTube動画のサムネイルに表示される色付きの円(A1-C2)
+- 🤖 **2つのAIエンジン** — Gemini Nano(Chrome内蔵AI)またはOllama(ローカルモデル)を使用
+- 🌍 **多言語対応** — 英語、スペイン語、フランス語、ドイツ語、日本語など、さまざまな言語の動画を分析
+- 🔒 **100%プライベート** — すべてローカルで実行 — データが端末の外に出ることはありません
+- 🎛️ **カスタムサーバー** — ネットワーク上の任意のOllamaインスタンスを指定可能
+- ⚡ **高速キャッシュ** — 結果はローカルにキャッシュされ、再分析を回避します
+- 📏 **分析文字数を調整可能** — 文字起こしのうち分析する文字数(3000/6000/12000)を選び、速度と精度のバランスを取れます
 
 ---
 
 ## 必要条件
 
-- **Chrome 128+**、**Brave**、または Chromium ベースのブラウザ
-- **Gemini Nano**：Prompt API が有効な Chrome 128+
-- **Ollama**：Ollama がインストールされ実行中であること（[ollama.com](https://ollama.com)）、かつ少なくとも 1 つのモデルがダウンロード済みであること
+- **Chrome 128以降**、**Brave**、またはChromiumベースの任意のブラウザ
+- **Gemini Nano**:Prompt APIを有効にしたChrome 128以降
+- **Ollama**:Ollamaがインストールされ実行中であること([ollama.com](https://ollama.com))。少なくとも1つのモデルをダウンロード済みであること
 
 ---
 
 ## Gemini Nano
 
-Gemini Nano は Chrome に組み込まれた AI モデルです。ダウンロードやサーバーは不要です。
+Gemini NanoはChromeに内蔵されたAIモデルです。まずAIモデルをダウンロードする必要があります。
 
-### 1. Prompt API フラグを有効化
+> Gemini NanoにはChromeの使用をおすすめします。他のブラウザでは動作しない場合があります。
 
-1. **`chrome://flags/#prompt-api-for-gemini-nano`** を開く
-2. フラグを **「Enabled」** に設定
-3. **「Relaunch」** をクリックして Chrome を再起動
+> お使いのブラウザで動作しませんか？代わりに下のOllamaオプションを使用してください — Chromiumベースのどのブラウザでも動作します。
 
-### 2. 多言語検出フラグを有効化
+> Gemini Nanoのモデルがダウンロードされます。準備が完了するまでブラウザを閉じないでください。
 
-1. **`chrome://flags/#language-detection-api-for-gemini-nano`** を開く
-2. フラグを **「Enabled」** に設定
-3. **「Relaunch」** をクリックして Chrome を再起動
+### 1. Nano AIを有効化する
 
-### 3. モデルのステータスを確認
+1. ブラウザのアドレスバーに以下を入力してください: **`chrome://flags/#prompt-api-for-gemini-nano`**
+2. フラグを**「Enabled Multilanguage」**に設定します
+3. **「Relaunch」**をクリックするか、ブラウザを再起動します
 
-YT Level のポップアップを開き、**Gemini Nano** タブを選択：
+> モデルのダウンロードが始まらない場合は、こちらも有効にしてください（推奨）： **`chrome://flags/#optimization-guide-on-device-model`** を開き **"Enabled BypassPerfRequirement"** を選択
 
-| ステータス | 意味 |
+### 2. モデルの状態を確認する
+
+YT Levelのポップアップを開き、**Gemini Nano**タブを選択します:
+
+| 状態 | 意味 |
 |--------|---------|
 | **Available** | 使用可能 |
 | **Downloading** | モデルをダウンロード中 |
-| **Downloadable** | ダウンロードが必要 |
-| **Unavailable** | お使いのブラウザでは非対応 |
+| **Downloadable** | 先にダウンロードが必要 |
+| **Unavailable** | お使いのブラウザでサポートされていないか、モデルが未ダウンロードです |
 
-### 4. 分析言語を選択
+### 3. 分析する言語を選択する
 
-分析する動画の言語を選択：
+分析したい動画の言語を選択してください:
 
 | コード | 言語 |
 |------|----------|
@@ -104,38 +107,40 @@ YT Level のポップアップを開き、**Gemini Nano** タブを選択：
 | de | ドイツ語 |
 | fr | フランス語 |
 
-### 5. effort モードを選択
-
-- **Quick** — シンプルなプロンプトで高速分類
-- **Deep** — 詳細なプロンプトで包括的な CEFR 評価
+> Gemini Nanoは多言語分析に対応しています。動画の内容に合った言語を選んでください。
 
 ---
 
 ## Ollama
 
-### 1. Ollama をインストール
+> Chromiumベースのあらゆるブラウザで動作します: Chrome、Brave、Edge、Vivaldi、Operaなど。
 
-**Linux / macOS：**
+### 1. Ollamaをインストールする
+
+**Linux / macOS:**
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
-**Windows：**
-[ollama.com/download](https://ollama.com/download) からインストーラーをダウンロードして実行。
+**Windows:**
 
-### 2. モデルをダウンロード
+[ollama.com/download](https://ollama.com/download) からインストーラーをダウンロードして実行してください。
+
+### 2. モデルをダウンロードする
+
+ターミナル（Linux/macOS）またはPowerShell/CMD（Windows）で以下を実行してください:
 
 ```bash
 ollama pull gemma3:1b
 ```
 
-> 任意のモデルを使用できます。拡張機能のポップアップの Ollama タブから選択してください。
+> [Ollamaモデルライブラリ](https://ollama.com/library)の任意のモデルを使用できます — 拡張機能のポップアップのOllamaタブから選択してください。より速い応答のために軽量/小型モデル（`gemma3:1b`など）をおすすめします。
 
-### 3. CORS を設定
+### 3. CORSを設定する
 
-拡張機能が YouTube から Ollama と通信するための権限が必要です。
+この拡張機能がYouTubeからOllamaと通信するには許可が必要です。
 
-#### Linux — Systemd（永続的）
+#### Linux — Systemd(恒久的)
 
 ```bash
 sudo mkdir -p /etc/systemd/system/ollama.service.d
@@ -152,60 +157,63 @@ sudo systemctl stop ollama
 OLLAMA_ORIGINS=* ollama serve
 ```
 
-#### Windows — 永続的
+#### Windows — 恒久的
 
-1. **システムのプロパティ** → **環境変数** を開く
-2. 新しい **システム変数** を追加：`OLLAMA_ORIGINS` = `*`
-3. **OK** をクリックし、Ollama を再起動
+1. **システムのプロパティ**を開き、**環境変数**を選択します
+2. 新しい**システム環境変数**を追加します:`OLLAMA_ORIGINS` = `*`
+3. **OK**をクリックしてOllamaを再起動します
 
-#### Windows — 一時的（PowerShell）
+#### Windows — 一時的(PowerShell)
 
 ```powershell
 $env:OLLAMA_ORIGINS="*"
 ollama serve
 ```
 
-### 4. 拡張機能で設定
+> ネットワーク上の別のPCからOllamaを使用したい場合は、Ollamaの設定を開き「Ollamaをネットワークに公開する」を有効にしてください。これによりローカルネットワーク上の他のデバイスからの接続が可能になります。
 
-1. 拡張機能アイコンをクリック
-2. **Ollama** タブを選択
-3. サーバー URL を設定（デフォルト：`http://localhost:11434`）
-4. **OK** をクリックして接続をテスト
-5. ドロップダウンからモデルを選択
+### 4. 拡張機能で設定する
+
+1. 拡張機能のアイコンをクリックします
+2. **Ollama**タブを選択します
+3. サーバーのURLを設定します(デフォルト:`http://localhost:11434`)
+4. **OK**をクリックして接続をテストします
+5. ドロップダウンからモデルを選択します
 
 ---
 
 ## 拡張機能の使用方法
 
-1. **https://www.youtube.com** にアクセス
+1. **https://www.youtube.com** にアクセスします
 2. 文字起こしがある動画は、分析中に緑色のスピナーが表示されます
-3. 色付きの円とともにレベルが表示されます：**A1**、**A2**、**B1**、**B2**、**C1**、**C2**
-4. バッジにカーソルを合わせると、使用されたエンジンとモデルが表示されます
-5. 拡張機能アイコンをクリックしてポップアップを開き、エンジンを切り替えます
+3. 分析が終わるとレベルを示す色付きの丸が表示されます:**A1**、**A2**、**B1**、**B2**、**C1**、**C2**
+4. バッジにカーソルを合わせると、使用されたエンジンとモデルを確認できます
+5. 拡張機能のアイコンをクリックするとポップアップが開き、エンジンを切り替えられます
 
 ---
 
 ## 仕組み
 
-1. YouTube フィードから各動画 ID を抽出
-2. YouTube から文字起こしを取得
-3. 文字起こしを選択した AI エンジン（Gemini Nano または Ollama）に送信し、CEFR 分類をリクエスト
-4. 結果を動画サムネイルに円形バッジとして表示
-5. 結果をローカルにキャッシュして再分析を防止
+1. YouTubeのフィードから各動画のIDを抽出します
+2. `youtube-transcript.ai` 経由で文字起こしを取得します
+3. 選択したAIエンジン(Gemini NanoまたはOllama)に文字起こしを送信し、CEFRレベルを判定します
+4. 結果を動画のサムネイルに丸いバッジとして表示します
+5. 結果はローカルにキャッシュされ、再分析を回避します
 
 ---
 
 ## カスタム Ollama サーバー
 
-デフォルトでは拡張機能は `http://localhost:11434` に接続します。変更するには：
+拡張機能はデフォルトで `http://localhost:11434` に接続します。変更するには:
 
-1. 拡張機能のポップアップを開く
-2. **Ollama** タブを選択
-3. サーバー URL を入力（例：`http://192.168.1.100:11434`）
-4. **OK** をクリック — 拡張機能が接続をテストし、利用可能なモデルを読み込みます
+1. 拡張機能のポップアップを開きます
+2. **Ollama**タブを選択します
+3. サーバーのURLを入力します(例:`http://localhost:11434`)
+4. **OK**をクリックすると — 拡張機能が接続をテストし、利用可能なモデルを読み込みます
 
 ---
 
 <div align="center">
-  <sub>API キーやインターネット接続は不要。すべてのデータはローカルに保持されます。</sub>
+  <sub>APIキーもインターネット接続も不要です。すべてのデータはローカルに保存されます。</sub>
 </div>
+

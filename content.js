@@ -470,6 +470,25 @@ function getStickyOverlayBottom() {
   return bottom
 }
 
+// The masthead search box renders its history/suggestions dropdown as a
+// floating listbox that is not sticky/fixed, so it isn't covered by
+// getStickyOverlayBottom(). Since our overlays live outside YouTube's own
+// stacking context, they'd otherwise render on top of that dropdown instead
+// of being covered like the real thumbnails underneath it.
+function getSearchSuggestionsRect() {
+  const suggestions = document.querySelector('[role="listbox"].ytSearchboxComponentSuggestionsContainer')
+  if (!suggestions) return null
+  const style = getComputedStyle(suggestions)
+  if (style.display === 'none' || style.visibility === 'hidden') return null
+  const rect = suggestions.getBoundingClientRect()
+  if (rect.width === 0 || rect.height === 0) return null
+  return rect
+}
+
+function rectsIntersect(a, b) {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
+}
+
 function syncOverlayHost(element) {
   const host = overlayHosts.get(element)
   if (!host) return
@@ -479,6 +498,8 @@ function syncOverlayHost(element) {
   const rect = anchor.getBoundingClientRect()
   if (rect.width === 0 && rect.height === 0) { host.style.display = 'none'; return }
   if (rect.top < getStickyOverlayBottom()) { host.style.display = 'none'; return }
+  const suggestionsRect = getSearchSuggestionsRect()
+  if (suggestionsRect && rectsIntersect(rect, suggestionsRect)) { host.style.display = 'none'; return }
   host.style.display = ''
   host.style.top = `${rect.top + window.scrollY}px`
   host.style.left = `${rect.left + window.scrollX}px`
@@ -1187,7 +1208,7 @@ function scheduleScan() {
   setTimeout(() => { scanScheduled = false; runScans() }, 400)
 }
 
-const observer = new MutationObserver(scheduleScan)
+const observer = new MutationObserver(() => { scheduleScan(); scheduleOverlayReposition() })
 observer.observe(document.body, { childList: true, subtree: true })
 window.addEventListener('scroll', scheduleScan, { passive: true })
 window.addEventListener('scrollend', runScans, { passive: true })

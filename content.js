@@ -432,18 +432,24 @@ function simulateClick(el) {
   el.click()
 }
 
-function isPanelExpanded(panel) {
-  return !!panel && panel.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN'
-}
-
 function findShowTranscriptButton() {
   const buttons = [...document.querySelectorAll('button')]
-  const exact = buttons.find((b) => (b.getAttribute('aria-label') || '').toLowerCase() === 'show transcript')
-  if (exact) return exact
-  return buttons.find((b) => {
+  const isVisible = (b) => b.offsetParent !== null && !b.disabled
+  const matchesLabel = (b) => {
     const label = (b.getAttribute('aria-label') || b.textContent || '').toLowerCase()
     return (label.includes('transcript') || label.includes('transcripci')) && !label.includes('close')
-  })
+  }
+  const exact = (b) => (b.getAttribute('aria-label') || '').toLowerCase() === 'show transcript'
+
+  // YouTube suele duplicar este botón (layouts responsive/menús colapsados) con
+  // copias ocultas por CSS. Un botón oculto puede tener listeners "muertos" o
+  // pertenecer a un panel que no es el que se está mostrando, así que preferimos
+  // siempre la copia visible antes que la primera coincidencia en el DOM.
+  const candidates = buttons.filter(matchesLabel)
+  return candidates.find((b) => exact(b) && isVisible(b))
+    || candidates.find(isVisible)
+    || candidates.find(exact)
+    || candidates[0]
 }
 
 // Lee la transcripción directamente del panel nativo de YouTube (sin APIs de
@@ -467,27 +473,13 @@ async function extractTranscriptFromDOM() {
     }
     console.log('[YT-Level] DOM transcript: botón encontrado ->', btn.outerHTML.slice(0, 300))
     console.log('[YT-Level] DOM transcript: visible?', btn.offsetParent !== null, 'disabled?', btn.disabled)
+
     simulateClick(btn)
 
-    const panelSelector = 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"], ytd-transcript-renderer'
-
-    for (let attempt = 0; attempt < 2; attempt++) {
-      for (let i = 0; i < 20; i++) {
-        await sleep(300)
-        segments = readTranscriptSegmentsFromDOM()
-        if (segments.length > 0) break
-      }
-
-      const panel = document.querySelector(panelSelector)
-      console.log('[YT-Level] DOM transcript: panel presente despues del click?', !!panel, 'expandido?', isPanelExpanded(panel), panel ? panel.outerHTML.slice(0, 200) : null)
-
+    for (let i = 0; i < 20; i++) {
+      await sleep(300)
+      segments = readTranscriptSegmentsFromDOM()
       if (segments.length > 0) break
-      if (attempt === 0 && panel && !isPanelExpanded(panel)) {
-        console.log('[YT-Level] DOM transcript: panel oculto, reintentando click')
-        simulateClick(btn)
-        continue
-      }
-      break
     }
   }
 
@@ -498,8 +490,31 @@ async function extractTranscriptFromDOM() {
   return segments.join(' ')
 }
 
+// Si el usuario pide el nivel apenas abre el video, la página puede seguir
+// cargando: el <video> todavía sin metadata, el panel de transcripción sin
+// inicializar. Un click (real o simulado) en ese momento no logra nada porque
+// YouTube mismo no está listo para abrir el panel. Esperamos a que el video
+// tenga metadata cargada antes de intentar la extracción por DOM.
+async function waitForPlayerReady(videoId, maxMs = 15000) {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+  const start = Date.now()
+  while (Date.now() - start < maxMs) {
+    if (getWatchVideoId() !== videoId) return false
+    const player = document.querySelector(WATCH_PLAYER_SELECTOR)
+    const video = document.querySelector(`${WATCH_PLAYER_SELECTOR} video`)
+    // "unstarted-mode"/"ad-showing" son las clases que YouTube pone en
+    // #movie_player mientras la pantalla está en negro cargando el video.
+    const playerReady = player && !player.classList.contains('unstarted-mode') && !player.classList.contains('ad-showing')
+    const videoReady = video && video.readyState >= 3 && video.duration > 0
+    if (playerReady && videoReady) return true
+    await sleep(250)
+  }
+  return getWatchVideoId() === videoId
+}
+
 async function fetchTranscript(videoId) {
   if (getWatchVideoId() === videoId) {
+    await waitForPlayerReady(videoId)
     const domTranscript = await extractTranscriptFromDOM()
     if (domTranscript) {
       console.log('[YT-Level] Transcript source: YouTube DOM (native panel) for', videoId)
@@ -512,7 +527,10 @@ async function fetchTranscript(videoId) {
     const result = await chrome.runtime.sendMessage({ type: 'fetch_transcript', videoId })
     console.log('[YT-Level] Transcript source: external API for', videoId)
     return result
-  } catch { return { transcript: null, rateLimited: false } }
+  } catch (e) {
+    console.log('[YT-Level] External API fallback failed for', videoId, '->', e)
+    return { transcript: null, rateLimited: false }
+  }
 }
 
 function getVideoId(element) {

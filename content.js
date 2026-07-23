@@ -762,6 +762,8 @@ function reconcileOverlay(element) {
     const cached = videoResultCache.get(videoId)
     if (cached === 'no_transcript') {
       if (!host?.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)) injectNoDataBadge(element)
+    } else if (cached === 'no_model') {
+      injectPriorityButton(element)
     } else if (cached && !host?.querySelector(`:scope > .${BADGE_CLASS}`)) {
       injectBadge(element, cached.level, cached.method, cached.model)
     }
@@ -814,6 +816,10 @@ async function processVideoElement(element) {
 
   if (videoResultCache.has(videoId)) {
     const cached = videoResultCache.get(videoId)
+    if (cached === 'no_model') {
+      injectPriorityButton(element)
+      return
+    }
     element.setAttribute(PROCESSED_ATTR, videoId)
     if (cached === 'no_transcript') injectNoDataBadge(element)
     else if (cached) injectBadge(element, cached.level, cached.method, cached.model)
@@ -1189,6 +1195,7 @@ document.addEventListener('yt-navigate-finish', () => {
   pendingElements.forEach(el => { removeSpinner(el); removePriorityButton(el) })
   pendingElements.length = 0
   chrome.runtime.sendMessage({ type: 'ollama_abort_all' }).catch(() => {})
+  scheduleOverlayReposition()
   setTimeout(runScans, 300)
   setTimeout(runScans, 1000)
   setTimeout(runScans, 2500)

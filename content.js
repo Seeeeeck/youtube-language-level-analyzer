@@ -409,9 +409,80 @@ async function analyzeLevel(text, token) {
   return null
 }
 
+function readTranscriptSegmentsFromDOM() {
+  const segs = [...document.querySelectorAll('ytd-transcript-segment-renderer, transcript-segment-view-model')]
+  return segs
+    .map((seg) => {
+      const textEl = seg.querySelector('.segment-text, .ytAttributedStringHost') || seg.querySelector('span[role="text"]')
+      return (textEl ? textEl.textContent : seg.textContent).trim()
+    })
+    .filter(Boolean)
+}
+
+function findShowTranscriptButton() {
+  const buttons = [...document.querySelectorAll('button')]
+  const exact = buttons.find((b) => (b.getAttribute('aria-label') || '').toLowerCase() === 'show transcript')
+  if (exact) return exact
+  return buttons.find((b) => {
+    const label = (b.getAttribute('aria-label') || b.textContent || '').toLowerCase()
+    return (label.includes('transcript') || label.includes('transcripci')) && !label.includes('close')
+  })
+}
+
+// Lee la transcripción directamente del panel nativo de YouTube (sin APIs de
+// terceros). Solo funciona para el video que está efectivamente cargado en el
+// player de la pestaña actual, porque el panel depende de ese player.
+async function extractTranscriptFromDOM() {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+  let segments = readTranscriptSegmentsFromDOM()
+
+  if (segments.length === 0) {
+    let btn = findShowTranscriptButton()
+    if (!btn) {
+      const expandBtn = document.querySelector('tp-yt-paper-button#expand, #expand')
+      if (expandBtn) { expandBtn.click(); await sleep(500) }
+      btn = findShowTranscriptButton()
+    }
+    if (!btn) {
+      console.log('[YT-Level] DOM transcript: no se encontró el botón de transcripción')
+      return null
+    }
+    console.log('[YT-Level] DOM transcript: botón encontrado ->', btn.outerHTML.slice(0, 300))
+    console.log('[YT-Level] DOM transcript: visible?', btn.offsetParent !== null, 'disabled?', btn.disabled)
+    btn.click()
+
+    for (let i = 0; i < 20; i++) {
+      await sleep(300)
+      segments = readTranscriptSegmentsFromDOM()
+      if (segments.length > 0) break
+    }
+
+    const panel = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"], ytd-transcript-renderer')
+    console.log('[YT-Level] DOM transcript: panel presente despues del click?', !!panel, panel ? panel.outerHTML.slice(0, 200) : null)
+  }
+
+  if (segments.length === 0) {
+    console.log('[YT-Level] DOM transcript: botón encontrado pero el panel no cargó segmentos (timeout)')
+    return null
+  }
+  return segments.join(' ')
+}
+
 async function fetchTranscript(videoId) {
+  if (getWatchVideoId() === videoId) {
+    const domTranscript = await extractTranscriptFromDOM()
+    if (domTranscript) {
+      console.log('[YT-Level] Transcript source: YouTube DOM (native panel) for', videoId)
+      return { transcript: domTranscript, rateLimited: false }
+    }
+  } else {
+    console.log('[YT-Level] DOM transcript skipped: video not currently loaded in the watch page player (watch:', getWatchVideoId(), 'requested:', videoId, ')')
+  }
   try {
-    return await chrome.runtime.sendMessage({ type: 'fetch_transcript', videoId })
+    const result = await chrome.runtime.sendMessage({ type: 'fetch_transcript', videoId })
+    console.log('[YT-Level] Transcript source: external API for', videoId)
+    return result
   } catch { return { transcript: null, rateLimited: false } }
 }
 

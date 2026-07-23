@@ -195,7 +195,7 @@ ollama serve
 ## How It Works
 
 1. Extracts each video ID from the YouTube feed
-2. Fetches the transcript via `youtube-transcript.ai`
+2. Fetches the video transcript
 3. Sends the transcript to the selected AI engine (Gemini Nano or Ollama) for CEFR classification
 4. Displays the result as a circular badge on the video thumbnail
 5. Results are cached locally to avoid re-analysis

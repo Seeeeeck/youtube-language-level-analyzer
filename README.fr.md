@@ -195,7 +195,7 @@ ollama serve
 ## Comment ça Marche
 
 1. Extrait chaque ID de vidéo du fil YouTube
-2. Récupère la transcription via `youtube-transcript.ai`
+2. Récupère la transcription de la vidéo
 3. Envoie la transcription au moteur d'IA sélectionné (Gemini Nano ou Ollama) pour une classification CECR
 4. Affiche le résultat sous forme de badge circulaire sur la vignette de la vidéo
 5. Les résultats sont mis en cache localement pour éviter une réanalyse

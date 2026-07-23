@@ -195,7 +195,7 @@ ollama serve
 ## So funktioniert es
 
 1. Extrahiert jede Video-ID aus dem YouTube-Feed
-2. Ruft das Transkript über `youtube-transcript.ai` ab
+2. Ruft das Transkript des Videos ab
 3. Sendet das Transkript an die ausgewählte KI-Engine (Gemini Nano oder Ollama) zur CEFR-Klassifizierung
 4. Zeigt das Ergebnis als kreisförmiges Abzeichen auf dem Video-Thumbnail an
 5. Ergebnisse werden lokal zwischengespeichert, um eine erneute Analyse zu vermeiden

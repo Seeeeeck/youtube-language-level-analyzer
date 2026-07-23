@@ -195,7 +195,7 @@ ollama serve
 ## 工作原理
 
 1. 从 YouTube 信息流中提取每个视频的 ID
-2. 通过 `youtube-transcript.ai` 获取字幕
+2. 获取视频的文字记录
 3. 将字幕发送给所选的 AI 引擎(Gemini Nano 或 Ollama)进行 CEFR 分级
 4. 在视频缩略图上以圆形徽章显示结果
 5. 结果会在本地缓存,避免重复分析

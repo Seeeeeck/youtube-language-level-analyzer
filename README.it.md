@@ -195,7 +195,7 @@ ollama serve
 ## Come Funziona
 
 1. Estrae ogni ID video dal feed di YouTube
-2. Recupera la trascrizione tramite `youtube-transcript.ai`
+2. Recupera la trascrizione del video
 3. Invia la trascrizione al motore AI selezionato (Gemini Nano o Ollama) per la classificazione CEFR
 4. Mostra il risultato come badge circolare sulla miniatura del video
 5. I risultati vengono memorizzati nella cache locale per evitare rianalisi

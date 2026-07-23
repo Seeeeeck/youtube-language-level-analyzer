@@ -419,6 +419,23 @@ function readTranscriptSegmentsFromDOM() {
     .filter(Boolean)
 }
 
+// Muchos botones de YouTube (tp-yt-paper-button, yt-icon-button, etc.) usan el
+// reconocedor de gestos de Polymer, que escucha pointerdown/pointerup en vez de
+// depender solo del evento "click" sintético que dispara Element.click(). Sin
+// esta secuencia, a veces el click no llega a abrir el panel de transcripción.
+function simulateClick(el) {
+  const opts = { bubbles: true, cancelable: true, composed: true, view: window }
+  el.dispatchEvent(new PointerEvent('pointerdown', opts))
+  el.dispatchEvent(new MouseEvent('mousedown', opts))
+  el.dispatchEvent(new PointerEvent('pointerup', opts))
+  el.dispatchEvent(new MouseEvent('mouseup', opts))
+  el.click()
+}
+
+function isPanelExpanded(panel) {
+  return !!panel && panel.getAttribute('visibility') !== 'ENGAGEMENT_PANEL_VISIBILITY_HIDDEN'
+}
+
 function findShowTranscriptButton() {
   const buttons = [...document.querySelectorAll('button')]
   const exact = buttons.find((b) => (b.getAttribute('aria-label') || '').toLowerCase() === 'show transcript')
@@ -450,16 +467,28 @@ async function extractTranscriptFromDOM() {
     }
     console.log('[YT-Level] DOM transcript: botón encontrado ->', btn.outerHTML.slice(0, 300))
     console.log('[YT-Level] DOM transcript: visible?', btn.offsetParent !== null, 'disabled?', btn.disabled)
-    btn.click()
+    simulateClick(btn)
 
-    for (let i = 0; i < 20; i++) {
-      await sleep(300)
-      segments = readTranscriptSegmentsFromDOM()
+    const panelSelector = 'ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"], ytd-transcript-renderer'
+
+    for (let attempt = 0; attempt < 2; attempt++) {
+      for (let i = 0; i < 20; i++) {
+        await sleep(300)
+        segments = readTranscriptSegmentsFromDOM()
+        if (segments.length > 0) break
+      }
+
+      const panel = document.querySelector(panelSelector)
+      console.log('[YT-Level] DOM transcript: panel presente despues del click?', !!panel, 'expandido?', isPanelExpanded(panel), panel ? panel.outerHTML.slice(0, 200) : null)
+
       if (segments.length > 0) break
+      if (attempt === 0 && panel && !isPanelExpanded(panel)) {
+        console.log('[YT-Level] DOM transcript: panel oculto, reintentando click')
+        simulateClick(btn)
+        continue
+      }
+      break
     }
-
-    const panel = document.querySelector('ytd-engagement-panel-section-list-renderer[target-id="engagement-panel-searchable-transcript"], ytd-transcript-renderer')
-    console.log('[YT-Level] DOM transcript: panel presente despues del click?', !!panel, panel ? panel.outerHTML.slice(0, 200) : null)
   }
 
   if (segments.length === 0) {

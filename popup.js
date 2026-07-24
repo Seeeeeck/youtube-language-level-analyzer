@@ -64,8 +64,8 @@ async function fetchModels(server) {
   return result?.models || []
 }
 
-function populateNanoLangSelect(lang) {
-  const select = document.getElementById('nanoLangSelect')
+function populateLangCodeSelect(selectId, lang) {
+  const select = document.getElementById(selectId)
   if (!select) return
   const currentVal = select.value
   const names = NANO_LANG_NAMES[lang] || NANO_LANG_NAMES.en
@@ -77,6 +77,10 @@ function populateNanoLangSelect(lang) {
     select.appendChild(opt)
   })
   if (NANO_LANG_CODES.includes(currentVal)) select.value = currentVal
+}
+
+function populateNanoLangSelect(lang) {
+  populateLangCodeSelect('nanoLangSelect', lang)
 }
 
 function applyLang(lang, els) {

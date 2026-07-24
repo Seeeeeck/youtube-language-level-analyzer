@@ -9,18 +9,18 @@ const PROCESSED_ATTR = 'data-level-video'
 const SETTINGS_KEYS = new Set(['ollamaModel', 'ollamaServer', 'aiEngine', 'nanoLang', 'lang', 'sampleChars'])
 
 const CONTENT_LANG = {
-  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel del lenguaje', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Límite excedido, abre el video para analizarlo', noModelLabel: 'No se seleccionó el servicio de Nano u Ollama', noModelTitle: 'Revisa la configuración de la extensión y elige Gemini Nano u Ollama' },
-  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: 'Get language level', priorityBtnActive: 'Getting…', priorityBtnTitle: "Analyze this video's level", noTranscriptLabel: 'No transcript', noTranscriptTitle: 'No transcript or captions available for this video', rateLimitedLabel: 'Rate limit exceeded', rateLimitedTitle: 'Rate limit exceeded, open the video to analyze it', noModelLabel: 'No Nano or Ollama service selected', noModelTitle: 'Check the extension settings and choose Gemini Nano or Ollama' },
-  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: 'Obtenir le niveau de langue', priorityBtnActive: 'Obtention…', priorityBtnTitle: 'Analyser le niveau de cette vidéo', noTranscriptLabel: 'Pas de transcription', noTranscriptTitle: "Aucune transcription ni sous-titres disponibles pour cette vidéo", rateLimitedLabel: 'Limite dépassée', rateLimitedTitle: 'Limite dépassée, ouvrez la vidéo pour l\'analyser', noModelLabel: "Aucun service Nano ou Ollama sélectionné", noModelTitle: "Vérifiez les paramètres de l'extension et choisissez Gemini Nano ou Ollama" },
-  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: 'Obter nível do idioma', priorityBtnActive: 'Obtendo…', priorityBtnTitle: 'Analisar o nível deste vídeo', noTranscriptLabel: 'Sem transcrição', noTranscriptTitle: 'Sem transcrição ou legendas disponíveis para este vídeo', rateLimitedLabel: 'Limite excedido', rateLimitedTitle: 'Limite excedido, abra o vídeo para analisá-lo', noModelLabel: 'Nenhum serviço Nano ou Ollama selecionado', noModelTitle: 'Verifique as configurações da extensão e escolha Gemini Nano ou Ollama' },
-  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: 'Sprachniveau abrufen', priorityBtnActive: 'Wird abgerufen…', priorityBtnTitle: 'Niveau dieses Videos analysieren', noTranscriptLabel: 'Kein Transkript', noTranscriptTitle: 'Kein Transkript oder Untertitel für dieses Video verfügbar', rateLimitedLabel: 'Limit überschritten', rateLimitedTitle: 'Limit überschritten, öffne das Video, um es zu analysieren', noModelLabel: 'Kein Nano- oder Ollama-Dienst ausgewählt', noModelTitle: 'Überprüfe die Erweiterungseinstellungen und wähle Gemini Nano oder Ollama' },
-  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: 'Ottieni livello di lingua', priorityBtnActive: 'Recupero…', priorityBtnTitle: 'Analizza il livello di questo video', noTranscriptLabel: 'Nessuna trascrizione', noTranscriptTitle: 'Nessuna trascrizione o sottotitoli disponibili per questo video', rateLimitedLabel: 'Limite superato', rateLimitedTitle: 'Limite superato, apri il video per analizzarlo', noModelLabel: 'Nessun servizio Nano o Ollama selezionato', noModelTitle: "Controlla le impostazioni dell'estensione e scegli Gemini Nano oppure Ollama" },
-  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '获取语言级别', priorityBtnActive: '获取中…', priorityBtnTitle: '分析此视频的级别', noTranscriptLabel: '无文字记录', noTranscriptTitle: '此视频没有可用的文字记录或字幕', rateLimitedLabel: '超出限制', rateLimitedTitle: '超出限制，请打开视频进行分析', noModelLabel: '未选择 Nano 或 Ollama 服务', noModelTitle: '请检查扩展程序设置，并选择 Gemini Nano 或 Ollama' },
-  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: '言語レベルを取得', priorityBtnActive: '取得中…', priorityBtnTitle: 'この動画のレベルを分析する', noTranscriptLabel: '文字起こしなし', noTranscriptTitle: 'この動画には文字起こしや字幕がありません', rateLimitedLabel: '制限超過', rateLimitedTitle: '制限超過、動画を開いて分析してください', noModelLabel: 'NanoまたはOllamaのサービスが選択されていません', noModelTitle: '拡張機能の設定を確認し、Gemini NanoまたはOllamaを選択してください' },
-  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '언어 레벨 가져오기', priorityBtnActive: '가져오는 중…', priorityBtnTitle: '이 동영상의 레벨 분석하기', noTranscriptLabel: '스크립트 없음', noTranscriptTitle: '이 동영상에는 사용 가능한 스크립트나 자막이 없습니다', rateLimitedLabel: '한도 초과', rateLimitedTitle: '한도 초과, 동영상을 열어 분석하세요', noModelLabel: 'Nano 또는 Ollama 서비스가 선택되지 않음', noModelTitle: '확장 프로그램 설정을 확인하고 Gemini Nano 또는 Ollama를 선택하세요' },
-  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: 'الحصول على مستوى اللغة', priorityBtnActive: 'جارٍ الحصول…', priorityBtnTitle: 'تحليل مستوى هذا الفيديو', noTranscriptLabel: 'لا يوجد نص', noTranscriptTitle: 'لا يوجد نص مكتوب أو ترجمة متاحة لهذا الفيديو', rateLimitedLabel: 'تم تجاوز الحد', rateLimitedTitle: 'تم تجاوز الحد، افتح الفيديو لتحليله', noModelLabel: 'لم يتم اختيار خدمة Nano أو Ollama', noModelTitle: 'تحقق من إعدادات الإضافة واختر Gemini Nano أو Ollama' },
-  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: 'भाषा स्तर प्राप्त करें', priorityBtnActive: 'प्राप्त हो रहा है…', priorityBtnTitle: 'इस वीडियो के स्तर का विश्लेषण करें', noTranscriptLabel: 'ट्रांसक्रिप्ट नहीं', noTranscriptTitle: 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट या सबटाइटल उपलब्ध नहीं है', rateLimitedLabel: 'सीमा पार हो गई', rateLimitedTitle: 'सीमा पार हो गई, इसे विश्लेषण करने के लिए वीडियो खोलें', noModelLabel: 'Nano या Ollama सेवा चयनित नहीं है', noModelTitle: 'एक्सटेंशन सेटिंग्स जांचें और Gemini Nano या Ollama चुनें' },
-  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: 'Получить уровень языка', priorityBtnActive: 'Получение…', priorityBtnTitle: 'Проанализировать уровень этого видео', noTranscriptLabel: 'Нет расшифровки', noTranscriptTitle: 'Для этого видео нет расшифровки или субтитров', rateLimitedLabel: 'Лимит превышен', rateLimitedTitle: 'Лимит превышен, откройте видео, чтобы его проанализировать', noModelLabel: 'Не выбрана служба Nano или Ollama', noModelTitle: 'Проверьте настройки расширения и выберите Gemini Nano или Ollama' },
+  es: { queuedLabel: 'En cola', activeLabel: 'En procesamiento', queuedTitle: 'En cola de análisis', activeTitle: 'Analizando ahora', priorityBtnLabel: 'Obtener nivel del lenguaje', priorityBtnActive: 'Obteniendo…', priorityBtnTitle: 'Analizar el nivel de este video', noTranscriptLabel: 'Sin transcripción', noTranscriptTitle: 'Sin transcripción o subtítulos disponibles para este video', rateLimitedLabel: 'Límite excedido', rateLimitedTitle: 'Límite excedido, abre el video para analizarlo', noModelLabel: 'No se seleccionó el servicio de Nano u Ollama', noModelTitle: 'Revisa la configuración de la extensión y elige Gemini Nano u Ollama', stopTitle: 'Detener análisis' },
+  en: { queuedLabel: 'Queued', activeLabel: 'Processing', queuedTitle: 'Queued for analysis', activeTitle: 'Analyzing now', priorityBtnLabel: 'Get language level', priorityBtnActive: 'Getting…', priorityBtnTitle: "Analyze this video's level", noTranscriptLabel: 'No transcript', noTranscriptTitle: 'No transcript or captions available for this video', rateLimitedLabel: 'Rate limit exceeded', rateLimitedTitle: 'Rate limit exceeded, open the video to analyze it', noModelLabel: 'No Nano or Ollama service selected', noModelTitle: 'Check the extension settings and choose Gemini Nano or Ollama', stopTitle: 'Stop analysis' },
+  fr: { queuedLabel: 'En attente', activeLabel: 'En cours', queuedTitle: "En file d'attente", activeTitle: 'Analyse en cours', priorityBtnLabel: 'Obtenir le niveau de langue', priorityBtnActive: 'Obtention…', priorityBtnTitle: 'Analyser le niveau de cette vidéo', noTranscriptLabel: 'Pas de transcription', noTranscriptTitle: "Aucune transcription ni sous-titres disponibles pour cette vidéo", rateLimitedLabel: 'Limite dépassée', rateLimitedTitle: 'Limite dépassée, ouvrez la vidéo pour l\'analyser', noModelLabel: "Aucun service Nano ou Ollama sélectionné", noModelTitle: "Vérifiez les paramètres de l'extension et choisissez Gemini Nano ou Ollama", stopTitle: "Arrêter l'analyse" },
+  pt: { queuedLabel: 'Na fila', activeLabel: 'Processando', queuedTitle: 'Na fila de análise', activeTitle: 'Analisando agora', priorityBtnLabel: 'Obter nível do idioma', priorityBtnActive: 'Obtendo…', priorityBtnTitle: 'Analisar o nível deste vídeo', noTranscriptLabel: 'Sem transcrição', noTranscriptTitle: 'Sem transcrição ou legendas disponíveis para este vídeo', rateLimitedLabel: 'Limite excedido', rateLimitedTitle: 'Limite excedido, abra o vídeo para analisá-lo', noModelLabel: 'Nenhum serviço Nano ou Ollama selecionado', noModelTitle: 'Verifique as configurações da extensão e escolha Gemini Nano ou Ollama', stopTitle: 'Parar análise' },
+  de: { queuedLabel: 'Warteschlange', activeLabel: 'Wird verarbeitet', queuedTitle: 'Wartet auf Analyse', activeTitle: 'Wird jetzt analysiert', priorityBtnLabel: 'Sprachniveau abrufen', priorityBtnActive: 'Wird abgerufen…', priorityBtnTitle: 'Niveau dieses Videos analysieren', noTranscriptLabel: 'Kein Transkript', noTranscriptTitle: 'Kein Transkript oder Untertitel für dieses Video verfügbar', rateLimitedLabel: 'Limit überschritten', rateLimitedTitle: 'Limit überschritten, öffne das Video, um es zu analysieren', noModelLabel: 'Kein Nano- oder Ollama-Dienst ausgewählt', noModelTitle: 'Überprüfe die Erweiterungseinstellungen und wähle Gemini Nano oder Ollama', stopTitle: 'Analyse stoppen' },
+  it: { queuedLabel: 'In coda', activeLabel: 'In elaborazione', queuedTitle: "In coda per l'analisi", activeTitle: 'Analisi in corso', priorityBtnLabel: 'Ottieni livello di lingua', priorityBtnActive: 'Recupero…', priorityBtnTitle: 'Analizza il livello di questo video', noTranscriptLabel: 'Nessuna trascrizione', noTranscriptTitle: 'Nessuna trascrizione o sottotitoli disponibili per questo video', rateLimitedLabel: 'Limite superato', rateLimitedTitle: 'Limite superato, apri il video per analizzarlo', noModelLabel: 'Nessun servizio Nano o Ollama selezionato', noModelTitle: "Controlla le impostazioni dell'estensione e scegli Gemini Nano oppure Ollama", stopTitle: "Ferma l'analisi" },
+  zh: { queuedLabel: '排队中', activeLabel: '处理中', queuedTitle: '排队分析中', activeTitle: '正在分析', priorityBtnLabel: '获取语言级别', priorityBtnActive: '获取中…', priorityBtnTitle: '分析此视频的级别', noTranscriptLabel: '无文字记录', noTranscriptTitle: '此视频没有可用的文字记录或字幕', rateLimitedLabel: '超出限制', rateLimitedTitle: '超出限制，请打开视频进行分析', noModelLabel: '未选择 Nano 或 Ollama 服务', noModelTitle: '请检查扩展程序设置，并选择 Gemini Nano 或 Ollama', stopTitle: '停止分析' },
+  ja: { queuedLabel: '待機中', activeLabel: '処理中', queuedTitle: '分析待機中', activeTitle: '分析中', priorityBtnLabel: '言語レベルを取得', priorityBtnActive: '取得中…', priorityBtnTitle: 'この動画のレベルを分析する', noTranscriptLabel: '文字起こしなし', noTranscriptTitle: 'この動画には文字起こしや字幕がありません', rateLimitedLabel: '制限超過', rateLimitedTitle: '制限超過、動画を開いて分析してください', noModelLabel: 'NanoまたはOllamaのサービスが選択されていません', noModelTitle: '拡張機能の設定を確認し、Gemini NanoまたはOllamaを選択してください', stopTitle: '分析を停止' },
+  ko: { queuedLabel: '대기 중', activeLabel: '처리 중', queuedTitle: '분석 대기 중', activeTitle: '분석 중', priorityBtnLabel: '언어 레벨 가져오기', priorityBtnActive: '가져오는 중…', priorityBtnTitle: '이 동영상의 레벨 분석하기', noTranscriptLabel: '스크립트 없음', noTranscriptTitle: '이 동영상에는 사용 가능한 스크립트나 자막이 없습니다', rateLimitedLabel: '한도 초과', rateLimitedTitle: '한도 초과, 동영상을 열어 분석하세요', noModelLabel: 'Nano 또는 Ollama 서비스가 선택되지 않음', noModelTitle: '확장 프로그램 설정을 확인하고 Gemini Nano 또는 Ollama를 선택하세요', stopTitle: '분석 중지' },
+  ar: { queuedLabel: 'قيد الانتظار', activeLabel: 'قيد المعالجة', queuedTitle: 'في انتظار التحليل', activeTitle: 'جارٍ التحليل الآن', priorityBtnLabel: 'الحصول على مستوى اللغة', priorityBtnActive: 'جارٍ الحصول…', priorityBtnTitle: 'تحليل مستوى هذا الفيديو', noTranscriptLabel: 'لا يوجد نص', noTranscriptTitle: 'لا يوجد نص مكتوب أو ترجمة متاحة لهذا الفيديو', rateLimitedLabel: 'تم تجاوز الحد', rateLimitedTitle: 'تم تجاوز الحد، افتح الفيديو لتحليله', noModelLabel: 'لم يتم اختيار خدمة Nano أو Ollama', noModelTitle: 'تحقق من إعدادات الإضافة واختر Gemini Nano أو Ollama', stopTitle: 'إيقاف التحليل' },
+  hi: { queuedLabel: 'कतार में', activeLabel: 'प्रसंस्करण में', queuedTitle: 'विश्लेषण की प्रतीक्षा में', activeTitle: 'अभी विश्लेषण हो रहा है', priorityBtnLabel: 'भाषा स्तर प्राप्त करें', priorityBtnActive: 'प्राप्त हो रहा है…', priorityBtnTitle: 'इस वीडियो के स्तर का विश्लेषण करें', noTranscriptLabel: 'ट्रांसक्रिप्ट नहीं', noTranscriptTitle: 'इस वीडियो के लिए कोई ट्रांसक्रिप्ट या सबटाइटल उपलब्ध नहीं है', rateLimitedLabel: 'सीमा पार हो गई', rateLimitedTitle: 'सीमा पार हो गई, इसे विश्लेषण करने के लिए वीडियो खोलें', noModelLabel: 'Nano या Ollama सेवा चयनित नहीं है', noModelTitle: 'एक्सटेंशन सेटिंग्स जांचें और Gemini Nano या Ollama चुनें', stopTitle: 'विश्लेषण रोकें' },
+  ru: { queuedLabel: 'В очереди', activeLabel: 'В обработке', queuedTitle: 'В очереди на анализ', activeTitle: 'Анализируется сейчас', priorityBtnLabel: 'Получить уровень языка', priorityBtnActive: 'Получение…', priorityBtnTitle: 'Проанализировать уровень этого видео', noTranscriptLabel: 'Нет расшифровки', noTranscriptTitle: 'Для этого видео нет расшифровки или субтитров', rateLimitedLabel: 'Лимит превышен', rateLimitedTitle: 'Лимит превышен, откройте видео, чтобы его проанализировать', noModelLabel: 'Не выбрана служба Nano или Ollama', noModelTitle: 'Проверьте настройки расширения и выберите Gemini Nano или Ollama', stopTitle: 'Остановить анализ' },
 }
 
 let currentLang = 'en'
@@ -74,7 +74,7 @@ const CARD_SELECTORS = [
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
-const DEEP_PROMPT = text => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
+const DEEP_PROMPT = (text) => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written English production.
 
 Your task is to analyze the following transcript and classify the speaker's level according to the Common European Framework of Reference. It may be the full transcript, or — for very long videos — separate excerpts taken from the beginning, middle, and end (marked with "[...]" between them); evaluate the language across everything given, not just the first part.
 
@@ -89,6 +89,40 @@ Rules:
 - Base your decision on the most consistent evidence throughout the text, not on a single isolated fragment.
 - If there are mixed signals between two levels, choose the level where most criteria are sustained consistently.
 - Do not explain your reasoning.
+- Do not add comments, justifications, or additional text.
+
+Your response must be EXCLUSIVELY one of these six codes, with no other character, word, period, or extra space:
+A1
+A2
+B1
+B2
+C1
+C2
+
+Any other response format is considered invalid.
+
+Transcript:
+"""
+${text}
+"""`
+
+const OLLAMA_DEEP_PROMPT = (text) => `Act as a certified CEFR (MCER) examiner with years of experience assessing spoken and written production across multiple languages.
+
+Your task has two steps:
+1. First, silently identify the language the transcript below is written in.
+2. Then, applying CEFR criteria for that language, classify the speaker's level according to the Common European Framework of Reference. It may be the full transcript, or — for very long videos — separate excerpts taken from the beginning, middle, and end (marked with "[...]" between them); evaluate the language across everything given, not just the first part.
+
+Evaluate based on these criteria, in order of importance:
+1. Grammatical range and accuracy (verb tenses, subordinate structures, agreement)
+2. Lexical range and precision (general vs. specialized vocabulary, collocations, nuance)
+3. Discourse coherence and cohesion (connectors, idea organization)
+4. Apparent fluency (self-corrections, filler words, pauses reflected in the text)
+5. Complexity of ideas expressed (ability to argue, qualify, hypothesize)
+
+Rules:
+- Base your decision on the most consistent evidence throughout the text, not on a single isolated fragment.
+- If there are mixed signals between two levels, choose the level where most criteria are sustained consistently.
+- Do not output the detected language, your reasoning, or any other text.
 - Do not add comments, justifications, or additional text.
 
 Your response must be EXCLUSIVELY one of these six codes, with no other character, word, period, or extra space:
@@ -338,7 +372,7 @@ async function analyzeWithOllama(text, model, token) {
   const result = await chrome.runtime.sendMessage({
     type: 'ollama_generate',
     model,
-    prompt: DEEP_PROMPT(text),
+    prompt: OLLAMA_DEEP_PROMPT(text),
     requestId
   })
   if (token) token.requestId = null
@@ -790,12 +824,18 @@ const SPINNER_ICON = {
   active: `<svg viewBox="0 0 24 24" style="width:14px;height:14px;flex-shrink:0;animation:ytLevelSpin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg>`
 }
 
+const SPINNER_CONTENT_CLASS = 'yt-level-spinner-content'
+const SPINNER_STOP_CLASS = 'yt-level-spinner-stop'
+
 function renderSpinner(spinner, state) {
   const t = T()
   spinner.dataset.state = state
   spinner.title = state === 'queued' ? t.queuedTitle : t.activeTitle
   spinner.style.background = state === 'queued' ? 'rgba(60,60,60,0.85)' : 'rgba(0,0,0,0.8)'
-  spinner.innerHTML = `${SPINNER_ICON[state]}<span>${state === 'queued' ? t.queuedLabel : t.activeLabel}</span>`
+  const content = spinner.querySelector(`.${SPINNER_CONTENT_CLASS}`)
+  content.innerHTML = `${SPINNER_ICON[state]}<span>${state === 'queued' ? t.queuedLabel : t.activeLabel}</span>`
+  const stopBtn = spinner.querySelector(`.${SPINNER_STOP_CLASS}`)
+  stopBtn.title = t.stopTitle
 }
 
 function injectSpinner(element, state = 'active') {
@@ -811,6 +851,25 @@ function injectSpinner(element, state = 'active') {
       color: '#fff', fontSize: '11px', fontWeight: 'bold', fontFamily: 'Arial, sans-serif',
       whiteSpace: 'nowrap', boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
     })
+
+    const content = document.createElement('div')
+    content.className = SPINNER_CONTENT_CLASS
+    Object.assign(content.style, { display: 'flex', alignItems: 'center', gap: '6px' })
+    spinner.appendChild(content)
+
+    const stopBtn = document.createElement('button')
+    stopBtn.type = 'button'
+    stopBtn.className = SPINNER_STOP_CLASS
+    stopBtn.textContent = '✕'
+    Object.assign(stopBtn.style, {
+      pointerEvents: 'none', background: 'transparent', border: 'none',
+      color: '#fff', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer',
+      padding: '0', marginLeft: '2px', lineHeight: '1', opacity: '0.8'
+    })
+    stopBtn._ytLevelActivate = () => stopVideoElement(element)
+    spinner.appendChild(stopBtn)
+    spinnerStopButtons.add(stopBtn)
+
     host.querySelector(`:scope > .${BADGE_CLASS}`)?.remove()
     host.querySelector(`:scope > .${ENGINE_BADGE_CLASS}`)?.remove()
     host.querySelector(`:scope > .${NO_DATA_BADGE_CLASS}`)?.remove()
@@ -823,14 +882,29 @@ function injectSpinner(element, state = 'active') {
 }
 
 function removeSpinner(element) {
-  overlayHosts.get(element)?.querySelector(`:scope > .${SPINNER_CLASS}`)?.remove()
+  const spinner = overlayHosts.get(element)?.querySelector(`:scope > .${SPINNER_CLASS}`)
+  if (!spinner) return
+  const stopBtn = spinner.querySelector(`.${SPINNER_STOP_CLASS}`)
+  if (stopBtn) spinnerStopButtons.delete(stopBtn)
+  spinner.remove()
 }
 
 const priorityButtons = new Set()
+const spinnerStopButtons = new Set()
 
 document.addEventListener('click', e => {
   for (const btn of priorityButtons) {
     if (!btn.isConnected || btn.disabled) continue
+    const r = btn.getBoundingClientRect()
+    if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+      e.preventDefault()
+      e.stopPropagation()
+      btn._ytLevelActivate()
+      return
+    }
+  }
+  for (const btn of spinnerStopButtons) {
+    if (!btn.isConnected) continue
     const r = btn.getBoundingClientRect()
     if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
       e.preventDefault()
@@ -1007,7 +1081,11 @@ async function processVideoElement(element) {
     if (e instanceof AbortedAnalysisError) {
       console.log('[YT-Level] Analysis aborted for', videoId)
       element.removeAttribute(PROCESSED_ATTR)
-      requeueElement(element)
+      if (token.stoppedByUser) {
+        if (element.isConnected) injectPriorityButton(element)
+      } else {
+        requeueElement(element)
+      }
     } else if (e instanceof TranscriptRateLimitedError) {
       console.log('[YT-Level] Transcript API rate limited for', videoId)
       element.removeAttribute(PROCESSED_ATTR)
@@ -1071,6 +1149,26 @@ function cancelActiveElement(element) {
   token.abortController.abort()
   if (token.requestId) {
     chrome.runtime.sendMessage({ type: 'ollama_abort', requestId: token.requestId }).catch(() => {})
+  }
+}
+
+function stopVideoElement(element) {
+  const videoId = getVideoId(element)
+  if (!videoId) return
+
+  const pendingIdx = pendingElements.indexOf(element)
+  if (pendingIdx !== -1) {
+    pendingElements.splice(pendingIdx, 1)
+    removeSpinner(element)
+    element.removeAttribute(PROCESSED_ATTR)
+    if (element.isConnected) injectPriorityButton(element)
+    return
+  }
+
+  const token = elementTokens.get(element)
+  if (token) {
+    token.stoppedByUser = true
+    cancelActiveElement(element)
   }
 }
 

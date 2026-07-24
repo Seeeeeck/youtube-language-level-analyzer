@@ -3,7 +3,7 @@
   <h1>YT Level</h1>
   <p><strong>YouTube-Sprachniveau-Analysator</strong></p>
   <p>Analysieren Sie das CEFR-Niveau (A1–C2) jedes YouTube-Videos mit lokaler KI — kein API-Schlüssel, keine Internetverbindung erforderlich.</p>
-  <p>Wählen Sie zwischen zwei KI-Engines: <strong>Gemini Nano</strong> (in Chrome integriert) oder <strong>Ollama</strong> (lokaler Server). Funktioniert für <strong>jede Sprache</strong>.</p>
+  <p>Wählen Sie zwischen drei KI-Engines: <strong>Gemini API</strong> (Cloud, kostenlose Stufe), <strong>Gemini Nano</strong> (in Chrome integriert) oder <strong>Ollama</strong> (lokaler Server). Funktioniert für <strong>jede Sprache</strong>.</p>
 </div>
 
 ---
@@ -49,7 +49,7 @@
 ## Funktionen
 
 - 🏷️ **CEFR-Abzeichen** — Farbige Kreise (A1-C2) auf YouTube-Video-Thumbnails
-- 🤖 **Zwei KI-Engines** — Verwenden Sie Gemini Nano (in Chrome integrierte KI) oder Ollama (lokale Modelle)
+- 🤖 **Drei KI-Engines** — Verwenden Sie Gemini API (Cloud), Gemini Nano (in Chrome integrierte KI) oder Ollama (lokale Modelle)
 - 🌍 **Mehrsprachig** — Analysiert Videos in jeder Sprache
 - 🔒 **100 % privat** — Alles läuft lokal, keine Daten verlassen Ihren Rechner
 - 🎛️ **Benutzerdefinierter Server** — Auf jede Ollama-Instanz in Ihrem Netzwerk verweisen
@@ -61,8 +61,34 @@
 ## Voraussetzungen
 
 - **Chrome 128+**, **Brave** oder ein beliebiger Chromium-basierter Browser
+- **Gemini API**: Kostenloser API-Schlüssel von [Google AI Studio](https://aistudio.google.com/apikey)
 - **Gemini Nano**: Chrome 128+ mit aktivierter Prompt-API
 - **Ollama**: Ollama installiert und ausgeführt ([ollama.com](https://ollama.com)) mit mindestens einem heruntergeladenen Modell
+
+---
+
+## Gemini API
+
+Gemini API nutzt die Cloud-KI-Modelle von Google mit einem kostenlosen API-Schlüssel von Google AI Studio. Funktioniert in jedem Chromium-basierten Browser und erfordert keinen Modell-Download.
+
+> Im Gegensatz zu Gemini Nano und Ollama sendet die Gemini API das Transkript zur Verarbeitung an die Server von Google.
+
+### 1. Ihren API-Schlüssel erhalten
+
+1. Gehen Sie zu **Google AI Studio**: [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Melden Sie sich mit Ihrem Google-Konto an
+3. Klicken Sie auf **"Create API key"**
+4. Kopieren Sie den generierten Schlüssel (beginnt mit `AIza...`)
+
+> Die Gemini API bietet eine kostenlose Stufe mit großzügigen Nutzungslimits — keine Kreditkarte für den Einstieg erforderlich.
+
+### 2. In der Erweiterung konfigurieren
+
+1. Klicken Sie auf das Erweiterungssymbol
+2. Wählen Sie den **API Gemini**-Tab
+3. Fügen Sie Ihren API-Schlüssel in das Feld ein
+4. Klicken Sie auf **OK**, um den Schlüssel zu speichern und zu testen
+5. Wählen Sie ein Modell aus dem Dropdown-Menü
 
 ---
 
@@ -196,7 +222,7 @@ ollama serve
 
 1. Extrahiert jede Video-ID aus dem YouTube-Feed
 2. Ruft das Transkript des Videos ab
-3. Sendet das Transkript an die ausgewählte KI-Engine (Gemini Nano oder Ollama) zur CEFR-Klassifizierung
+3. Sendet das Transkript an die ausgewählte KI-Engine (Gemini API, Gemini Nano oder Ollama) zur CEFR-Klassifizierung
 4. Zeigt das Ergebnis als kreisförmiges Abzeichen auf dem Video-Thumbnail an
 5. Ergebnisse werden lokal zwischengespeichert, um eine erneute Analyse zu vermeiden
 
@@ -214,6 +240,6 @@ Standardmäßig verbindet sich die Erweiterung mit `http://localhost:11434`. So 
 ---
 
 <div align="center">
-  <sub>Kein API-Schlüssel oder Internetverbindung erforderlich. Alle Daten bleiben lokal.</sub>
+  <sub>Gemini Nano und Ollama laufen zu 100 % lokal — kein API-Schlüssel nötig. Gemini API ist optional und nutzt einen kostenlosen Schlüssel von Google AI Studio.</sub>
 </div>
 

@@ -3,7 +3,7 @@
   <h1>YT Level</h1>
   <p><strong>YouTube Language Level Analyzer</strong></p>
   <p>ローカル AI を使用して YouTube 動画の CEFR レベル（A1～C2）を分析 — API キーもインターネットも不要。</p>
-  <p><strong>Gemini Nano</strong>（Chrome に組み込み）または <strong>Ollama</strong>（ローカルサーバー）の 2 つの AI エンジンから選択可能。<strong>あらゆる言語</strong>に対応。</p>
+  <p><strong>Gemini API</strong>（クラウド、無料枠）、<strong>Gemini Nano</strong>（Chrome に組み込み）、<strong>Ollama</strong>（ローカルサーバー）の 3 つの AI エンジンから選択可能。<strong>あらゆる言語</strong>に対応。</p>
 </div>
 
 ---
@@ -49,7 +49,7 @@
 ## 機能
 
 - 🏷️ **CEFRバッジ** — YouTube動画のサムネイルに表示される色付きの円(A1-C2)
-- 🤖 **2つのAIエンジン** — Gemini Nano(Chrome内蔵AI)またはOllama(ローカルモデル)を使用
+- 🤖 **3つのAIエンジン** — Gemini API(クラウド)、Gemini Nano(Chrome内蔵AI)、またはOllama(ローカルモデル)を使用
 - 🌍 **多言語対応** — 英語、スペイン語、フランス語、ドイツ語、日本語など、さまざまな言語の動画を分析
 - 🔒 **100%プライベート** — すべてローカルで実行 — データが端末の外に出ることはありません
 - 🎛️ **カスタムサーバー** — ネットワーク上の任意のOllamaインスタンスを指定可能
@@ -61,8 +61,34 @@
 ## 必要条件
 
 - **Chrome 128以降**、**Brave**、またはChromiumベースの任意のブラウザ
+- **Gemini API**:[Google AI Studio](https://aistudio.google.com/apikey)から取得できる無料のAPIキー
 - **Gemini Nano**:Prompt APIを有効にしたChrome 128以降
 - **Ollama**:Ollamaがインストールされ実行中であること([ollama.com](https://ollama.com))。少なくとも1つのモデルをダウンロード済みであること
+
+---
+
+## Gemini API
+
+Gemini APIは、Google AI Studioの無料APIキーを使用してGoogleのクラウドAIモデルを利用します。Chromiumベースのどのブラウザでも動作し、モデルのダウンロードは不要です。
+
+> Gemini NanoやOllamaとは異なり、Gemini APIは処理のために文字起こしをGoogleのサーバーに送信します。
+
+### 1. APIキーを取得する
+
+1. **Google AI Studio**にアクセスします:[aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Googleアカウントでログインします
+3. **「Create API key」**をクリックします
+4. 生成されたキー(`AIza...`で始まります)をコピーします
+
+> Gemini APIには無料枠があり、利用上限も十分に大きく設定されています —— 開始にクレジットカードは不要です。
+
+### 2. 拡張機能で設定する
+
+1. 拡張機能のアイコンをクリックします
+2. **API Gemini**タブを選択します
+3. APIキーを入力欄に貼り付けます
+4. **OK**をクリックしてキーを保存・テストします
+5. ドロップダウンからモデルを選択します
 
 ---
 
@@ -196,7 +222,7 @@ ollama serve
 
 1. YouTubeのフィードから各動画のIDを抽出します
 2. 動画の文字起こしを取得します
-3. 選択したAIエンジン(Gemini NanoまたはOllama)に文字起こしを送信し、CEFRレベルを判定します
+3. 選択したAIエンジン(Gemini API、Gemini Nano、またはOllama)に文字起こしを送信し、CEFRレベルを判定します
 4. 結果を動画のサムネイルに丸いバッジとして表示します
 5. 結果はローカルにキャッシュされ、再分析を回避します
 
@@ -214,6 +240,6 @@ ollama serve
 ---
 
 <div align="center">
-  <sub>APIキーもインターネット接続も不要です。すべてのデータはローカルに保存されます。</sub>
+  <sub>Gemini NanoとOllamaは100%ローカルで動作し、APIキーは不要です。Gemini APIは任意で使用でき、Google AI Studioの無料キーを利用します。</sub>
 </div>
 

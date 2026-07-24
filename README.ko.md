@@ -3,7 +3,7 @@
   <h1>YT Level</h1>
   <p><strong>YouTube 언어 수준 분석기</strong></p>
   <p>로컬 AI를 사용하여 모든 YouTube 동영상의 CEFR 수준(A1–C2)을 분석합니다 — API 키 불필요, 인터넷 불필요.</p>
-  <p><strong>Gemini Nano</strong>(Chrome 내장) 또는 <strong>Ollama</strong>(로컬 서버) 중에서 AI 엔진을 선택하세요. <strong>모든 언어</strong>에서 작동합니다.</p>
+  <p><strong>Gemini API</strong>(클라우드, 무료 등급), <strong>Gemini Nano</strong>(Chrome 내장), <strong>Ollama</strong>(로컬 서버) 중에서 AI 엔진을 선택하세요. <strong>모든 언어</strong>에서 작동합니다.</p>
 </div>
 
 ---
@@ -49,7 +49,7 @@
 ## 기능
 
 - 🏷️ **CEFR 배지** — YouTube 동영상 썸네일에 표시되는 색상별 원형 배지(A1-C2)
-- 🤖 **두 가지 AI 엔진** — Gemini Nano(Chrome 내장 AI) 또는 Ollama(로컬 모델) 사용
+- 🤖 **세 가지 AI 엔진** — Gemini API(클라우드), Gemini Nano(Chrome 내장 AI), 또는 Ollama(로컬 모델) 사용
 - 🌍 **다국어 지원** — 영어, 스페인어, 프랑스어, 독일어, 일본어 등 다양한 언어의 동영상 분석
 - 🔒 **100% 비공개** — 모든 작업이 로컬에서 실행됩니다 — 데이터가 기기 밖으로 나가지 않습니다
 - 🎛️ **사용자 지정 서버** — 네트워크의 어떤 Ollama 인스턴스든 지정 가능
@@ -61,8 +61,34 @@
 ## 요구 사항
 
 - **Chrome 128 이상**, **Brave**, 또는 Chromium 기반 브라우저
+- **Gemini API**: [Google AI Studio](https://aistudio.google.com/apikey)에서 발급받은 무료 API 키
 - **Gemini Nano**: Prompt API가 활성화된 Chrome 128 이상
 - **Ollama**: Ollama가 설치되어 실행 중이어야 하며 ([ollama.com](https://ollama.com)), 최소 하나의 모델이 다운로드되어 있어야 합니다
+
+---
+
+## Gemini API
+
+Gemini API는 Google AI Studio에서 발급받은 무료 API 키로 Google의 클라우드 AI 모델을 사용합니다. Chromium 기반 어떤 브라우저에서도 작동하며 모델을 다운로드할 필요가 없습니다.
+
+> Gemini Nano 및 Ollama와 달리, Gemini API는 처리를 위해 스크립트를 Google 서버로 전송합니다.
+
+### 1. API 키 발급받기
+
+1. **Google AI Studio**로 이동하세요: [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Google 계정으로 로그인하세요
+3. **"Create API key"**를 클릭하세요
+4. 생성된 키를 복사하세요 (`AIza...`로 시작합니다)
+
+> Gemini API는 넉넉한 사용 한도를 제공하는 무료 등급이 있습니다 —— 시작하는 데 신용카드가 필요하지 않습니다.
+
+### 2. 확장 프로그램에서 설정하기
+
+1. 확장 프로그램 아이콘을 클릭하세요
+2. **API Gemini** 탭을 선택하세요
+3. API 키를 입력란에 붙여넣으세요
+4. **OK**를 클릭하여 키를 저장하고 테스트하세요
+5. 드롭다운에서 모델을 선택하세요
 
 ---
 
@@ -196,7 +222,7 @@ ollama serve
 
 1. YouTube 피드에서 각 동영상의 ID를 추출합니다
 2. 동영상의 스크립트를 가져옵니다
-3. 선택한 AI 엔진(Gemini Nano 또는 Ollama)으로 자막을 보내 CEFR 등급을 분류합니다
+3. 선택한 AI 엔진(Gemini API, Gemini Nano 또는 Ollama)으로 자막을 보내 CEFR 등급을 분류합니다
 4. 결과를 동영상 썸네일에 원형 배지로 표시합니다
 5. 결과가 로컬에 캐시되어 재분석을 방지합니다
 
@@ -214,6 +240,6 @@ ollama serve
 ---
 
 <div align="center">
-  <sub>API 키나 인터넷 연결이 필요하지 않습니다. 모든 데이터는 로컬에 보관됩니다.</sub>
+  <sub>Gemini Nano와 Ollama는 100% 로컬에서 실행되며 API 키가 필요 없습니다. Gemini API는 선택 사항이며 Google AI Studio의 무료 키를 사용합니다.</sub>
 </div>
 

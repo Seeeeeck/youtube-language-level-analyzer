@@ -86,7 +86,7 @@
       <h1 data-i18n-html="header_title">YT <span>Level</span></h1>
       <p data-i18n="header_subtitle">YouTube Language Level Analyzer</p>
       <p data-i18n="header_desc">Analyze the CEFR level (A1&#8211;C2) of any YouTube video using local AI &#8212; no API keys, no internet required.</p>
-      <p data-i18n-html="header_desc2">Choose between two AI engines: <strong>Gemini Nano</strong> (built into Chrome) or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
+      <p data-i18n-html="header_desc2">Choose between three AI engines: <strong>Gemini API</strong> (cloud, free tier), <strong>Gemini Nano</strong> (built into Chrome), or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
       <a class="btn" href="#" data-i18n="header_btn">Available on Chrome Web Store</a>
     </header>
 
@@ -122,7 +122,7 @@
       <h2 data-i18n="features_title">Features</h2>
       <div class="features">
         <div class="feature"><h3 data-i18n="feature_badges">&#127991;&#65039; CEFR Badges</h3><p data-i18n="feature_badges_desc">Colored circles (A1&#8211;C2) on YouTube video thumbnails</p></div>
-        <div class="feature"><h3 data-i18n="feature_engines">&#129302; Two AI Engines</h3><p data-i18n="feature_engines_desc">Use Gemini Nano (built-in Chrome AI) or Ollama (local models)</p></div>
+        <div class="feature"><h3 data-i18n="feature_engines">&#129302; Three AI Engines</h3><p data-i18n="feature_engines_desc">Use Gemini API (cloud), Gemini Nano (built-in Chrome AI), or Ollama (local models)</p></div>
         <div class="feature"><h3 data-i18n="feature_multilingual">&#127760; Multi-language</h3><p data-i18n="feature_multilingual_desc">Analyzes videos in English, Spanish, French, German, Japanese, and more</p></div>
         <div class="feature"><h3 data-i18n="feature_privacy">&#128274; 100% Private</h3><p data-i18n="feature_privacy_desc">Everything runs locally &#8212; no data leaves your machine</p></div>
         <div class="feature"><h3 data-i18n="feature_server">&#127928; Custom Server</h3><p data-i18n="feature_server_desc">Point to any Ollama instance on your network</p></div>
@@ -135,13 +135,38 @@
       <h2 data-i18n="requirements_title">Requirements</h2>
       <ul>
         <li data-i18n-html="req_chrome"><strong>Chrome 128+</strong>, <strong>Brave</strong>, or any Chromium-based browser</li>
+        <li data-i18n-html="req_geminiapi"><strong>Gemini API</strong>: Free API key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a></li>
         <li data-i18n-html="req_gemini"><strong>Gemini Nano</strong>: Chrome 128+ with Prompt API enabled</li>
         <li data-i18n-html="req_ollama"><strong>Ollama</strong>: Ollama installed and running (<a href="https://ollama.com">ollama.com</a>) with at least one model downloaded</li>
       </ul>
     </div>
 
     <div class="section">
-      <h2 data-i18n="gemini_title">Option 1: Gemini Nano</h2>
+      <h2 data-i18n="geminiapi_title">Option 1: Gemini API</h2>
+      <p data-i18n="geminiapi_desc">Gemini API uses Google's cloud AI models with a free API key from Google AI Studio. Works on any Chromium-based browser and doesn't require downloading any model.</p>
+      <div class="tip" data-i18n="geminiapi_privacy_tip">Unlike Gemini Nano and Ollama, the Gemini API sends the transcript to Google's servers for processing.</div>
+
+      <h3 data-i18n="geminiapi_key_title">1. Get your API key</h3>
+      <ol>
+        <li data-i18n-html="geminiapi_key_1">Go to <strong>Google AI Studio</strong>: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></li>
+        <li data-i18n="geminiapi_key_2">Sign in with your Google account</li>
+        <li data-i18n-html="geminiapi_key_3">Click <strong>&quot;Create API key&quot;</strong></li>
+        <li data-i18n-html="geminiapi_key_4">Copy the generated key (starts with <code>AIza...</code>)</li>
+      </ol>
+      <div class="tip" data-i18n="geminiapi_key_tip">The Gemini API has a free tier with generous usage limits — no credit card required to get started.</div>
+
+      <h3 data-i18n="geminiapi_config_title">2. Configure in the extension</h3>
+      <ol>
+        <li data-i18n="geminiapi_config_1">Click the extension icon</li>
+        <li data-i18n-html="geminiapi_config_2">Select the <strong>API Gemini</strong> tab</li>
+        <li data-i18n="geminiapi_config_3">Paste your API key into the field</li>
+        <li data-i18n-html="geminiapi_config_4">Click <strong>OK</strong> to save and test the key</li>
+        <li data-i18n="geminiapi_config_5">Select a model from the dropdown</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="gemini_title">Option 2: Gemini Nano</h2>
       <p data-i18n="gemini_desc">Gemini Nano is Chrome's built-in AI model. You need to download the AI model first.</p>
       <div class="tip" data-i18n="gemini_browser_tip">Chrome is recommended for Gemini Nano. It may not work in other browsers.</div>
 
@@ -182,7 +207,7 @@
     </div>
 
     <div class="section">
-      <h2 data-i18n="ollama_title">Option 2: Ollama</h2>
+      <h2 data-i18n="ollama_title">Option 3: Ollama</h2>
       <div class="tip" data-i18n="ollama_all_browsers_tip">Works on any Chromium-based browser: Chrome, Brave, Edge, Vivaldi, Opera, and more.</div>
 
       <h3 data-i18n="ollama_install_title">1. Install Ollama</h3>
@@ -256,7 +281,7 @@ ollama serve</code></pre>
     </div>
 
     <footer>
-      <p data-i18n="footer_1">No API key or internet connection required. All data stays local.</p>
+      <p data-i18n="footer_1">Gemini Nano and Ollama run 100% locally — no API key needed. Gemini API is optional and uses a free key from Google AI Studio.</p>
       <p data-i18n="footer_2">YT Level &#8212; YouTube Language Level Analyzer</p>
     </footer>
   </div>

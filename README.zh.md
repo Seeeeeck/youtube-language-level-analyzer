@@ -3,7 +3,7 @@
   <h1>YT Level</h1>
   <p><strong>YouTube 语言级别分析器</strong></p>
   <p>使用本地 AI 分析任何 YouTube 视频的 CEFR 级别（A1–C2）——无需 API 密钥，无需互联网。</p>
-  <p>可在两种 AI 引擎之间选择：<strong>Gemini Nano</strong>（Chrome 内置）或 <strong>Ollama</strong>（本地服务器）。适用于<strong>任何语言</strong>。</p>
+  <p>可在三种 AI 引擎之间选择：<strong>Gemini API</strong>（云端,免费额度）、<strong>Gemini Nano</strong>（Chrome 内置）或 <strong>Ollama</strong>（本地服务器）。适用于<strong>任何语言</strong>。</p>
 </div>
 
 ---
@@ -49,7 +49,7 @@
 ## 功能特点
 
 - 🏷️ **CEFR 徽章** — YouTube 视频缩略图上的彩色徽章(A1-C2)
-- 🤖 **两种 AI 引擎** — 使用 Gemini Nano(Chrome 内置 AI)或 Ollama(本地模型)
+- 🤖 **三种 AI 引擎** — 使用 Gemini API(云端)、Gemini Nano(Chrome 内置 AI)或 Ollama(本地模型)
 - 🌍 **多语言支持** — 可分析英语、西班牙语、法语、德语、日语等多种语言的视频
 - 🔒 **100% 隐私保护** — 一切均在本地运行 — 数据不会离开你的设备
 - 🎛️ **自定义服务器** — 可指向你网络中的任意 Ollama 实例
@@ -61,8 +61,34 @@
 ## 系统要求
 
 - **Chrome 128+**、**Brave** 或任意基于 Chromium 的浏览器
+- **Gemini API**:从 [Google AI Studio](https://aistudio.google.com/apikey) 获取免费 API 密钥
 - **Gemini Nano**:Chrome 128+ 并启用 Prompt API
 - **Ollama**:已安装并运行 Ollama([ollama.com](https://ollama.com)),且至少下载了一个模型
+
+---
+
+## Gemini API
+
+Gemini API 使用 Google 的云端 AI 模型,只需 Google AI Studio 提供的免费 API 密钥。可在任意基于 Chromium 的浏览器上使用,无需下载任何模型。
+
+> 与 Gemini Nano 和 Ollama 不同,Gemini API 会将字幕发送到 Google 的服务器进行处理。
+
+### 1. 获取你的 API 密钥
+
+1. 前往 **Google AI Studio**:[aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. 使用你的 Google 账号登录
+3. 点击 **"Create API key"**
+4. 复制生成的密钥(以 `AIza...` 开头)
+
+> Gemini API 提供免费额度,使用限额相当宽松 —— 无需信用卡即可开始使用。
+
+### 2. 在扩展中配置
+
+1. 点击扩展图标
+2. 选择 **API Gemini** 标签页
+3. 将你的 API 密钥粘贴到输入框中
+4. 点击 **确定** 保存并测试密钥
+5. 从下拉菜单中选择一个模型
 
 ---
 
@@ -196,7 +222,7 @@ ollama serve
 
 1. 从 YouTube 信息流中提取每个视频的 ID
 2. 获取视频的文字记录
-3. 将字幕发送给所选的 AI 引擎(Gemini Nano 或 Ollama)进行 CEFR 分级
+3. 将字幕发送给所选的 AI 引擎(Gemini API、Gemini Nano 或 Ollama)进行 CEFR 分级
 4. 在视频缩略图上以圆形徽章显示结果
 5. 结果会在本地缓存,避免重复分析
 
@@ -214,6 +240,6 @@ ollama serve
 ---
 
 <div align="center">
-  <sub>无需 API 密钥或联网连接,所有数据均保存在本地。</sub>
+  <sub>Gemini Nano 和 Ollama 完全在本地运行 —— 无需 API 密钥。Gemini API 为可选项,使用 Google AI Studio 提供的免费密钥。</sub>
 </div>
 

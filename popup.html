@@ -153,12 +153,34 @@
       <option value="3000">3000 car. (rápido)</option>
       <option value="6000">6000 car. (equilibrado)</option>
       <option value="12000">12000 car. (más preciso)</option>
+      <option value="24000">24000 car. (máxima precisión)</option>
     </select>
   </div>
 
   <div class="tabs">
+    <button id="tabGeminiApi" class="tab-btn">API Gemini</button>
     <button id="tabNano" class="tab-btn active">Gemini Nano</button>
     <button id="tabOllama" class="tab-btn">Ollama</button>
+  </div>
+
+  <div id="geminiApiSection" class="section">
+    <div id="geminiApiStatus" class="status"></div>
+
+    <div class="server-row" id="geminiKeyRow">
+      <label>API Key</label>
+      <input type="password" id="geminiKeyInput" class="server-input" placeholder="AIza...">
+      <button class="btn" id="saveGeminiKeyBtn">OK</button>
+      <button class="btn-reset" id="resetGeminiKeyBtn">↺</button>
+    </div>
+
+    <div class="row" id="geminiModelRow" style="display:none;border:none;">
+      <label>Modelo</label>
+      <select id="geminiModelSelect"></select>
+    </div>
+
+    <div style="text-align:center;padding:8px 0 0">
+      <a href="#" id="geminiApiInstructionsBtn" class="instructions-btn">Instrucciones</a>
+    </div>
   </div>
 
   <div id="geminiSection" class="section active">

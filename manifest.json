@@ -4,7 +4,7 @@
   "version": "1.4.0",
   "description": "Analyze YouTube video transcripts to determine CEFR language level (A1-C2) using local AI",
   "permissions": ["storage"],
-  "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "https://kome.ai/*", "http://*/*"],
+  "host_permissions": ["https://www.youtube.com/*", "https://youtube-transcript.ai/*", "https://kome.ai/*", "https://generativelanguage.googleapis.com/*", "http://*/*"],
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/*"],

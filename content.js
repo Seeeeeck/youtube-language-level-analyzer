@@ -1437,6 +1437,10 @@ document.addEventListener('yt-navigate-finish', () => {
   setTimeout(runScans, 1000)
   setTimeout(runScans, 2500)
 })
+window.addEventListener('pagehide', () => {
+  chrome.runtime.sendMessage({ type: 'ollama_abort_all' }).catch(() => {})
+})
+
 setTimeout(runScans, 500)
 setTimeout(runScans, 2000)
 runScans()

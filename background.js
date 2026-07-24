@@ -6,6 +6,7 @@ async function getServerUrl() {
 }
 
 const generateControllers = new Map()
+const requestsByTab = new Map()
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'ollama_get_models') {
@@ -13,12 +14,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true
   }
   if (msg.type === 'ollama_generate') {
-    generate({ model: msg.model, prompt: msg.prompt, requestId: msg.requestId }).then(sendResponse)
+    generate({ model: msg.model, prompt: msg.prompt, requestId: msg.requestId, tabId: sender.tab?.id }).then(sendResponse)
     return true
   }
   if (msg.type === 'ollama_abort_all') {
     for (const controller of generateControllers.values()) controller.abort()
     generateControllers.clear()
+    requestsByTab.clear()
     sendResponse(true)
     return true
   }
@@ -31,6 +33,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     fetchTranscript(msg.videoId).then(sendResponse)
     return true
   }
+})
+
+// A closed tab never gets to send 'ollama_abort_all' from its unload
+// handler in time, so the Ollama request would otherwise keep running
+// server-side until it finishes or the 60s timeout hits.
+chrome.tabs.onRemoved.addListener(tabId => {
+  const requestIds = requestsByTab.get(tabId)
+  if (!requestIds) return
+  for (const requestId of requestIds) generateControllers.get(requestId)?.abort()
+  requestsByTab.delete(tabId)
 })
 
 async function getModels(server) {
@@ -88,9 +100,13 @@ async function fetchTranscript(videoId) {
   return { transcript: null, rateLimited: true }
 }
 
-async function generate({ model, prompt, requestId }) {
+async function generate({ model, prompt, requestId, tabId }) {
   const controller = new AbortController()
   if (requestId) generateControllers.set(requestId, controller)
+  if (requestId && tabId != null) {
+    if (!requestsByTab.has(tabId)) requestsByTab.set(tabId, new Set())
+    requestsByTab.get(tabId).add(requestId)
+  }
   const timeoutId = setTimeout(() => controller.abort(), 60000)
   try {
     const base = await getServerUrl()
@@ -116,5 +132,6 @@ async function generate({ model, prompt, requestId }) {
   } finally {
     clearTimeout(timeoutId)
     if (requestId) generateControllers.delete(requestId)
+    if (requestId && tabId != null) requestsByTab.get(tabId)?.delete(requestId)
   }
 }

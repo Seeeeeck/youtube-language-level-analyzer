@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">YouTube Language Level</title>
+  <link rel="icon" type="image/png" href="icon128.png">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+    header { text-align: center; padding: 60px 0 40px; border-bottom: 1px solid #eee; }
+    header img { width: 80px; margin-bottom: 16px; }
+    header h1 { font-size: 36px; color: #333; }
+    header h1 span { color: #4CAF50; }
+    header p { font-size: 16px; color: #666; max-width: 500px; margin: 12px auto; }
+    .btn {
+      display: inline-block; padding: 12px 32px; background: #4CAF50; color: #fff;
+      border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px;
+      margin-top: 20px; transition: background .2s; cursor: pointer;
+    }
+    .btn:hover { background: #388E3C; }
+    .kofi-btn { background: #FF5E5B; padding: 10px 28px; font-size: 14px; margin-top: 12px; }
+    .kofi-btn:hover { background: #e04946; }
+    .kofi-note {
+      font-size: 16px; color: #2e7d32; max-width: 520px; margin: 18px auto 0;
+      background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 10px;
+      padding: 16px 20px; line-height: 1.5;
+    }
+    .langs { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 24px 0; }
+    .langs button {
+      padding: 6px 14px; background: #f5f5f5; border-radius: 6px;
+      border: 2px solid transparent; cursor: pointer;
+      text-decoration: none; color: #555; font-size: 13px; transition: all .2s;
+      font-family: inherit;
+    }
+    .langs button:hover { background: #4CAF50; color: #fff; }
+    .langs button.active { border-color: #4CAF50; background: #e8f5e9; color: #333; }
+    .section { padding: 32px 0; border-bottom: 1px solid #eee; }
+    .section:last-child { border-bottom: none; }
+    .section h2 { font-size: 24px; color: #333; margin-bottom: 16px; }
+    .section h3 { font-size: 18px; color: #333; margin: 20px 0 10px; }
+    .section h4 { font-size: 15px; color: #555; margin: 16px 0 8px; }
+    .section p { margin: 8px 0; color: #555; }
+    .section ul, .section ol { padding-left: 24px; margin: 8px 0; }
+    .section li { margin: 4px 0; color: #555; }
+    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .feature {
+      padding: 16px; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #4CAF50;
+    }
+    .feature h3 { font-size: 14px; color: #333; margin: 0 0 4px; }
+    .feature p { font-size: 13px; color: #666; margin: 0; }
+    .screenshots { text-align: center; }
+    .screenshots img { max-width: 100%; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.1); margin: 12px 0; }
+    .screenshots .caption { font-size: 13px; color: #999; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 14px; }
+    th { background: #f5f5f5; font-weight: 600; color: #333; }
+    td { color: #555; }
+    code {
+      background: #f5f5f5; padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #333;
+    }
+    pre {
+      background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto;
+      margin: 12px 0; border: 1px solid #eee;
+    }
+    pre code { background: none; padding: 0; }
+    .tip { background: #e8f5e9; padding: 12px 16px; border-radius: 6px; color: #2e7d32; font-size: 14px; margin: 12px 0; }
+    .copy-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; margin-left: 4px; padding: 0;
+      background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;
+      cursor: pointer; font-size: 12px; line-height: 1; vertical-align: middle;
+    }
+    .copy-btn:hover { background: #e0e0e0; }
+    .copy-btn.copied { background: #4CAF50; border-color: #4CAF50; }
+    footer { text-align: center; padding: 40px 0; color: #999; font-size: 13px; }
+    @media (max-width: 600px) {
+      .features { grid-template-columns: 1fr; }
+      header h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="icon128.png" alt="YouTube Language Level" width="48">
+      <h1 data-i18n-html="header_title">YouTube <span>Language Level</span></h1>
+      <p data-i18n="header_subtitle">CEFR level checker for YouTube videos</p>
+      <p data-i18n="header_desc">Analyze the CEFR level (A1&#8211;C2) of any YouTube video using AI &#8212; cloud (Gemini API) or fully local, no internet required (Gemini Nano, Ollama).</p>
+      <p data-i18n-html="header_desc2">Choose between three AI engines: <strong>Gemini API</strong> (cloud, free tier), <strong>Gemini Nano</strong> (built into Chrome), or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
+      <a class="btn" href="https://chromewebstore.google.com/detail/youtube-language-level/nniefbagnnfiambohflolmikfinlfffd" target="_blank" rel="noopener" data-i18n="header_btn">Available on Chrome Web Store</a>
+      <br>
+      <a class="btn kofi-btn" href="https://ko-fi.com/seeeeeck" target="_blank" rel="noopener" data-i18n="header_kofi_btn">&#9749; Support on Ko-fi</a>
+      <p class="kofi-note" data-i18n="header_kofi_note">This extension relies on free external AI services to analyze language level. These services may become paid or unavailable in the future &#8212; if you'd like to help keep the extension running, consider supporting it. Thank you! &#128153;</p>
+    </header>
+
+    <div class="section">
+      <h2 data-i18n="lang_title">&#127760; Language</h2>
+      <div class="langs" id="langBtns">
+        <button onclick="switchLang('en')" class="active">&#127468;&#127463; English</button>
+        <button onclick="switchLang('es')">&#127466;&#127480; Espa&ntilde;ol</button>
+        <button onclick="switchLang('fr')">&#127467;&#127479; Fran&ccedil;ais</button>
+        <button onclick="switchLang('pt')">&#127477;&#127473; Portugu&ecirc;s</button>
+        <button onclick="switchLang('de')">&#127465;&#127466; Deutsch</button>
+        <button onclick="switchLang('it')">&#127470;&#127473; Italiano</button>
+        <button onclick="switchLang('zh')">&#127464;&#127475; &#20013;&#25991;</button>
+        <button onclick="switchLang('ja')">&#127471;&#127477; &#26085;&#26412;&#35486;</button>
+        <button onclick="switchLang('ko')">&#127472;&#127479; &#54620;&#44397;&#50612;</button>
+        <button onclick="switchLang('ar')">&#127480;&#127462; &#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</button>
+        <button onclick="switchLang('hi')">&#127470;&#127475; &#2361;&#2367;&#2344;&#2381;&#2342;&#2368;</button>
+        <button onclick="switchLang('ru')">&#127479;&#127482; &#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</button>
+      </div>
+    </div>
+
+    <div class="section screenshots">
+      <h2 data-i18n="screenshots_title">Screenshots</h2>
+      <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/screenshots/screenshot-badges.png" alt="CEFR level badges on YouTube thumbnails" style="width:100%;max-width:900px">
+      <p class="caption" data-i18n="screenshot_levels_caption">CEFR level badges shown on YouTube video thumbnails</p>
+      <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/screenshots/screenshot-nano.png" alt="Extension popup — Gemini Nano tab" style="width:100%;max-width:900px">
+      <p class="caption" data-i18n="screenshot3_caption">Extension popup — Gemini Nano tab</p>
+      <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/screenshots/screenshot-ollama.png" alt="Extension popup — Ollama tab" style="width:100%;max-width:900px">
+      <p class="caption" data-i18n="screenshot4_caption">Extension popup — Ollama tab</p>
+      <img src="https://raw.githubusercontent.com/Seeeeeck/youtube-language-level-analyzer/master/screenshots/screenshot-gemini.png" alt="Extension popup — Gemini API tab" style="width:100%;max-width:900px">
+      <p class="caption" data-i18n="screenshot2_caption">Extension popup — Gemini API tab</p>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="features_title">Features</h2>
+      <div class="features">
+        <div class="feature"><h3 data-i18n="feature_badges">&#127991;&#65039; CEFR Badges</h3><p data-i18n="feature_badges_desc">Colored circles (A1&#8211;C2) on YouTube video thumbnails</p></div>
+        <div class="feature"><h3 data-i18n="feature_engines">&#129302; Three AI Engines</h3><p data-i18n="feature_engines_desc">Use Gemini API (cloud), Gemini Nano (built-in Chrome AI), or Ollama (local models)</p></div>
+        <div class="feature"><h3 data-i18n="feature_multilingual">&#127760; Multi-language</h3><p data-i18n="feature_multilingual_desc">Analyzes videos in English, Spanish, French, German, Japanese, and more</p></div>
+        <div class="feature"><h3 data-i18n="feature_privacy">&#128274; 100% Private</h3><p data-i18n="feature_privacy_desc">Everything runs locally &#8212; no data leaves your machine</p></div>
+        <div class="feature"><h3 data-i18n="feature_server">&#127928; Custom Server</h3><p data-i18n="feature_server_desc">Point to any Ollama instance on your network</p></div>
+        <div class="feature"><h3 data-i18n="feature_cache">&#9889; Fast Cache</h3><p data-i18n="feature_cache_desc">Results are cached locally to avoid re-analysis</p></div>
+        <div class="feature"><h3 data-i18n="feature_length">&#128203; Adjustable Sample Size</h3><p data-i18n="feature_length_desc">Choose how many characters of the transcript to analyze (3000/6000/12000) to trade off speed vs. accuracy</p></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="requirements_title">Requirements</h2>
+      <ul>
+        <li data-i18n-html="req_chrome"><strong>Chrome 128+</strong>, <strong>Brave</strong>, or any Chromium-based browser</li>
+        <li data-i18n-html="req_geminiapi"><strong>Gemini API</strong>: Free API key from <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a></li>
+        <li data-i18n-html="req_gemini"><strong>Gemini Nano</strong>: Chrome 128+ with Prompt API enabled</li>
+        <li data-i18n-html="req_ollama"><strong>Ollama</strong>: Ollama installed and running (<a href="https://ollama.com">ollama.com</a>) with at least one model downloaded</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="geminiapi_title">Option 1: Gemini API</h2>
+      <p data-i18n="geminiapi_desc">Gemini API uses Google's cloud AI models with a free API key from Google AI Studio. Works on any Chromium-based browser and doesn't require downloading any model.</p>
+      <div class="tip" data-i18n="geminiapi_privacy_tip">Unlike Gemini Nano and Ollama, the Gemini API sends the transcript to Google's servers for processing.</div>
+
+      <h3 data-i18n="geminiapi_key_title">1. Get your API key</h3>
+      <ol>
+        <li data-i18n-html="geminiapi_key_1">Go to <strong>Google AI Studio</strong>: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></li>
+        <li data-i18n="geminiapi_key_2">Sign in with your Google account</li>
+        <li data-i18n-html="geminiapi_key_3">Click <strong>&quot;Create API key&quot;</strong></li>
+        <li data-i18n-html="geminiapi_key_4">Copy the generated API key, paste it into the extension's API key field, then click OK</li>
+      </ol>
+      <div class="tip" data-i18n="geminiapi_key_tip">The Gemini API has a free tier with generous usage limits — no credit card required to get started.</div>
+      <div class="tip" data-i18n="geminiapi_key_share_tip">Never share your API key with anyone — treat it like a password.</div>
+
+      <h3 data-i18n="geminiapi_config_title">2. Configure in the extension</h3>
+      <ol>
+        <li data-i18n="geminiapi_config_1">Click the extension icon</li>
+        <li data-i18n-html="geminiapi_config_2">Select the <strong>API Gemini</strong> tab</li>
+        <li data-i18n="geminiapi_config_3">Paste your API key into the field</li>
+        <li data-i18n-html="geminiapi_config_4">Click <strong>OK</strong> to save and test the key</li>
+        <li data-i18n="geminiapi_config_5">Select a model from the dropdown</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="gemini_title">Option 2: Gemini Nano</h2>
+      <p data-i18n="gemini_desc">Gemini Nano is Chrome's built-in AI model. You need to download the AI model first.</p>
+      <div class="tip" data-i18n="gemini_browser_tip">Chrome is recommended for Gemini Nano. It may not work in other browsers.</div>
+
+      <div class="tip" data-i18n="gemini_other_browsers_tip">Doesn't work in your browser? Use the Ollama option below instead — it works on any Chromium-based browser.</div>
+
+      <div class="tip" data-i18n="gemini_download_note">A Gemini Nano model will be downloaded. Do not close the browser until it is ready.</div>
+
+      <h3 data-i18n="gemini_flag_title">1. Activate Nano AI</h3>
+      <ol>
+        <li data-i18n-html="gemini_flag_1">Enter this in the browser address bar:<br><strong><code>chrome://flags/#prompt-api-for-gemini-nano</code><button class="copy-btn" data-copy="chrome://flags/#prompt-api-for-gemini-nano" onclick="copyFlag(this)" title="Copy">&#128203;</button></strong></li>
+        <li data-i18n-html="gemini_flag_2">Set the flag to <strong>&quot;Enabled Multilanguage&quot;</strong></li>
+        <li data-i18n-html="gemini_flag_3">Click <strong>&quot;Relaunch&quot;</strong> or restart the browser</li>
+      </ol>
+      <div class="tip" data-i18n-html="gemini_flag_bypass">If the model does not start downloading, also enable (recommended): <br><strong><code>chrome://flags/#optimization-guide-on-device-model</code><button class="copy-btn" data-copy="chrome://flags/#optimization-guide-on-device-model" onclick="copyFlag(this)" title="Copy">&#128203;</button></strong> and select <strong>&quot;Enabled BypassPerfRequirement&quot;</strong></div>
+
+      <h3 data-i18n="gemini_status_title">2. Check the model status</h3>
+      <p data-i18n-html="gemini_status_desc">Open the YouTube Language Level popup and select the <strong>Gemini Nano</strong> tab:</p>
+      <table>
+        <tr><th data-i18n="status_col">Status</th><th data-i18n="meaning_col">Meaning</th></tr>
+        <tr><td><strong data-i18n="gemini_available">Available</strong></td><td data-i18n="gemini_available_desc">Ready to use</td></tr>
+        <tr><td><strong data-i18n="gemini_downloading">Downloading</strong></td><td data-i18n="gemini_downloading_desc">Model is being downloaded</td></tr>
+        <tr><td><strong data-i18n="gemini_downloadable">Downloadable</strong></td><td data-i18n="gemini_downloadable_desc">Needs to download first</td></tr>
+        <tr><td><strong data-i18n="gemini_unavailable">Unavailable</strong></td><td data-i18n="gemini_unavailable_desc">Not supported in your browser or model not downloaded</td></tr>
+      </table>
+
+      <h3 data-i18n="gemini_lang_title">3. Choose the analysis language</h3>
+      <p data-i18n="gemini_lang_desc">Select the language of the video you want to analyze:</p>
+      <table>
+        <tr><th data-i18n="code_col">Code</th><th data-i18n="language_col">Language</th></tr>
+        <tr><td>en</td><td data-i18n="lang_en">English</td></tr>
+        <tr><td>es</td><td data-i18n="lang_es">Spanish</td></tr>
+        <tr><td>ja</td><td data-i18n="lang_ja">Japanese</td></tr>
+        <tr><td>de</td><td data-i18n="lang_de">German</td></tr>
+        <tr><td>fr</td><td data-i18n="lang_fr">French</td></tr>
+      </table>
+      <div class="tip" data-i18n="gemini_lang_tip">Gemini Nano supports multilingual analysis. Select the language that matches the video content.</div>
+
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="ollama_title">Option 3: Ollama</h2>
+      <div class="tip" data-i18n="ollama_all_browsers_tip">Works on any Chromium-based browser: Chrome, Brave, Edge, Vivaldi, Opera, and more.</div>
+
+      <h3 data-i18n="ollama_install_title">1. Install Ollama</h3>
+      <p data-i18n-html="ollama_linux_mac"><strong>Linux / macOS:</strong></p>
+      <pre><code>curl -fsSL https://ollama.com/install.sh | sh</code></pre>
+      <p data-i18n-html="ollama_win"><strong>Windows:</strong></p>
+      <p data-i18n-html="ollama_win_desc">Download the installer from <a href="https://ollama.com/download">ollama.com/download</a> and run it.</p>
+
+      <h3 data-i18n="ollama_model_title">2. Download a model</h3>
+      <p data-i18n-html="ollama_model_desc">Run this in a terminal (Linux/macOS) or PowerShell/CMD (Windows):</p>
+      <pre><code>ollama pull gemma3:1b</code></pre>
+      <div class="tip" data-i18n-html="ollama_model_tip">You can use any model from the <a href="https://ollama.com/library" target="_blank" rel="noopener">Ollama model library</a> — select it from the Ollama tab in the extension popup. A lightweight/small model (like <code>gemma3:1b</code>) is recommended for faster responses.</div>
+
+      <h3 data-i18n="ollama_cors_title">3. Configure CORS</h3>
+      <p data-i18n="ollama_cors_desc">The extension needs permission to talk to Ollama from YouTube.</p>
+
+      <h4 data-i18n="ollama_linux_perm">Linux &#8212; Systemd (permanent)</h4>
+      <pre><code>sudo mkdir -p /etc/systemd/system/ollama.service.d
+echo '[Service]
+Environment=OLLAMA_ORIGINS=*' | sudo tee /etc/systemd/system/ollama.service.d/override.conf
+sudo systemctl daemon-reload
+sudo systemctl restart ollama</code></pre>
+
+      <h4 data-i18n="ollama_linux_temp">Linux &#8212; Temporary</h4>
+      <pre><code>sudo systemctl stop ollama
+OLLAMA_ORIGINS=* ollama serve</code></pre>
+
+      <h4 data-i18n="ollama_win_perm">Windows &#8212; Permanent</h4>
+      <ol>
+        <li data-i18n-html="ollama_win_perm_1">Open <strong>System Properties</strong> &#8594; <strong>Environment Variables</strong></li>
+        <li data-i18n-html="ollama_win_perm_2">Add a new <strong>System variable</strong>: <code>OLLAMA_ORIGINS</code> = <code>*</code></li>
+        <li data-i18n-html="ollama_win_perm_3">Click <strong>OK</strong> and restart Ollama</li>
+      </ol>
+
+      <h4 data-i18n="ollama_win_temp">Windows &#8212; Temporary (PowerShell)</h4>
+      <pre><code>$env:OLLAMA_ORIGINS="*"
+ollama serve</code></pre>
+
+      <div class="tip" data-i18n="ollama_expose_tip">If you want to use Ollama from another PC on your network, open Ollama Settings and enable "Expose Ollama to network". This allows connections from other devices on your local network.</div>
+
+      <h3 data-i18n="ollama_config_title">4. Configure in the extension</h3>
+      <ol>
+        <li data-i18n="ollama_config_1">Click the extension icon</li>
+        <li data-i18n-html="ollama_config_2">Select the <strong>Ollama</strong> tab</li>
+        <li data-i18n-html="ollama_config_3">Set your server URL (default: <code>http://localhost:11434</code>)</li>
+        <li data-i18n="ollama_config_4">Click <strong>OK</strong> to test the connection</li>
+        <li data-i18n="ollama_config_5">Select a model from the dropdown</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="usage_title">Using the Extension</h2>
+      <ol>
+        <li data-i18n-html="usage_1">Go to <strong>https://www.youtube.com</strong></li>
+        <li data-i18n="usage_2">Videos with transcripts show a green spinner while analyzing</li>
+        <li data-i18n-html="usage_3">A colored circle appears with the level: <strong>A1</strong>, <strong>A2</strong>, <strong>B1</strong>, <strong>B2</strong>, <strong>C1</strong>, or <strong>C2</strong></li>
+        <li data-i18n="usage_4">Hover over the badge to see which engine and model was used</li>
+        <li data-i18n="usage_5">Click the extension icon to open the popup and switch between engines</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="custom_title">Custom Ollama Server</h2>
+      <p data-i18n-html="custom_desc">By default the extension connects to <code>http://localhost:11434</code>. To change it:</p>
+      <ol>
+        <li data-i18n="custom_1">Open the extension popup</li>
+        <li data-i18n-html="custom_2">Select the <strong>Ollama</strong> tab</li>
+        <li data-i18n-html="custom_3">Enter your server URL (e.g. <code>http://localhost:11434</code>)</li>
+        <li data-i18n-html="custom_4">Click <strong>OK</strong> &#8212; the extension will test the connection and load available models</li>
+      </ol>
+    </div>
+
+    <footer>
+      <p data-i18n="footer_1">Gemini Nano and Ollama run 100% locally — no API key needed. Gemini API is optional and uses a free key from Google AI Studio.</p>
+      <p data-i18n="footer_2">YouTube Language Level &#8212; CEFR level for any YouTube video</p>
+    </footer>
+  </div>
+
+  <script src="translations.js"></script>
+  <script>
+    function get(key, lang) { return T[lang] && T[lang][key] !== undefined ? T[lang][key] : T.en[key]; }
+    function copyFlag(btn) {
+      navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+        const original = btn.textContent;
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1200);
+      });
+    }
+    function switchLang(lang) {
+      const t = T[lang] || T.en;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        const val = t[key];
+        if (val !== undefined) el.textContent = val;
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        const val = t[key];
+        if (val !== undefined) el.innerHTML = val;
+      });
+      document.title = t.page_title || T.en.page_title;
+      document.querySelectorAll('#langBtns button').forEach(b => b.classList.toggle('active', b.getAttribute('onclick').includes("'"+lang+"'")));
+      localStorage.setItem('ytlevel_lang', lang);
+    }
+    const saved = localStorage.getItem('ytlevel_lang');
+    if (saved && T[saved]) switchLang(saved);
+  </script>
+</body>
+</html>

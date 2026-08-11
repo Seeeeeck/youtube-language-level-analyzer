@@ -71,7 +71,7 @@
 
 Gemini API uses Google's cloud AI models with a free API key from Google AI Studio. Works on any Chromium-based browser and doesn't require downloading any model.
 
-> Unlike Gemini Nano and Ollama, the Gemini API sends the transcript to Google's servers for processing.
+> The Gemini API has a daily quota (resets at midnight Pacific time). Once you use it up, you'll need to wait for it to recharge before using it again.
 
 ### 1. Get your API key
 

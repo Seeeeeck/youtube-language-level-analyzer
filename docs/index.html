@@ -25,10 +25,12 @@
       margin-top: 20px; transition: background .2s; cursor: pointer;
     }
     .btn:hover { background: #388E3C; }
-    .reload-note { display: inline-block; margin-left: 12px; font-size: 13px; color: #888; vertical-align: middle; }
-    @media (max-width: 600px) {
-      .reload-note { display: block; margin: 8px auto 0; }
+    .reload-note {
+      display: flex; align-items: center; gap: 6px; justify-content: center;
+      margin: 12px auto 0; padding: 6px 14px; background: #f1f8f1; color: #4a7a4a;
+      border: 1px solid #d7ecd7; border-radius: 999px; font-size: 12.5px; width: fit-content;
     }
+    .reload-note::before { content: "💡"; font-size: 13px; }
     .kofi-btn { background: #FF5E5B; padding: 10px 28px; font-size: 14px; margin-top: 12px; }
     .kofi-btn:hover { background: #e04946; }
     .kofi-note {
@@ -99,9 +101,9 @@
       <p data-i18n="header_subtitle">CEFR level checker for YouTube videos</p>
       <p data-i18n="header_desc">Analyze the CEFR level (A1&#8211;C2) of any YouTube video using AI &#8212; cloud (Gemini API) or fully local, no internet required (Gemini Nano, Ollama).</p>
       <p data-i18n-html="header_desc2">Choose between three AI engines: <strong>Gemini API</strong> (cloud, free tier), <strong>Gemini Nano</strong> (built into Chrome), or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
-      <a class="btn" href="https://chromewebstore.google.com/detail/youtube-language-level/nniefbagnnfiambohflolmikfinlfffd" target="_blank" rel="noopener" data-i18n="header_btn">Available on Chrome Web Store</a>
-      <span class="reload-note" data-i18n="header_reload_note">Reload YouTube after installing the extension</span>
       <br>
+      <a class="btn" href="https://chromewebstore.google.com/detail/youtube-language-level/nniefbagnnfiambohflolmikfinlfffd" target="_blank" rel="noopener" data-i18n="header_btn">Available on Chrome Web Store</a>
+      <div class="reload-note" data-i18n="header_reload_note">Reload YouTube after installing the extension</div>
       <a class="btn kofi-btn" href="https://ko-fi.com/seeeeeck" target="_blank" rel="noopener" data-i18n="header_kofi_btn">&#9749; Support on Ko-fi</a>
       <p class="kofi-note" data-i18n="header_kofi_note">This extension relies on free external AI services to analyze language level. These services may become paid or unavailable in the future &#8212; if you'd like to help keep the extension running, consider supporting it. Thank you! &#128153;</p>
     </header>

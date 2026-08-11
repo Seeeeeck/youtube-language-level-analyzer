@@ -26,8 +26,8 @@
     }
     .btn:hover { background: #388E3C; }
     .reload-note {
-      display: flex; align-items: center; gap: 6px; justify-content: center;
-      margin: 12px auto 0; padding: 6px 14px; background: #f1f8f1; color: #4a7a4a;
+      display: flex; align-items: center; gap: 6px;
+      margin: 16px 0 0; padding: 6px 14px; background: #f1f8f1; color: #4a7a4a;
       border: 1px solid #d7ecd7; border-radius: 999px; font-size: 12.5px; width: fit-content;
     }
     .reload-note::before { content: "💡"; font-size: 13px; }
@@ -103,7 +103,7 @@
       <p data-i18n-html="header_desc2">Choose between three AI engines: <strong>Gemini API</strong> (cloud, free tier), <strong>Gemini Nano</strong> (built into Chrome), or <strong>Ollama</strong> (local server). Works for <strong>any language</strong>.</p>
       <br>
       <a class="btn" href="https://chromewebstore.google.com/detail/youtube-language-level/nniefbagnnfiambohflolmikfinlfffd" target="_blank" rel="noopener" data-i18n="header_btn">Available on Chrome Web Store</a>
-      <div class="reload-note" data-i18n="header_reload_note">Reload YouTube after installing the extension</div>
+      <br>
       <a class="btn kofi-btn" href="https://ko-fi.com/seeeeeck" target="_blank" rel="noopener" data-i18n="header_kofi_btn">&#9749; Support on Ko-fi</a>
       <p class="kofi-note" data-i18n="header_kofi_note">This extension relies on free external AI services to analyze language level. These services may become paid or unavailable in the future &#8212; if you'd like to help keep the extension running, consider supporting it. Thank you! &#128153;</p>
     </header>
@@ -183,6 +183,9 @@
         <li data-i18n-html="geminiapi_config_4">Click <strong>OK</strong> to save and test the key</li>
         <li data-i18n="geminiapi_config_5">Select a model from the dropdown</li>
       </ol>
+
+      <h3 data-i18n="geminiapi_reload_title">3. Reload YouTube</h3>
+      <div class="reload-note" data-i18n="geminiapi_reload_1">Reload any open YouTube tabs so the extension can start working</div>
     </div>
 
     <div class="section">
@@ -224,6 +227,8 @@
       </table>
       <div class="tip" data-i18n="gemini_lang_tip">Gemini Nano supports multilingual analysis. Select the language that matches the video content.</div>
 
+      <h3 data-i18n="gemini_reload_title">4. Reload YouTube</h3>
+      <div class="reload-note" data-i18n="gemini_reload_1">Reload any open YouTube tabs so the extension can start working</div>
     </div>
 
     <div class="section">
@@ -276,6 +281,9 @@ ollama serve</code></pre>
         <li data-i18n="ollama_config_4">Click <strong>OK</strong> to test the connection</li>
         <li data-i18n="ollama_config_5">Select a model from the dropdown</li>
       </ol>
+
+      <h3 data-i18n="ollama_reload_title">5. Reload YouTube</h3>
+      <div class="reload-note" data-i18n="ollama_reload_1">Reload any open YouTube tabs so the extension can start working</div>
     </div>
 
     <div class="section">

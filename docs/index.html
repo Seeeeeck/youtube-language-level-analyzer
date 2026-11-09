@@ -62,6 +62,10 @@
     .feature h3 { font-size: 14px; color: #333; margin: 0 0 4px; }
     .feature p { font-size: 13px; color: #666; margin: 0; }
     .screenshots { text-align: center; }
+    .video-demo { text-align: center; }
+    .video-note { font-weight: 600; }
+    .video-wrap { position: relative; width: 100%; padding-top: 56.25%; margin: 16px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.1); }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .screenshots img { max-width: 100%; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.1); margin: 12px 0; }
     .screenshots .caption { font-size: 13px; color: #999; margin-bottom: 24px; }
     table { width: 100%; border-collapse: collapse; margin: 12px 0; }
@@ -107,6 +111,14 @@
       <a class="btn kofi-btn" href="https://ko-fi.com/seeeeeck" target="_blank" rel="noopener" data-i18n="header_kofi_btn">&#9749; Support on Ko-fi</a>
       <p class="kofi-note" data-i18n="header_kofi_note">This extension relies on free external AI services to analyze language level. These services may become paid or unavailable in the future &#8212; if you'd like to help keep the extension running, consider supporting it. Thank you! &#128153;</p>
     </header>
+
+    <div class="section video-demo">
+      <h2 data-i18n="video_title">Video demo &amp; instructions</h2>
+      <p class="video-note" data-i18n="video_note">&#127466;&#127480; This video is in Spanish. It shows a demo of the extension and how to set it up.</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube-nocookie.com/embed/nAiXOqZm02g?start=302" title="YouTube Language Level demo" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
 
     <div class="section">
       <h2 data-i18n="lang_title">&#127760; Language</h2>
